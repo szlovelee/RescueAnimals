@@ -32,7 +32,7 @@ namespace UI.Intro
 
         private IEnumerator LoadHomeSceneAsync()
         {
-            var oper = SceneManager.LoadSceneAsync("Scenes/HomeScene");
+            var oper = SceneManager.LoadSceneAsync("Scenes/GameScene");
             while (!oper.isDone)
             {
                 yield return null;
