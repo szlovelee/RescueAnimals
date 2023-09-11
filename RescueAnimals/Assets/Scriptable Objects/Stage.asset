@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08bf59238bdb8524d85f4a10774119e7, type: 3}
-  m_Name: NoneStage
+  m_Name: Stage
   m_EditorClassIdentifier: 
   intervalX: 0.5
   intervalY: -0.3
-  startPosition: {x: -1.7, y: 2.5}
   generationTime: 100
-  maxRow: 8
+  maxRow: 6
   maxCol: 8
   blockGenerator: {fileID: 11400000, guid: ab8118850d59c4affad6b825704d7554, type: 2}
   animalGenerator: {fileID: 11400000, guid: 4e215d21ae1114ed2868a2d6f843f35a, type: 2}
-  _blockPrefab: {fileID: 4222917890701272065, guid: 41865b16c3659ef4c9361794269f9444, type: 3}
-  _animalPrefab: {fileID: 1519063363925240311, guid: 7427a7ebd78b844d3878d6103cfcddf9, type: 3}
+  blockPrefab: {fileID: 5226164755119570723, guid: 52f64bd10a687468c99cb37b20284bb5, type: 3}
+  animalPrefab: {fileID: 4222917890701272065, guid: 41865b16c3659ef4c9361794269f9444, type: 3}
   stage: 1
