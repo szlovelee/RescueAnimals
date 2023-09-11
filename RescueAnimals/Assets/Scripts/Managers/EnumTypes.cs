@@ -11,7 +11,11 @@ namespace EnumTypes
     }
 
     public enum StageType
-    {
-        None = 0, j
+        None,
+        Mountain,
+        Sea,
+        Jungle,
+        Hell,
+        Heaven
     }
 }
