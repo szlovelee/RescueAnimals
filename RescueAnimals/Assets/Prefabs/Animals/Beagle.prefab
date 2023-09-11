@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1927630459849661686}
+  - component: {fileID: 5999534416283534598}
   m_Layer: 0
   m_Name: Beagle
   m_TagString: Untagged
@@ -32,6 +33,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5999534416283534598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4182793997858057886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 016138846d4a7754fb464f1b22353387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animalType: 1
+  reinforceLevel: 0
 --- !u!1 &4931391171678638825
 GameObject:
   m_ObjectHideFlags: 0
