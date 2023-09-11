@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Entities
 {
+    //확인좀 부탁 
     [CreateAssetMenu(menuName = "Stage")]
     public class Stage : ScriptableObject
     {
