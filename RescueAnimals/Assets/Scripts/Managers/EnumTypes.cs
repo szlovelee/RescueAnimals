@@ -16,7 +16,7 @@ namespace EnumTypes
         None = 0, d, c, g
     }
 
-    public enum StageType
+    public enum StageType{
         None = 1 << 0,
         Mountain = 1 << 1,
         Sea = 1 << 2,
