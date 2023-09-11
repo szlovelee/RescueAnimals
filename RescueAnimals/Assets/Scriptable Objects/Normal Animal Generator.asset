@@ -12,6 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5f7968a7e54f48b8ec03945565516a, type: 3}
   m_Name: Normal Animal Generator
   m_EditorClassIdentifier: 
+<<<<<<< HEAD:RescueAnimals/Assets/Scriptable Objects/NoneStage.asset
+  blockGenerator: {fileID: 11400000, guid: ab8118850d59c4affad6b825704d7554, type: 2}
+  _prefab: {fileID: 4182793997858057886, guid: bfd3773ff959b4256be85779fd2d1e59, type: 3}
+  animals: []
+  stage: 1
+=======
   startPosition: {x: 0.2, y: 0.4}
   intervalX: 1
   intervalY: 1
+>>>>>>> main:RescueAnimals/Assets/Scriptable Objects/Normal Animal Generator.asset

@@ -1,9 +1,11 @@
+using EnumTypes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using EnumTypes;
 
-public class Animal : MonoBehaviour
+[Serializable]
+public class AnimalReinforce
 {
     public AnimalType animalType;
     public int reinforceLevel;

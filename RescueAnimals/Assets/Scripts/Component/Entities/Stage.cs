@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Entities.BlockGenerators;
 using EnumTypes;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Entities
 {
+    //확인좀 부탁 
     [CreateAssetMenu(menuName = "Stage")]
     public class Stage : ScriptableObject
     {
@@ -18,8 +17,8 @@ namespace Entities
 
         private Vector2 _startPosition = new(-1.7f, 2.5f);
         [SerializeField] private float generationTime = 100f;
-        [SerializeField] private int maxRow = 8;
-        [SerializeField] private int maxCol = 8;
+        public int maxRow = 8;
+        public int maxCol = 8;
 
         public static AnimalType[] AnimalTypes = (AnimalType[])Enum.GetValues(typeof(AnimalType));
 
@@ -31,8 +30,8 @@ namespace Entities
         [SerializeField] public BlockGenerator blockGenerator;
         [SerializeField] public AnimalGenerator animalGenerator;
 
-        [SerializeField] private GameObject _blockPrefab; // block prefab => todo change name
-        [SerializeField] private GameObject _animalPrefab; // block prefab => todo change name
+        [SerializeField] public GameObject blockPrefab; 
+        [SerializeField] public GameObject animalPrefab;
 
         private MapType[,] _mapTypes;
         public List<KeyValuePair<BlockType, Vector2>> BlockPositions;
@@ -110,14 +109,15 @@ namespace Entities
                 {
                     var mapType = _mapTypes[row, col];
                     if (mapType == MapType.Blank) continue;
+
                     var position = new Vector2(
-                        x: _startPosition.x + col * intervalX,
+                        x: _startPosition.x + intervalX * col,
                         y: _startPosition.y + intervalY * row);
 
                     var prefab = mapType switch
                     {
-                        MapType.Block => _blockPrefab,
-                        MapType.Animal => _animalPrefab,
+                        MapType.Block => blockPrefab,
+                        MapType.Animal => animalPrefab,
                         _ => throw new ArgumentOutOfRangeException()
                     };
 
