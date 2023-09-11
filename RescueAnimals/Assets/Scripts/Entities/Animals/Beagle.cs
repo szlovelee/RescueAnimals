@@ -15,13 +15,7 @@ public class Beagle : Animal, IAnimalBehaviour
     {
         for(int i = 0; i < player.balls.Count; i++)
         {
-            player.balls[i].OnPiercingMode(true, _reinforceTime);
+            player.balls[i].OnPiercingMode(true, _reinforceTime + (reinforceLevel * 0.2f));
         }
-    }
-
-    public void OnReinforced()
-    {
-        reinforceLevel += 1;
-        _reinforceTime += 0.3f;
     }
 }
