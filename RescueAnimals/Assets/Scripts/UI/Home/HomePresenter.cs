@@ -16,6 +16,7 @@ public class HomePresenter : MonoBehaviour
     {
         _view = _viewObj.GetComponent<HomeView>(); 
     }
+
     private void Start()
     {
         SetCurrentAnimalReinforceState();
@@ -58,6 +59,7 @@ public class HomePresenter : MonoBehaviour
     private void LoadGame()
     {
         StartCoroutine(LoadGameSceneAsync());
+        SoundManager.instance.PlayAcceptEffect();
     }
     
     private void UpgradePanelOpen()
@@ -81,6 +83,8 @@ public class HomePresenter : MonoBehaviour
         {
             panel.SetActive(false);
         }
+
+        SoundManager.instance.PlayReturnEffect();
     }
 
     private void ActivatePanel(GameObject[] panels, GameObject targetPanel)
@@ -96,6 +100,8 @@ public class HomePresenter : MonoBehaviour
                 panel.SetActive(false);
             }
         }
+
+        SoundManager.instance.PlayClickEffect();
     }
 
     private IEnumerator LoadGameSceneAsync()
