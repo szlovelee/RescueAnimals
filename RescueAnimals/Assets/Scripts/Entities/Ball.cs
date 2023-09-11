@@ -7,9 +7,9 @@ public class Ball : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D BallRd;
 
-    private Vector2 direction = new Vector2(2, 1);
+    private Vector2 direction = new Vector2(2, 1).normalized;
 
-    public float speed = 10f;
+    [Range(50f, 200f)] public float speed = 100f;
 
     private void Awake()
     {
@@ -18,31 +18,26 @@ public class Ball : MonoBehaviour
 
     void Start()
     {
-        
+        BallRd.AddForce(direction * speed);
     }
 
     void Update()
     {
-        MoveBall();
+        //MoveBall();
     }
 
-    private void MoveBall()
-    {
-        direction.Normalize();
-        direction = direction * speed;
-        BallRd.velocity = direction;
-    }
+    //private void MoveBall()
+    //{
+    //    direction.Normalize();
+    //    direction = direction * speed;
+    //    BallRd.velocity = direction;
+    //}
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Block")
         {
-            MoveBallReversal();
+            Debug.Log("1212");
         }
-    }
-
-    private void MoveBallReversal()
-    {
-        direction.x = -direction.x;
     }
 }
