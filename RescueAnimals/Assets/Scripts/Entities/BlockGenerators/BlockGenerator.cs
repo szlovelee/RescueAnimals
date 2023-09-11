@@ -6,6 +6,6 @@ namespace Entities.BlockGenerators
 {
     public abstract class BlockGenerator : ScriptableObject
     {
-        public abstract List<Vector2> Generate();
+        public abstract bool[,] Generate(int maxRow, int maxCol);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Entities.BlockGenerators;
 using EnumTypes;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,6 +12,15 @@ namespace Entities
     [CreateAssetMenu(menuName = "Stage")]
     public class Stage : ScriptableObject
     {
+        private const float intervalX = 0.5f;
+        private const float intervalY = 0.2f;
+
+        private float startX = -1.5f;
+        private float startY = 4f;
+
+        [SerializeField] private int maxRow = 8;
+        [SerializeField] private int maxCol = 8;
+
         public static AnimalType[] AnimalTypes = (AnimalType[])Enum.GetValues(typeof(AnimalType));
 
         public static BlockPattern[] BlockPatterns =
@@ -19,18 +29,23 @@ namespace Entities
         public static BlockType[] BlockTypes = (BlockType[])Enum.GetValues(typeof(BlockType));
 
         [SerializeField] public BlockGenerator blockGenerator;
+        [SerializeField] public AnimalGenerator animalGenerator;
+
+        [SerializeField] private GameObject _prefab; // block prefab => todo change name
+        [SerializeField] private GameObject _animalPrefab; // block prefab => todo change name
+
+        private MapType[,] _mapTypes;
         public List<KeyValuePair<BlockType, Vector2>> BlockPositions;
-        [SerializeField] private GameObject _prefab;
-        public List<Animal> animals;
+        public List<KeyValuePair<AnimalType, Vector2>> AnimalPositions;
+
         public StageType stage = StageType.None;
-        private Dictionary<AnimalType, float> _animalPercentages;
-        private Dictionary<BlockType, float> _brickPercentages;
         public float BricksGenTime => CalcBrickGenTime();
 
-        public bool IsClear => animals.Count <= 0;
+        public bool IsClear => AnimalPositions.Count <= 0;
 
         private void OnEnable()
         {
+            _mapTypes = new MapType[maxRow, maxCol];
             CreateBlocks();
             CreateAnimals();
         }
@@ -62,6 +77,7 @@ namespace Entities
 
         public void OnClearStage()
         {
+            // update stage information to move next stage
             CalcAnimalPercentage();
             CreateBlocks();
             CreateAnimals();
@@ -70,25 +86,49 @@ namespace Entities
 
         public void CreateBlocks()
         {
-            BlockPositions = blockGenerator
-                .Generate()
-                .Select(vector2 =>
+            var blocks = blockGenerator.Generate(maxRow, maxCol);
+            for (int row = 0; row < maxRow; row++)
+            {
+                for (int col = 0; col < maxCol; col++)
                 {
-                    var block = CalcBlockPercentage();
-                    return new KeyValuePair<BlockType, Vector2>(block, vector2);
-                }).ToList();
+                    _mapTypes[row, col] = blocks[row, col] ? MapType.Block : MapType.Blank;
+                }
+            }
         }
 
 
         private void CreateAnimals()
         {
+            var animalPosList = animalGenerator
+                .Generate(2)
+                .Select(pos => new KeyValuePair<AnimalType, Vector2>(CalcAnimalPercentage(), pos))
+                .ToList();
+
+            AnimalPositions = animalPosList;
         }
 
-        public void InstantiateBlocks()
+        public void InstantiateObjects()
         {
-            foreach (var (blockType, position) in BlockPositions)
+            for (var row = 0; row < maxRow; row++)
             {
-                Instantiate(_prefab, position, Quaternion.identity);
+                for (var col = 0; col < maxCol; col++)
+                {
+                    var mapType = _mapTypes[row, col];
+                    if (mapType == MapType.Blank) continue;
+                    var position = new Vector2(startX + col * intervalX, startY + intervalY * col);
+                    var prefab = mapType switch
+                    {
+                        MapType.Block => _prefab,
+                        MapType.Animal => _prefab,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+
+                    //todo set prefab's data to apply random block, animalType
+                    var block = CalcBlockPercentage();
+                    var animal = CalcAnimalPercentage();
+
+                    Instantiate(prefab, position, Quaternion.identity);
+                }
             }
         }
     }
