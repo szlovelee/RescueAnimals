@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5270111612833577927}
+  - component: {fileID: -255591197691997364}
   m_Layer: 0
   m_Name: StaffyDog
   m_TagString: Untagged
@@ -32,6 +33,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-255591197691997364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5226164755119570723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bfb1a1a32cbb2c449001283c3f72638, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animalType: 0
+  reinforceLevel: 0
 --- !u!1 &7391628890172827511
 GameObject:
   m_ObjectHideFlags: 0
