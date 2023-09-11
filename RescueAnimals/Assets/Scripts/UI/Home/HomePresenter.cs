@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
-
+using EnumTypes;
 
 public class HomePresenter : MonoBehaviour
 {
+    public AnimalData reinforceData;
+
     [SerializeField] private GameObject _viewObj;
     private HomeView _view;
 
@@ -16,11 +18,41 @@ public class HomePresenter : MonoBehaviour
     }
     private void Start()
     {
+        SetCurrentAnimalReinforceState();
+
         _view.OnGameStartClicked += LoadGame;
         _view.OnUpgradeOpen += UpgradePanelOpen;
         _view.OnRankOpen += RankPanelOpen;
         _view.OnPlayerOpen += PlayerPanelOpen;
         _view.OnPanelClose += PanelClose;
+        _view.OnBeagleReinforce += ReinforceAnimal;
+    }
+
+    private void SetCurrentAnimalReinforceState()
+    {
+        foreach(var data in reinforceData.AnimalReinforceData)
+        {
+            ShowReinforceState(data.animalType, data.reinforceLevel);
+        }
+    }
+
+    private void ShowReinforceState(AnimalType animalType, int level)
+    {
+        switch (animalType)
+        {
+            case AnimalType.Beagle:
+                _view.beagleLevelText.text = $"레벨 {level}";
+                _view.beagleExplanationText.text = $"공이 {level * 0.2f}초 동안 관통!";
+                break;
+        }
+    }
+
+    private void ReinforceAnimal(AnimalType animalType)
+    {
+        var data = reinforceData.AnimalReinforceData.Find(x=>x.animalType == animalType);
+
+        data.reinforceLevel += 1;
+        ShowReinforceState(data.animalType, data.reinforceLevel);
     }
 
     private void LoadGame()

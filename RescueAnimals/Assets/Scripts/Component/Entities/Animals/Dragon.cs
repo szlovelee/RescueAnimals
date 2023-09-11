@@ -16,10 +16,4 @@ public class Dragon : Animal, IAnimalBehaviour
     {
         //player.balls.°­È­(_reinforceTime);
     }
-
-    public void OnReinforced()
-    {
-        reinforceLevel += 1;
-        _reinforceTime += 0.3f;
-    }
 }

@@ -9,6 +9,12 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
 {
     public AnimalType animalType;
     public int reinforceLevel;
+
+    public void SetAnimalReinforceLevel(int level)
+    {
+        reinforceLevel = level;
+    }
+
     private Action<Animal> _returnAction;
 
     public void Initialize(Action<Animal> returnAction)
