@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using Entities;
 using UnityEngine;
-using EnumTypes;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,5 +10,10 @@ public class GameManager : MonoBehaviour
     public void ChangeStage(Stage stage)
     {
         currentStage = stage;
+    }
+
+    private void Start()
+    {
+        currentStage.InstantiateObjects();
     }
 }
