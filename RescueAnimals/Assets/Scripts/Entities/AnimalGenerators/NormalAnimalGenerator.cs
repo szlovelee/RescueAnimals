@@ -7,7 +7,6 @@ namespace Entities.AnimalGenerators
     [CreateAssetMenu(menuName = "AnimalGenerator/NormalAnimalGenerator")]
     public class NormalAnimalGenerator : AnimalGenerator
     {
-        private bool[,] isSelected = new bool[4, 4];
         [SerializeField] private Vector2 startPosition = new Vector2(0.2f, 0.4f);
 
         //todo migrate to scriptable Object BlockSetup -> in manager or !![stage]!!
@@ -16,25 +15,22 @@ namespace Entities.AnimalGenerators
         [SerializeField] private float intervalY = 1f;
 
         //
-        public override List<Vector2> Generate(int animalCount)
+        public override void Generate(int animalCount, int rows, int cols, MapType[,] maps)
         {
-            var ret = new List<Vector2>();
-            for (int i = 0; i < animalCount || i < 16; i++)
+            bool[,] isSelected = new bool[rows, cols];
+            for (int i = 0; i < animalCount && i < maps.Length; i++)
             {
                 int row;
                 int col;
-
                 do
                 {
-                    row = Random.Range(0, 4);
-                    col = Random.Range(0, 4);
-                } while (!isSelected[row, col]);
+                    row = Random.Range(0, 8);
+                    col = Random.Range(0, 8);
+                } while (isSelected[row, col] || maps[row, col] != MapType.Blank);
 
                 isSelected[row, col] = true;
-                ret.Add(startPosition + new Vector2(x: col * intervalX, y: row * intervalY));
+                maps[row, col] = MapType.Animal;
             }
-
-            return ret;
         }
     }
 }

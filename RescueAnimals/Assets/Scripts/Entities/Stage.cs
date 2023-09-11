@@ -12,12 +12,13 @@ namespace Entities
     [CreateAssetMenu(menuName = "Stage")]
     public class Stage : ScriptableObject
     {
-        private const float intervalX = 0.5f;
-        private const float intervalY = 0.2f;
+        [SerializeField] private float intervalX = 1f;
+        [SerializeField] private float intervalY = -0.3f;
 
         private float startX = -1.5f;
         private float startY = 4f;
 
+        [SerializeField] private float GenerationTime = 100f;
         [SerializeField] private int maxRow = 8;
         [SerializeField] private int maxCol = 8;
 
@@ -31,7 +32,7 @@ namespace Entities
         [SerializeField] public BlockGenerator blockGenerator;
         [SerializeField] public AnimalGenerator animalGenerator;
 
-        [SerializeField] private GameObject _prefab; // block prefab => todo change name
+        [SerializeField] private GameObject _blockPrefab; // block prefab => todo change name
         [SerializeField] private GameObject _animalPrefab; // block prefab => todo change name
 
         private MapType[,] _mapTypes;
@@ -52,7 +53,7 @@ namespace Entities
 
         private float CalcBrickGenTime()
         {
-            var time = 100f - (float)stage;
+            var time = GenerationTime - (float)stage;
             return time < 20 ? 20 : time;
         }
 
@@ -99,12 +100,7 @@ namespace Entities
 
         private void CreateAnimals()
         {
-            var animalPosList = animalGenerator
-                .Generate(2)
-                .Select(pos => new KeyValuePair<AnimalType, Vector2>(CalcAnimalPercentage(), pos))
-                .ToList();
-
-            AnimalPositions = animalPosList;
+            animalGenerator.Generate(5, maxRow, maxCol, maps: _mapTypes);
         }
 
         public void InstantiateObjects()
@@ -115,18 +111,19 @@ namespace Entities
                 {
                     var mapType = _mapTypes[row, col];
                     if (mapType == MapType.Blank) continue;
-                    var position = new Vector2(startX + col * intervalX, startY + intervalY * col);
+                    var position = new Vector2(startX + col * intervalX, startY + intervalY * row);
                     var prefab = mapType switch
                     {
-                        MapType.Block => _prefab,
-                        MapType.Animal => _prefab,
+                        MapType.Block => _blockPrefab,
+                        MapType.Animal => _animalPrefab,
                         _ => throw new ArgumentOutOfRangeException()
                     };
 
                     //todo set prefab's data to apply random block, animalType
+                    
                     var block = CalcBlockPercentage();
                     var animal = CalcAnimalPercentage();
-
+                    
                     Instantiate(prefab, position, Quaternion.identity);
                 }
             }

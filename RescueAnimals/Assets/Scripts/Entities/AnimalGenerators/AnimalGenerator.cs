@@ -5,5 +5,5 @@ using UnityEngine;
 
 public abstract class AnimalGenerator : ScriptableObject
 {
-    public abstract List<Vector2> Generate(int animalCount);
+    public abstract void Generate(int animalCount, int rows, int cols, MapType[,] maps);
 }

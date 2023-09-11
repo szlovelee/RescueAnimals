@@ -15,7 +15,7 @@ namespace Entities.BlockGenerators
             {
                 for (int j = 0; j < maxCol; j++)
                 {
-                    ret[i, j] = (j & 1) == 0;
+                    ret[i, j] = ((j + i) & 1) == 0;
                 }
             }
 
