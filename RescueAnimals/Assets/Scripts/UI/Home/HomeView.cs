@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using EnumTypes;
 
 public class HomeView : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class HomeView : MonoBehaviour
     public event Action OnRankOpen;
     public event Action OnPlayerOpen;
     public event Action OnPanelClose;
+    public event Action<AnimalType> OnBeagleReinforce;
 
     public GameObject upgradePanel;
     public GameObject rankPanel;
@@ -20,6 +22,11 @@ public class HomeView : MonoBehaviour
     public Text coin;
 
     public GameObject[] panels;
+
+    [Header("Beagle")]
+    public Text beagleLevelText;
+    public Text beaglePriceText;
+    public Text beagleExplanationText;
 
     private void Start()
     {
@@ -29,6 +36,11 @@ public class HomeView : MonoBehaviour
     private void Update()
     {
         coin.text = "2000";  //Retreive information from the GameManager
+    }
+
+    public void CallBeagleReinforce()
+    {
+        OnBeagleReinforce?.Invoke(AnimalType.Beagle);
     }
 
     public void CallGameStartClicked()

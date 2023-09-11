@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "AnimalData")]
 public class AnimalData : ScriptableObject
 {
-    public AnimalReinforce[] AnimalReinforceData;
+    public List<AnimalReinforce> AnimalReinforceData;
 }

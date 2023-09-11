@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07a2d434c21d004bbdd34b166001188, type: 3}
   m_Name: AnimalDatas
   m_EditorClassIdentifier: 
-  Animals: []
+  AnimalReinforceData:
+  - animalType: 1
+    reinforceLevel: 1
