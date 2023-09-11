@@ -7,14 +7,6 @@ namespace Entities.AnimalGenerators
     [CreateAssetMenu(menuName = "AnimalGenerator/NormalAnimalGenerator")]
     public class NormalAnimalGenerator : AnimalGenerator
     {
-        [SerializeField] private Vector2 startPosition = new Vector2(0.2f, 0.4f);
-
-        //todo migrate to scriptable Object BlockSetup -> in manager or !![stage]!!
-        [SerializeField] private float intervalX = 1f;
-
-        [SerializeField] private float intervalY = 1f;
-
-        //
         public override void Generate(int animalCount, int rows, int cols, MapType[,] maps)
         {
             bool[,] isSelected = new bool[rows, cols];
