@@ -12,6 +12,7 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace Entities
 {
+    //확인좀 부탁 
     [CreateAssetMenu(menuName = "Stage")]
     public class Stage : ScriptableObject
     {
