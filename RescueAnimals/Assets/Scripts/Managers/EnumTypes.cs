@@ -2,7 +2,6 @@ namespace EnumTypes
 {
     public enum AnimalType
     {
-        None = 0,
         Beagle,
         Dragon,
         Panda,

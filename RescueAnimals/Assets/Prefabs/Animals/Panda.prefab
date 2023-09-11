@@ -94,6 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7977647607789404399}
   - component: {fileID: 826284623007253262}
+  - component: {fileID: 3523107788309090226}
   m_Layer: 0
   m_Name: Panda
   m_TagString: Untagged
@@ -110,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 1942674578692393687}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 865762965174757737}
@@ -138,3 +139,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3523107788309090226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942674578692393687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8052ad54bdfb0c34bbc94a1b5923ef31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animalType: 0
+  reinforceLevel: 0

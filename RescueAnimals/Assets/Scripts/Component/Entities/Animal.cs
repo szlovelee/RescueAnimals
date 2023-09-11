@@ -1,10 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EnumTypes;
+using Util;
 
-public class Animal : MonoBehaviour
+public class Animal : MonoBehaviour, IPoolable<Animal>
 {
     public AnimalType animalType;
     public int reinforceLevel;
+    private Action<Animal> _returnAction;
+
+    public void Initialize(Action<Animal> returnAction)
+    {
+        _returnAction = returnAction;
+    }
+
+    public void ReturnToPool()
+    {
+        _returnAction?.Invoke(this);
+    }
 }
