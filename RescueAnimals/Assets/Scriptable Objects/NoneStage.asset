@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   intervalX: 0.5
   intervalY: -0.3
-  GenerationTime: 100
+  startPosition: {x: -1.7, y: 2.5}
+  generationTime: 100
   maxRow: 8
   maxCol: 8
   blockGenerator: {fileID: 11400000, guid: ab8118850d59c4affad6b825704d7554, type: 2}

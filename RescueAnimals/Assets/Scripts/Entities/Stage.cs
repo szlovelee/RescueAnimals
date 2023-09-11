@@ -5,6 +5,7 @@ using Entities.BlockGenerators;
 using EnumTypes;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Entities
@@ -15,10 +16,8 @@ namespace Entities
         [SerializeField] private float intervalX = 1f;
         [SerializeField] private float intervalY = -0.3f;
 
-        private float startX = -1.5f;
-        private float startY = 4f;
-
-        [SerializeField] private float GenerationTime = 100f;
+        private Vector2 _startPosition = new(-1.7f, 2.5f);
+        [SerializeField] private float generationTime = 100f;
         [SerializeField] private int maxRow = 8;
         [SerializeField] private int maxCol = 8;
 
@@ -42,7 +41,7 @@ namespace Entities
         public StageType stage = StageType.None;
         public float BricksGenTime => CalcBrickGenTime();
 
-        public bool IsClear => AnimalPositions.Count <= 0;
+        public bool IsStageOver => AnimalPositions.Count <= 0;
 
         private void OnEnable()
         {
@@ -53,7 +52,7 @@ namespace Entities
 
         private float CalcBrickGenTime()
         {
-            var time = GenerationTime - (float)stage;
+            var time = generationTime - (float)stage;
             return time < 20 ? 20 : time;
         }
 
@@ -111,7 +110,10 @@ namespace Entities
                 {
                     var mapType = _mapTypes[row, col];
                     if (mapType == MapType.Blank) continue;
-                    var position = new Vector2(startX + col * intervalX, startY + intervalY * row);
+                    var position = new Vector2(
+                        x: _startPosition.x + col * intervalX,
+                        y: _startPosition.y + intervalY * row);
+
                     var prefab = mapType switch
                     {
                         MapType.Block => _blockPrefab,
@@ -120,13 +122,19 @@ namespace Entities
                     };
 
                     //todo set prefab's data to apply random block, animalType
-                    
+
                     var block = CalcBlockPercentage();
                     var animal = CalcAnimalPercentage();
-                    
+
                     Instantiate(prefab, position, Quaternion.identity);
                 }
             }
         }
+
+        public void SetStartPosition(Vector2 startPosition)
+        {
+            _startPosition = startPosition;
+        }
+        //todo to manipulate retry make function that clear and init  
     }
 }
