@@ -16,8 +16,8 @@ namespace Entities.AnimalGenerators
                 int col;
                 do
                 {
-                    row = Random.Range(0, 8);
-                    col = Random.Range(0, 8);
+                    row = Random.Range(0, rows);
+                    col = Random.Range(0, cols);
                 } while (isSelected[row, col] || maps[row, col] != MapType.Blank);
 
                 isSelected[row, col] = true;
