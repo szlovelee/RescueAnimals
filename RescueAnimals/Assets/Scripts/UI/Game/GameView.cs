@@ -10,8 +10,19 @@ public class GameView : MonoBehaviour
     public event Action OnGameResume;
     public event Action OnGameOver;
     public event Action OnHomeClicked;
+    public event Action OnRestartClicked;
 
-    public void CallGameStart()
+
+    public GameObject PausePanel;
+    public GameObject GameOverPanel;
+    public GameObject GameUI;
+    public GameObject Boost;
+
+    private void Start()
+    {
+        CallGameStart();
+    }
+    void CallGameStart()
     {
         OnGameStart?.Invoke();
     }
@@ -34,5 +45,10 @@ public class GameView : MonoBehaviour
     public void CallHomeClicked()
     {
         OnHomeClicked?.Invoke();
+    }
+
+    public void CallRestartClicked()
+    {
+        OnRestartClicked?.Invoke();
     }
 }
