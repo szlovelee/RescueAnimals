@@ -6,36 +6,39 @@ namespace Util
 {
     public class ObjectPool<T> : IPool<T> where T : MonoBehaviour, IPoolable<T>
     {
-        private Stack<T> _objectPool = new();
+        private Dictionary<int, Stack<T>> _objectPool = new();
         protected List<GameObject> _prefabs;
         public int SelectedIndex;
-        public int PooledCount => _objectPool.Count;
+
+        public int PooledCount(int idx)
+        {
+            var isValid = _objectPool.TryGetValue(idx, out var stack);
+            return isValid ? stack.Count : 0;
+        }
 
         public T Pull()
         {
             T t;
-            if (PooledCount > 0)
+            if (PooledCount(SelectedIndex) > 0)
             {
-                t = _objectPool.Pop();
+                t = _objectPool[SelectedIndex].Pop();
             }
             else
             {
                 t = GameObject.Instantiate(_prefabs[SelectedIndex]).GetComponent<T>();
             }
-            
+
             t.gameObject.SetActive(true);
-            t.Initialize(Push);
-
-
+            t.Initialize(r => Push(r, SelectedIndex));
             return t;
         }
-        
+
         public T Pull(int selectedIndex, Vector2 position, Quaternion rotation)
         {
             T t;
-            if (PooledCount > 0)
+            if (PooledCount(selectedIndex) > 0)
             {
-                t = _objectPool.Pop();
+                t = _objectPool[selectedIndex].Pop();
             }
             else
             {
@@ -46,20 +49,24 @@ namespace Util
             transform.localPosition = position;
             transform.localRotation = rotation;
             t.gameObject.SetActive(true);
-            t.Initialize(Push);
-
-
+            t.Initialize(v => { Push(v, selectedIndex); });
             return t;
         }
 
-        
+
         public void Push(T obj)
         {
-            _objectPool.Push(obj);
+            _objectPool[SelectedIndex].Push(obj);
             obj.gameObject.SetActive(false);
         }
 
-        public ObjectPool(List<GameObject> prefabs)
+        public void Push(T obj, int selectedIndex)
+        {
+            SelectedIndex = selectedIndex;
+            Push(obj);
+        }
+
+        public ObjectPool(List<GameObject> prefabs, int spawnNum = 0)
         {
             _prefabs = prefabs;
         }
