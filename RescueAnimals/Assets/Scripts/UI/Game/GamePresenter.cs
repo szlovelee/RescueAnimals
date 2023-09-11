@@ -34,12 +34,14 @@ public class GamePresenter : MonoBehaviour
     {
         // pause logic
         ActivateUIElement(_view.PausePanel);
+        SoundManager.instance.PauseBGM();
     }
 
     void ResumeGame()
     {
         // resume logic
         DeactivateUIElement(_view.PausePanel);
+        SoundManager.instance.ResumeBGM();
     }
 
     void OpenGameOverPanel()
@@ -60,16 +62,19 @@ public class GamePresenter : MonoBehaviour
     void ActivateUIElement(GameObject obj)
     {
         obj.SetActive(true);
+        SoundManager.instance.PlayClickEffect();
     }
 
     void DeactivateUIElement(GameObject obj)
     {
         obj.SetActive(false);
+        SoundManager.instance.PlayReturnEffect();
     }
 
     void LoadTargetScene(string sceneName)
     {
         StartCoroutine(LoadTargetSceneAsync(sceneName));
+        SoundManager.instance.PlayAcceptEffect();
     }
 
     private IEnumerator LoadTargetSceneAsync(string sceneName)

@@ -19,6 +19,7 @@ namespace UI.Intro
         {
             //TODO when added character and selectable them, add logic to select character
             StartCoroutine(LoadHomeSceneAsync());
+            SoundManager.instance.PlayAcceptEffect();
         }
 
         private void ExitClicked()

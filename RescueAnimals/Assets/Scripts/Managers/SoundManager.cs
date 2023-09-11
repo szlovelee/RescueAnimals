@@ -18,7 +18,8 @@ public class SoundManager : MonoBehaviour
 
 
 
-    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource bgmAudioSource;
+    [SerializeField] private AudioSource effectAudioSource;
 
     private void Awake()
     {
@@ -37,22 +38,32 @@ public class SoundManager : MonoBehaviour
 
     public void PlayClickEffect()
     {
-        audioSource.PlayOneShot(errorEffect);
+        effectAudioSource.PlayOneShot(clickEffect);
     }
 
     public void PlayReturnEffect()
     {
-        audioSource.PlayOneShot(returnEffect);
+        effectAudioSource.PlayOneShot(returnEffect);
     }
 
     public void PlayAcceptEffect()
     {
-        audioSource.PlayOneShot(acceptEffect);
+        effectAudioSource.PlayOneShot(acceptEffect);
     }
 
     public void PlayErrorEffect()
     {
-        audioSource.PlayOneShot(errorEffect);
+        effectAudioSource.PlayOneShot(errorEffect);
+    }
+
+    public void PauseBGM()
+    {
+        bgmAudioSource.Pause();
+    }
+
+    public void ResumeBGM()
+    {
+        bgmAudioSource.Play();
     }
 
     private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode loadSceneMode)
@@ -67,7 +78,7 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            if (audioSource.clip != BGM_Home)
+            if (bgmAudioSource.clip != BGM_Home)
             {
                 BgmPlay(BGM_Home);
             }
@@ -76,9 +87,9 @@ public class SoundManager : MonoBehaviour
 
     private void BgmPlay(AudioClip clip)
     {
-        audioSource.clip = clip;
-        audioSource.loop = true;
-        audioSource.volume = 0.5f;
-        audioSource.Play();
+        bgmAudioSource.clip = clip;
+        bgmAudioSource.loop = true;
+        bgmAudioSource.volume = 0.5f;
+        bgmAudioSource.Play();
     }
 }
