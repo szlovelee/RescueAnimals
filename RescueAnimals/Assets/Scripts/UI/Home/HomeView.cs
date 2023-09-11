@@ -2,40 +2,57 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HomeView : MonoBehaviour
 {
     public event Action OnGameStartClicked;
     public event Action OnUpgradePanelControl;
     public event Action OnRankPanelControl;
+    public event Action OnUpgradeOpen;
+    public event Action OnRankOpen;
+    public event Action OnPlayerOpen;
+    public event Action OnPanelClose;
 
     public GameObject upgradePanel;
     public GameObject rankPanel;
+    public GameObject playerPanel;
+    public Text coin;
+
+    public GameObject[] panels;
+
+    private void Start()
+    {
+        panels = new GameObject[] { upgradePanel, rankPanel, playerPanel };
+    }
+
+    private void Update()
+    {
+        coin.text = "2000";  //Retreive information from the GameManager
+    }
 
     public void CallGameStartClicked()
     {
         OnGameStartClicked?.Invoke();
     }
 
-    public void UpgradePanelOpen()  // 보통 간단한 UI 작업은 view에서 정의한다고 하길래 일단 여기에 넣어뒀습니다.
+    public void CallUpgradeOpen() 
     {
-        if(rankPanel.activeInHierarchy) rankPanel.SetActive(false);
-        upgradePanel.SetActive(true);
+        OnUpgradeOpen?.Invoke();
     }
 
-    public void UpgradePanelClose()
+    public void CallRankOpen()
     {
-        upgradePanel.SetActive(false);
+        OnRankOpen?.Invoke();
     }
 
-    public void RankPanelOpen()
+    public void CallPlayerOpen()
     {
-        if (upgradePanel.activeInHierarchy) upgradePanel.SetActive(false);
-        rankPanel.SetActive(true);
+        OnPlayerOpen?.Invoke();
     }
 
-    public void RankPanelClose()
+    public void CallPanelsClose()
     {
-        rankPanel.SetActive(false);
+        OnPanelClose?.Invoke();
     }
 }
