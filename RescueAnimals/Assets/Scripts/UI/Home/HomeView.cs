@@ -8,8 +8,6 @@ using EnumTypes;
 public class HomeView : MonoBehaviour
 {
     public event Action OnGameStartClicked;
-    public event Action OnUpgradePanelControl;
-    public event Action OnRankPanelControl;
     public event Action OnUpgradeOpen;
     public event Action OnRankOpen;
     public event Action OnPlayerOpen;

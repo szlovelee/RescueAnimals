@@ -8,16 +8,17 @@ namespace Entities.BlockGenerators
     [CreateAssetMenu(menuName = "BlockGenerator/NormalBlockGenerator")]
     public class NormalBlockGenerator : BlockGenerator
     {
-        public override List<Vector2> Generate()
+        public override bool[,] Generate(int maxRow, int maxCol)
         {
-            var ret = new List<Vector2>();
-            for (int i = 0; i < 4; i++)
+            var ret = new bool[maxRow, maxCol];
+            for (int i = 0; i < maxRow; i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < maxCol; j++)
                 {
-                    ret.Add(new Vector2(-1 + j, 3.5f + i * (0.3f)));
+                    ret[i, j] = ((j + i) & 1) == 0;
                 }
             }
+
             return ret;
         }
     }

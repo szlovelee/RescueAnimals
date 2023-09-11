@@ -39,4 +39,12 @@ namespace EnumTypes
         Normal,
         Heart,
     }
+
+    public enum MapType
+    {
+        Blank,
+        Block,
+        Animal
+    }
+    
 }
