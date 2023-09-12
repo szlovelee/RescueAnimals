@@ -46,6 +46,11 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     {
         var attackable = collision.gameObject.GetComponent<IAttackable>();
         if (attackable == null) return;
+
+        // Sound Added
+
+        SoundManager.instance.PlayBallEffectOnCage();
+
         Hp -= attackable.Atk;
         if (Hp <= 0)
         {
