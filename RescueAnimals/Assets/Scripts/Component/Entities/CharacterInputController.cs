@@ -9,9 +9,7 @@ namespace Entities
     {
         private Camera _camera;
         private bool _isPointerOverUI = false;
-        private event Action<Vector2> OnTouchPressEvent;
-        private event Action<Vector2> LookEvent; // todo manager manage this event (calculate in manager) 
-        private event Action HitBallEvent; // todo manager manage this event (calculate in manager)
+        public event Action<Vector2> OnTouchPressEvent;
 
         private void Awake()
         {

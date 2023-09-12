@@ -4,11 +4,12 @@ using Entities;
 using Unity.VisualScripting;
 using UnityEngine;
 
+//todo make IPoolable
 public class Ball : MonoBehaviour, IAttackable
 {
     [SerializeField] private Rigidbody2D BallRd;
     [SerializeField] private Collider2D BallCollider;
-    
+
     [Range(50f, 200f)] public float speed = 100f;
 
     private bool _isPiercing = false;
@@ -18,13 +19,13 @@ public class Ball : MonoBehaviour, IAttackable
     {
         Atk = atk;
     }
-        
+
     void Start()
     {
         var direction = new Vector2(2f, 1f).normalized;
         BallRd.AddForce(direction * speed);
     }
-    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (_isPiercing)
