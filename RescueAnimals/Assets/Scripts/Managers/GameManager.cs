@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
+    [SerializeField] private GameObject playerPrefab;
     private Camera cam;
 
     public event Action OnGameStart;
@@ -45,9 +46,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        OnGameStart += SetGame;
+        SetGame();
         OnStageClear += UpdateStage;
-
         OnBlockBreak += AddBlockPoint;
         OnAnimalRescue += AddAnimalPoint;
     }
@@ -72,10 +72,8 @@ public class GameManager : MonoBehaviour
     private void SetGame()
     {
         score = 0;
-
-        Debug.Log("SetGameCalled");
+        InstantiateCharacter();
         CreateBall();
-
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
@@ -196,5 +194,14 @@ public class GameManager : MonoBehaviour
         gameOverLine = baseY + heights[1] * 0.5f * dy[1] * -1;
 
         Debug.Log("WallCreated");
+    }
+
+    private void InstantiateCharacter()
+    {
+        // var characterType  =  CharacterType.
+        var halfHeight = cam.ViewportToWorldPoint(new Vector2(1, 1)).y;
+        var y = halfHeight * 0.7f * -1;
+        player = Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity)
+            .GetComponent<Player>();
     }
 }

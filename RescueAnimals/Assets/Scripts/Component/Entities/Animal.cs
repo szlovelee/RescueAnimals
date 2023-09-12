@@ -46,19 +46,10 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         var attackable = collision.gameObject.GetComponent<IAttackable>();
         if (attackable == null) return;
         Hp -= attackable.Atk;
-
-        switch (Hp / MaxHp)
+        if (Hp <= 0)
         {
-            case <= 0:
-                //_animator.SetTrigger("0%");
-                onResqueEvent.Invoke();
-                break;
-            case <= 0.33:
-                //_animator.SetTrigger("33%");
-                break;
-            case <= 0.66:
-                //_animator.SetTrigger("66%");
-                break;
+            jailObj.SetActive(false);
+            // gameObject.SetActive(false);
         }
     }
 }

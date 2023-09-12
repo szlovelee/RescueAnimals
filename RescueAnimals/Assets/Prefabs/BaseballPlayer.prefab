@@ -170,7 +170,7 @@ MonoBehaviour:
   BallType: 1
   balls: []
   _ballPrefab: {fileID: 995715049263497212, guid: 3e2e09c054bdb4c9b8c40b337d2ea036, type: 3}
-  animator: {fileID: 0}
+  animator: {fileID: 6992126590800072917}
 --- !u!114 &8076561642329176035
 MonoBehaviour:
   m_ObjectHideFlags: 0
