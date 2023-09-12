@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Util
 {
-    public class Singleton<T> : MonoBehaviour where T : Component
+    public class Singleton<T> : MonoBehaviour where T : UnityEngine.Component
     {
         private static T _instance;
 

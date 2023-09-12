@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Entities;
+using EnumTypes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Util;
@@ -101,6 +104,11 @@ public class GameManager : MonoBehaviour
 
     public void CallGameEnd()
     {
+        if (!DataManager.Instance.IsWrite)
+        {
+            DataManager.Instance.SavePlayer(player);
+        }
+
         OnGameEnd?.Invoke();
     }
 
