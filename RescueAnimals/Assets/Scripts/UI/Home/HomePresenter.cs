@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using EnumTypes;
+using TMPro;
 
 public class HomePresenter : MonoBehaviour
 {
@@ -33,17 +34,28 @@ public class HomePresenter : MonoBehaviour
     {
         foreach(var data in reinforceData.AnimalReinforceData)
         {
-            ShowReinforceState(data.animalType, data.reinforceLevel);
+            ShowReinforceState(data);
         }
     }
 
-    private void ShowReinforceState(AnimalType animalType, int level)
+    private void ShowReinforceState(AnimalReinforce data)
     {
-        switch (animalType)
+        switch (data.animalType)
         {
             case AnimalType.Beagle:
-                _view.beagleLevelText.text = $"레벨 {level}";
-                _view.beagleExplanationText.text = $"공이 {level * 0.2f}초 동안 관통!";
+                _view.beagleNotActivePanel.SetActive(!data.isActive);
+                _view.beagleLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.beagleExplanationText.text = $"공이 {data.reinforceLevel * data.bonusStatRate}초 동안 관통!";
+                break;
+            case AnimalType.Panda:
+                _view.pandaNotActivePanel.SetActive(!data.isActive);
+                _view.pandaLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.pandaExplanationText.text = $"공이 {data.reinforceLevel * data.bonusStatRate}초 동안 관통!";
+                break;
+            case AnimalType.Dragon:
+                _view.dragonNotActivePanel.SetActive(!data.isActive);
+                _view.dragonLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.dragonExplanationText.text = $"공이 {data.reinforceLevel * data.bonusStatRate}초 동안 관통!";
                 break;
         }
     }
@@ -53,7 +65,7 @@ public class HomePresenter : MonoBehaviour
         var data = reinforceData.AnimalReinforceData.Find(x=>x.animalType == animalType);
 
         data.reinforceLevel += 1;
-        ShowReinforceState(data.animalType, data.reinforceLevel);
+        ShowReinforceState(data);
     }
 
     private void LoadGame()
