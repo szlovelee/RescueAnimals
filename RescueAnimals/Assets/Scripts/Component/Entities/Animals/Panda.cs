@@ -9,7 +9,7 @@ public class Panda : Animal, IAnimalBehaviour
     {
         jailObj.SetActive(false);
     }
-    public void OnResqueEffect(Player player)
+    public void OnResqueEffect()
     {
 
     }

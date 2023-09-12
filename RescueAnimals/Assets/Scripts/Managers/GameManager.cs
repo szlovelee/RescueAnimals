@@ -6,6 +6,7 @@ using Util;
 
 public class GameManager : Singleton<GameManager>
 {
+    public Player player;
     public Stage currentStage;
     public int score;
     [SerializeField] private GameObject wallPrefab;
