@@ -12,7 +12,7 @@ public class Dragon : Animal, IAnimalBehaviour
     {
         jailObj.SetActive(false);
     }
-    public void OnResqueEffect(Player player)
+    public void OnResqueEffect()
     {
         //player.balls.°­È­(_reinforceTime);
     }

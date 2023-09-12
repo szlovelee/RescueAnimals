@@ -27,8 +27,8 @@ namespace Entities
 
             var screenPos = value.Get<Vector2>();
             var worldPos = _camera.ScreenToWorldPoint(screenPos);
-            Debug.Log($"screenPos is {screenPos.x}, {screenPos.y}");
-            Debug.Log($"InvokeEvent::({worldPos.x}, {worldPos.y})");
+            //Debug.Log($"screenPos is {screenPos.x}, {screenPos.y}");
+            //Debug.Log($"InvokeEvent::({worldPos.x}, {worldPos.y})");
             OnTouchPressEvent?.Invoke(worldPos);
         }
 

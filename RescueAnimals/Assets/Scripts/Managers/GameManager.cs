@@ -7,6 +7,7 @@ using Util;
 
 public class GameManager : MonoBehaviour
 {
+    public Player player;
     public Stage currentStage;
     public int score;
     public int coin;
