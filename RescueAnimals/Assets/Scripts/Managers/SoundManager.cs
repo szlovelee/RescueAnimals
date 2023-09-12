@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,6 +13,11 @@ public class SoundManager : MonoBehaviour
     public AudioClip acceptEffect;
     public AudioClip errorEffect;
 
+    [SerializeField] private AudioClip ball;
+    [SerializeField] private AudioClip ball_cage;
+    [SerializeField] private AudioClip stageClear;
+    [SerializeField] private AudioClip gameOver;
+
 
 
     [SerializeField] private AudioSource bgmAudioSource;
@@ -27,13 +29,26 @@ public class SoundManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
             Destroy(gameObject);
             return;
         }
+    }
+
+    private void Start()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        if (currentScene.name == "IntroScene")
+        {
+            BgmPlay(BGM_Home);
+        }
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     public void PlayClickEffect()
@@ -60,14 +75,39 @@ public class SoundManager : MonoBehaviour
     {
         bgmAudioSource.Pause();
     }
+    public void StopBGM()
+    {
+        bgmAudioSource.Stop();
+    }
 
     public void ResumeBGM()
     {
         bgmAudioSource.Play();
     }
 
+    public void PlayBallEffect()
+    {
+        effectAudioSource.PlayOneShot(ball);
+    }
+
+    public void PlayBallEffectOnCage()
+    {
+        effectAudioSource.PlayOneShot(ball_cage);
+    }
+
+    public void PlayStageClear()
+    {
+        effectAudioSource.PlayOneShot(stageClear);
+    }
+
+    public void PlayGameOver()
+    {
+        effectAudioSource.PlayOneShot(gameOver);
+    }
+
     private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode loadSceneMode)
     {
+        Debug.Log("OnSceneLoaded");
         if (scene.name == "GameScene")
         {
             BgmPlay(BGM_Game_1);
@@ -91,5 +131,10 @@ public class SoundManager : MonoBehaviour
         bgmAudioSource.loop = true;
         bgmAudioSource.volume = 0.5f;
         bgmAudioSource.Play();
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

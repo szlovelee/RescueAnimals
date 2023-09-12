@@ -7,8 +7,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private int _level;
-    private float _exp;
+    
+    public int level;
+    public float exp;
     public BallType BallType = BallType.Baseball;
 
     //todo make Object pool
@@ -61,17 +62,4 @@ public class Player : MonoBehaviour
     {
         StopAllCoroutines();
     }
-    /*
-     todo migrate to manager
-     *private void InstantiateCharacter()
-    {
-        // var characterType  =  CharacterType.
-        var position = cam.ViewportToWorldPoint(new Vector2(0.5f, 0.15f));
-        position.z = 0;
-        var go = Instantiate(_playerPrefab, position, Quaternion.identity);
-        _player = go.GetComponent<Player>();
-        _player.InstantiateBall();
-    }
-     *
-     */
 }

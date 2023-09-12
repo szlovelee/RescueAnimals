@@ -19,7 +19,7 @@ MonoBehaviour:
   generationTime: 100
   maxRow: 8
   maxCol: 8
-  blockGenerator: {fileID: 11400000, guid: 512c00b935a034ac7b39a1e742cbb7d0, type: 2}
+  blockGenerator: {fileID: 11400000, guid: a8ed15048cc894068b0337cc0eb61e1e, type: 2}
   animalGenerator: {fileID: 11400000, guid: 22cb8ac5ef9004cd7ab9901676ef96a1, type: 2}
   blockGenerators:
   - {fileID: 11400000, guid: a8ed15048cc894068b0337cc0eb61e1e, type: 2}

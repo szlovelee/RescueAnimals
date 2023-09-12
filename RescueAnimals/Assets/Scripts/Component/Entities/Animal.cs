@@ -14,6 +14,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     [SerializeField] private double MaxHp = 10;
     [SerializeField] private double Hp = 10;
     //[SerializeField] private Animator _animator;
+    public GameObject jailObj;
 
     public AnimalType animalType;
     public int reinforceLevel;
@@ -54,6 +55,11 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     {
         var attackable = collision.gameObject.GetComponent<IAttackable>();
         if (attackable == null) return;
+
+        // Sound Added
+
+        SoundManager.instance.PlayBallEffectOnCage();
+
         Hp -= attackable.Atk;
         if (Hp <= 0 && !_isSaved)
         {
