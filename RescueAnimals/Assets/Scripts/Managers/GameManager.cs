@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
     private void CreateBall()
     {
         Vector2 ballPos = new Vector2(0, -3);
-        //ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
         Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
         player.balls.Add(newBall);
     }

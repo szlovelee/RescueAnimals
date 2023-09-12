@@ -49,10 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHp: 10
   Hp: 10
-  _animator: {fileID: 0}
   animalType: 3
   reinforceLevel: 0
-  jailObj: {fileID: 2611822572965229373}
   onResqueEvent:
     m_PersistentCalls:
       m_Calls:
@@ -80,7 +78,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ballPrefab: {fileID: 0}
+  ballPrefab: {fileID: 7321661936805002925, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
 --- !u!61 &663607166513995293
 BoxCollider2D:
   m_ObjectHideFlags: 0
