@@ -12,7 +12,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
 {
     [SerializeField] private double MaxHp = 10;
     [SerializeField] private double Hp = 10;
-    [SerializeField] private Animator _animator;
+    //[SerializeField] private Animator _animator;
 
     public AnimalType animalType;
     public int reinforceLevel;
@@ -51,14 +51,14 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         switch (Hp / MaxHp)
         {
             case <= 0:
-                _animator.SetTrigger("0%");
+                //_animator.SetTrigger("0%");
                 onResqueEvent.Invoke();
                 break;
             case <= 0.33:
-                _animator.SetTrigger("33%");
+                //_animator.SetTrigger("33%");
                 break;
             case <= 0.66:
-                _animator.SetTrigger("66%");
+                //_animator.SetTrigger("66%");
                 break;
         }
     }

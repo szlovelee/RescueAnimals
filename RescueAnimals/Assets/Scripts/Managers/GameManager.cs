@@ -25,9 +25,7 @@ public class GameManager : MonoBehaviour
     public event Action OnScoreAdded;
 
     float ballSpeed = 0f;
-    float gameOverLine = 0f;
-
-    GameObject ball;
+    public float gameOverLine = 0f;
 
     public static GameManager Instance;
 
@@ -58,6 +56,12 @@ public class GameManager : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene();
 
+        if (player.balls.Count == 0 && scene.name == "GameScene")
+        {
+            CallGameEnd();
+        }
+
+        /*
         if (ball != null && scene.name == "GameScene")
         {
             if (ball.transform.position.y <= gameOverLine)
@@ -66,17 +70,22 @@ public class GameManager : MonoBehaviour
                 Destroy(ball);
             }
         }
+        */
     }
 
     private void CreateBall()
     {
+        /*
         if (ball != null)
         {
             Destroy(ball);
         }
+        */
 
         Vector2 ballPos = new Vector2(0, -3);
-        ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
+        //ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
+        Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
+        player.balls.Add(newBall);
     }
 
     private void SetGame()
@@ -90,7 +99,6 @@ public class GameManager : MonoBehaviour
         SetBlockStartPosition();
         currentStage.ResetStage();
         currentStage.InstantiateObjects();
-        Debug.Log(ball);
         score = 0;
     }
 

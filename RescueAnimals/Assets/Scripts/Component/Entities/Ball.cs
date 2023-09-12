@@ -40,6 +40,11 @@ public class Ball : MonoBehaviour, IAttackable
 
     void Update()
     {
+        if(this.transform.position.y <= GameManager.Instance.gameOverLine) {
+            GameManager.Instance.player.balls.Remove(this);
+            Destroy(this);
+        }
+
         if (Input.touchCount > 0)
         {
             Debug.Log(_isShooting);
