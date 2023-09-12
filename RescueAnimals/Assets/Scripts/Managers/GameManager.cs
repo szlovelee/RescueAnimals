@@ -46,9 +46,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        OnGameStart += SetGame;
+        SetGame();
         OnStageClear += UpdateStage;
-
         OnBlockBreak += AddBlockPoint;
         OnAnimalRescue += AddAnimalPoint;
     }
@@ -61,28 +60,10 @@ public class GameManager : MonoBehaviour
         {
             CallGameEnd();
         }
-
-        /*
-        if (ball != null && scene.name == "GameScene")
-        {
-            if (ball.transform.position.y <= gameOverLine)
-            {
-                CallGameEnd();
-                Destroy(ball);
-            }
-        }
-        */
     }
 
     private void CreateBall()
     {
-        /*
-        if (ball != null)
-        {
-            Destroy(ball);
-        }
-        */
-
         Vector2 ballPos = new Vector2(0, -3);
         //ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
         Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
@@ -92,16 +73,12 @@ public class GameManager : MonoBehaviour
     private void SetGame()
     {
         score = 0;
-
-        Debug.Log("SetGameCalled");
+        InstantiateCharacter();
         CreateBall();
-
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
         currentStage.InstantiateObjects();
-        InstantiateCharacter();
-        Debug.Log(ball);
         score = 0;
     }
 
@@ -225,6 +202,7 @@ public class GameManager : MonoBehaviour
         // var characterType  =  CharacterType.
         var halfHeight = cam.ViewportToWorldPoint(new Vector2(1, 1)).y;
         var y = halfHeight * 0.7f * -1;
-        Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity);
+        player = Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity)
+            .GetComponent<Player>();
     }
 }
