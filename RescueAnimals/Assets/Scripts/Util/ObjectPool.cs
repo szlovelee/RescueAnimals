@@ -56,7 +56,13 @@ namespace Util
 
         public void Push(T obj)
         {
-            _objectPool[SelectedIndex].Push(obj);
+            if (!_objectPool.TryGetValue(SelectedIndex, out var stack))
+            {
+                stack = new();
+                _objectPool[SelectedIndex] = stack;
+            }
+
+            stack.Push(obj);
             obj.gameObject.SetActive(false);
         }
 
