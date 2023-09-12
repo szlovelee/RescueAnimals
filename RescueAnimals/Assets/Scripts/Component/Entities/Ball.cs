@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Entities;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Ball : MonoBehaviour
+public class Ball : MonoBehaviour, IAttackable
 {
     [SerializeField] private Rigidbody2D BallRd;
     [SerializeField] private Collider2D BallCollider;
@@ -14,6 +15,11 @@ public class Ball : MonoBehaviour
 
     private bool _isPiercing = false;
     private float _piercingTimer = 0f;
+
+    public Ball(int atk = 1)
+    {
+        Atk = atk;
+    }
 
     private void Awake()
     {
@@ -74,6 +80,7 @@ public class Ball : MonoBehaviour
             BallCollider.isTrigger = false;
             _piercingTimer = 0f;
         }
-
     }
+
+    public int Atk { get; }
 }
