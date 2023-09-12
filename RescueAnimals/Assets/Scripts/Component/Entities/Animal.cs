@@ -9,6 +9,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
 {
     public AnimalType animalType;
     public int reinforceLevel;
+    public GameObject jailObj;
 
     public void SetAnimalReinforceLevel(int level)
     {

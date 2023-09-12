@@ -15,6 +15,8 @@ namespace Entities
     {
         public int stageNum = 1;
 
+        [SerializeField] private AnimalData animalData;
+
         [SerializeField] private float intervalX = 1f;
         [SerializeField] private float intervalY = -0.3f;
 
@@ -155,6 +157,7 @@ namespace Entities
                             _animalPool.SelectedIndex = selectedIdx;
                             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
                             instantiatedObjects.Add(newAnimal.gameObject);
+                            SetAnimalReinforceState(_animalPool.Pull(selectedIdx, position, Quaternion.identity));
                             break;
                     }
 
@@ -180,6 +183,13 @@ namespace Entities
             AnimalGenerator animalGen = animalGenerator; // temp
 
             ChangePattern(blockGen, animalGen);
+        }
+
+        private void SetAnimalReinforceState(Animal animal)
+        {
+            AnimalReinforce data = animalData.AnimalReinforceData.Find(x=>x.animalType == animal.animalType);
+
+            animal.reinforceLevel = data.reinforceLevel;
         }
 
         public void SetStartPosition(Vector2 startPosition)

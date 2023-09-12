@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animalType: 2
   reinforceLevel: 0
+  jailObj: {fileID: 2904408813000938979}
 --- !u!1 &2904408813000938979
 GameObject:
   m_ObjectHideFlags: 0
