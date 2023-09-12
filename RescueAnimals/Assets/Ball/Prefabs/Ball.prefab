@@ -101,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BallRd: {fileID: 0}
+  BallCollider: {fileID: 0}
   speed: 200
 --- !u!58 &939229430747075610
 CircleCollider2D:
