@@ -3716,7 +3716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStage: {fileID: 11400000, guid: bdbeb16d10d3349a382039428b1d2c7d, type: 2}
   score: 0
-  wallPrefab: {fileID: 0}
+  wallPrefab: {fileID: 7218572055491127341, guid: a435f62d4e8684e5c8ae4f9fbcc2c939, type: 3}
 --- !u!4 &1070558929
 Transform:
   m_ObjectHideFlags: 0
@@ -4613,7 +4613,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2081439164311315529, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 2081439164311315529, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4662,6 +4662,22 @@ PrefabInstance:
     - target: {fileID: 3093811770252103605, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
       propertyPath: m_CollisionDetection
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3923070933175635176, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3994515342574773751, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229445937952378072, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090247411242937806, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7321661936805002925, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
       propertyPath: BallRd
