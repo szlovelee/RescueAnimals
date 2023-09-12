@@ -22,6 +22,7 @@ public class GamePresenter : MonoBehaviour
         GameManager.Instance.OnGameEnd += GameOver;
         GameManager.Instance.OnScoreAdded += UpdateScoreUI;
         GameManager.Instance.OnScoreAdded += UpdateCoinUI;
+        GameManager.Instance.OnStageClear += StageClearUI;
 
     }
 
@@ -53,6 +54,8 @@ public class GamePresenter : MonoBehaviour
 
     void OpenGameOverPanel()
     {
+        _view.FinalScoreTxt.text = GameManager.Instance.score.ToString();
+        _view.FinalCoinTxt.text = GameManager.Instance.coin.ToString();
         ActivateUIElement(_view.GameOverPanel);
     }
 
@@ -74,6 +77,12 @@ public class GamePresenter : MonoBehaviour
     void UpdateCoinUI()
     {
         _view.CoinTxt.text = GameManager.Instance.coin.ToString();
+    }
+
+    void StageClearUI()
+    {
+        _view.StageTxt.text = string.Format($"stage {GameManager.Instance.currentStage.stageNum}");
+        StartCoroutine(PauseRoutine(3f));
     }
 
     void ActivateUIElement(GameObject obj)
@@ -101,6 +110,50 @@ public class GamePresenter : MonoBehaviour
         {
             yield return null;
         }
+    }
+
+    private IEnumerator PauseRoutine(float duration)
+    {
+        GameManager.Instance.currentStage.ClearMap();
+        GameManager.Instance.GamePause();
+
+        DeactivateUIElement(_view.GameUI);
+
+        ActivateUIElement(_view.ClearMessage);
+
+        StartCoroutine(BlinkTextRoutine(duration));
+
+        // duration 동안 대기
+        float pauseEndTime = Time.realtimeSinceStartup + duration;
+        while (Time.realtimeSinceStartup < pauseEndTime)
+        {
+            yield return null;
+        }
+
+        ActivateUIElement(_view.GameUI);
+        DeactivateUIElement(_view.ClearMessage);
+
+        GameManager.Instance.GameResume();
+        GameManager.Instance.currentStage.InstantiateObjects();
+
+    }
+    private IEnumerator BlinkTextRoutine(float duration)
+    {
+        Color32 clearColor = new Color32(21, 217, 171, 0);
+        Color32 defaultColor = new Color32(21, 217, 171, 225);
+        float elapsedTime = 0;
+
+        while (elapsedTime < duration)
+        {
+            _view.NextMessage.color = defaultColor;
+            yield return new WaitForSecondsRealtime(0.5f);
+            _view.NextMessage.color = clearColor;
+            yield return new WaitForSecondsRealtime(0.5f);
+
+            elapsedTime += 1.0f;
+        }
+
+        _view.NextMessage.color = clearColor;   //  원래 컬러로 복구
     }
 
 }

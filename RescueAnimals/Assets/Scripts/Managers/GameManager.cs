@@ -47,8 +47,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        OnGameStart += SetGame;
-        OnStageClear += UpdateStage;
+        score = 0;
+
+        SetGame();
 
         OnBlockBreak += AddBlockPoint;
         OnAnimalRescue += AddAnimalPoint;
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
             if (ball.transform.position.y < -3.5f) 
             { 
                 CallGameEnd();
+                currentStage.ClearMap();
                 Destroy(ball);
             }
         }
@@ -80,8 +82,6 @@ public class GameManager : MonoBehaviour
     }
     private void SetGame()
     {
-        score = 0;
-
         Debug.Log("SetGameCalled");
         CreateBall();
 
@@ -123,17 +123,17 @@ public class GameManager : MonoBehaviour
         OnScoreAdded?.Invoke();
     }
 
-
-    private void UpdateStage()
-    {
-        currentStage.InstantiateObjects();
-    }
-
     private void AddBlockPoint()
     {
         score += 10;
         coin += 2;
         CallScoreAdded();
+
+        if (score >= currentStage.stageNum * 20)
+        {
+            currentStage.UpdateStageSettings();
+            CallStageClear();
+        }
     }
 
     private void AddAnimalPoint()
