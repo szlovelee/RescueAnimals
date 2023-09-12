@@ -29,6 +29,7 @@ public class Retreiver : Animal, IAnimalBehaviour
         {
             Ball newBall = Instantiate(ballPrefab);
             newBall.transform.position = this.transform.position;
+            newBall.SetBonusBall();
 
             newBalls.Add(newBall);
         }
