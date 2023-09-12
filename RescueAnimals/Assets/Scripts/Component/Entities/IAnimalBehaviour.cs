@@ -5,5 +5,5 @@ using UnityEngine;
 public interface IAnimalBehaviour
 {
     void OnResqueMove();
-    void OnResqueEffect(Player player);
+    void OnResqueEffect();
 }

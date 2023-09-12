@@ -66,7 +66,7 @@ public class Ball : MonoBehaviour, IAttackable
                     ballDir = ((Vector2)transform.position - touchPos).normalized;
                     BallRd.AddForce(ballDir * speed);
                     ThrowPivot.SetActive(false);
-                    //_isShooting = false;
+                    _isShooting = false;
                 }
             }
         }

@@ -4,12 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using EnumTypes;
 using Util;
+using UnityEngine.Events;
+using Entities;
+using Unity.Mathematics;
 
 public class Animal : MonoBehaviour, IPoolable<Animal>
 {
+    [SerializeField] private double MaxHp = 10;
+    [SerializeField] private double Hp = 10;
+    [SerializeField] private Animator _animator;
+
     public AnimalType animalType;
     public int reinforceLevel;
     public GameObject jailObj;
+
+    public UnityEvent onResqueEvent;
 
     public void SetAnimalReinforceLevel(int level)
     {
@@ -31,5 +40,26 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     private void OnDisable()
     {
         ReturnToPool();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        var attackable = collision as IAttackable;
+        if (attackable == null) return;
+        Hp -= attackable.Atk;
+
+        switch (Hp / MaxHp)
+        {
+            case <= 0:
+                _animator.SetTrigger("0%");
+                onResqueEvent.Invoke();
+                break;
+            case <= 0.33:
+                _animator.SetTrigger("33%");
+                break;
+            case <= 0.66:
+                _animator.SetTrigger("66%");
+                break;
+        }
     }
 }
