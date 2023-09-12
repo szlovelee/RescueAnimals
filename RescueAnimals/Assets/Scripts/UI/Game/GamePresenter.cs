@@ -28,6 +28,7 @@ public class GamePresenter : MonoBehaviour
     {
         ActivateUIElement(_view.GameUI);
         if (true) ActivateUIElement(_view.Boost); // additional condition for boost needed;
+        GameManager.Instance.CallGameStart();
     }
 
     void PauseGame()

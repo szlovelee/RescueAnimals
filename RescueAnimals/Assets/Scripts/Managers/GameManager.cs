@@ -9,23 +9,105 @@ public class GameManager : Singleton<GameManager>
     public Stage currentStage;
     public int score;
     [SerializeField] private GameObject wallPrefab;
+    [SerializeField] private GameObject ballPrefab;
     private Camera cam;
 
-    public void ChangeStage(Stage stage)
-    {
-        currentStage = stage;
-    }
+    public event Action OnGameStart;
+    public event Action OnStageClear;
+    public event Action OnBlockBreak;
+    public event Action OnAnimalRescue;
+    public event Action OnGameEnd;
+
+    float ballSpeed = 0f;
+    float gameOverLine = 0f;
+
+    GameObject ball;
 
     private void Awake()
     {
         cam = Camera.main;
-    }
 
-    private void Start()
-    {
+        OnGameStart += SetGame;
+        OnStageClear += UpdateStage;
+
         MakeWalls();
         SetBlockStartPosition();
+
+
+        OnBlockBreak += AddBlockPoint;
+        OnAnimalRescue += AddAnimalPoint;
+    }
+
+    //private void Start()
+    //{
+    //    OnGameStart += SetGame;
+    //    OnStageClear += UpdateStage;
+
+    //    MakeWalls();
+    //    SetBlockStartPosition();
+
+
+    //    OnBlockBreak += AddBlockPoint;
+    //    OnAnimalRescue += AddAnimalPoint;
+    //}
+
+    private void SetGame()
+    {
+        Debug.Log("SetGame Called.");
+
+        if (ball!= null)
+        {
+            Destroy(ball);
+        }
+
+        Vector2 ballPos = new Vector2(0, -3);
+        ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
+
+        currentStage.ResetStage();
         currentStage.InstantiateObjects();
+        Debug.Log(ball);
+        score = 0;
+
+    }
+
+    public void CallGameStart()
+    {
+        OnGameStart?.Invoke();
+    }
+
+    public void CallStageClear()
+    {
+        OnStageClear?.Invoke();
+    }
+
+    public void CallBlockBreak()
+    {
+        OnBlockBreak?.Invoke();
+    }
+
+    public void CallAnimalRescue()
+    {
+        OnAnimalRescue?.Invoke();
+    }
+
+    public void CallGameEnd()
+    {
+        OnGameEnd?.Invoke();
+    }
+
+    private void UpdateStage()
+    {
+        currentStage.InstantiateObjects();
+    }
+
+    private void AddBlockPoint()
+    {
+        score += 10;
+    }
+
+    private void AddAnimalPoint()
+    {
+        score += 50;
     }
 
     private void SetBlockStartPosition()
@@ -43,6 +125,7 @@ public class GameManager : Singleton<GameManager>
             currentStage.SetStartPosition(startPosition);
         }
     }
+
 
     private void MakeWalls()
     {
@@ -74,5 +157,9 @@ public class GameManager : Singleton<GameManager>
             var go = Instantiate(wallPrefab, position, Quaternion.identity);
             go.transform.localScale = new Vector2(widths[i], heights[i]);
         }
+
+        float baseY = startYList[1];
+        float offsetY = heights[1] * 0.5f * dy[1];
+        gameOverLine = baseY + offsetY;
     }
 }
