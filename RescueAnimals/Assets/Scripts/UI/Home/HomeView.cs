@@ -13,6 +13,8 @@ public class HomeView : MonoBehaviour
     public event Action OnPlayerOpen;
     public event Action OnPanelClose;
     public event Action<AnimalType> OnBeagleReinforce;
+    public event Action<AnimalType> OnPandaReinforce;
+    public event Action<AnimalType> OnDragonReinforce;
 
     public GameObject upgradePanel;
     public GameObject rankPanel;
@@ -25,6 +27,19 @@ public class HomeView : MonoBehaviour
     public Text beagleLevelText;
     public Text beaglePriceText;
     public Text beagleExplanationText;
+    public GameObject beagleNotActivePanel;
+
+    [Header("Panda")]
+    public Text pandaLevelText;
+    public Text pandaPriceText;
+    public Text pandaExplanationText;
+    public GameObject pandaNotActivePanel;
+
+    [Header("Dragon")]
+    public Text dragonLevelText;
+    public Text dragonPriceText;
+    public Text dragonExplanationText;
+    public GameObject dragonNotActivePanel;
 
     private void Start()
     {
@@ -39,6 +54,16 @@ public class HomeView : MonoBehaviour
     public void CallBeagleReinforce()
     {
         OnBeagleReinforce?.Invoke(AnimalType.Beagle);
+    }
+
+    public void CallPandaReinforce()
+    {
+        OnBeagleReinforce?.Invoke(AnimalType.Panda);
+    }
+
+    public void CallDragonReinforce()
+    {
+        OnBeagleReinforce?.Invoke(AnimalType.Dragon);
     }
 
     public void CallGameStartClicked()
