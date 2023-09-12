@@ -18,7 +18,7 @@ MonoBehaviour:
   maxRow: 6
   maxCol: 8
   blockGenerator: {fileID: 11400000, guid: ab8118850d59c4affad6b825704d7554, type: 2}
-  animalGenerator: {fileID: 11400000, guid: b1cc9e805f69b478691e4eb4fbe479e0, type: 2}
+  animalGenerator: {fileID: 11400000, guid: 7884b5c440227447c96f4605fa4b1d69, type: 2}
   blockPrefabs:
   - {fileID: 4222917890701272065, guid: 41865b16c3659ef4c9361794269f9444, type: 3}
   animalPrefabs:
