@@ -105,7 +105,7 @@ MonoBehaviour:
   BallCollider: {fileID: 0}
   ThrowPivot: {fileID: 0}
   ThrowPoint: {fileID: 0}
-  BallParticle: {fileID: 0}
+  BallParticle: {fileID: 5024009746357069192, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   speed: 200
   _isShooting: 1
 --- !u!58 &939229430747075610

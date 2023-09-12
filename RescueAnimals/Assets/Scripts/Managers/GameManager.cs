@@ -60,8 +60,8 @@ public class GameManager : MonoBehaviour
 
         if (ball != null && scene.name == "GameScene")
         {
-            if (ball.transform.position.y < -3.5f) 
-            { 
+            if (ball.transform.position.y <= gameOverLine)
+            {
                 CallGameEnd();
                 Destroy(ball);
             }
@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         Vector2 ballPos = new Vector2(0, -3);
         ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
     }
+
     private void SetGame()
     {
         score = 0;
@@ -203,8 +204,7 @@ public class GameManager : MonoBehaviour
         }
 
         float baseY = startYList[1];
-        float offsetY = heights[1] * 0.5f * dy[1];
-        gameOverLine = baseY + offsetY;
+        gameOverLine = baseY + heights[1] * 0.5f * dy[1] * -1;
 
         Debug.Log("WallCreated");
     }
