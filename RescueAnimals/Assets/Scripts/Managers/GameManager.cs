@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
+    [SerializeField] private GameObject playerPrefab;
     private Camera cam;
 
     public event Action OnGameStart;
@@ -25,9 +26,7 @@ public class GameManager : MonoBehaviour
     public event Action OnScoreAdded;
 
     float ballSpeed = 0f;
-    float gameOverLine = 0f;
-
-    GameObject ball;
+    public float gameOverLine = 0f;
 
     public static GameManager Instance;
 
@@ -59,37 +58,28 @@ public class GameManager : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene();
 
-        if (ball != null && scene.name == "GameScene")
+        if (player.balls.Count == 0 && scene.name == "GameScene")
         {
-            if (ball.transform.position.y < -3.5f) 
-            { 
-                CallGameEnd();
-                currentStage.ClearMap();
-                Destroy(ball);
-            }
+            CallGameEnd();
         }
     }
 
     private void CreateBall()
     {
-        if (ball != null)
-        {
-            Destroy(ball);
-        }
-
         Vector2 ballPos = new Vector2(0, -3);
-        ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
+        Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
+        player.balls.Add(newBall);
     }
+
     private void SetGame()
     {
-        Debug.Log("SetGameCalled");
+        score = 0;
+        InstantiateCharacter();
         CreateBall();
-
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
         currentStage.InstantiateObjects();
-        Debug.Log(ball);
         score = 0;
     }
 
@@ -203,9 +193,17 @@ public class GameManager : MonoBehaviour
         }
 
         float baseY = startYList[1];
-        float offsetY = heights[1] * 0.5f * dy[1];
-        gameOverLine = baseY + offsetY;
+        gameOverLine = baseY + heights[1] * 0.5f * dy[1] * -1;
 
         Debug.Log("WallCreated");
+    }
+
+    private void InstantiateCharacter()
+    {
+        // var characterType  =  CharacterType.
+        var halfHeight = cam.ViewportToWorldPoint(new Vector2(1, 1)).y;
+        var y = halfHeight * 0.7f * -1;
+        player = Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity)
+            .GetComponent<Player>();
     }
 }

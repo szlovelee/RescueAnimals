@@ -9,7 +9,7 @@ namespace Entities.BlockGenerators
     public class NormalBlockGenerator : BlockGenerator
     {
         [Multiline(12)] public string map;
-
+        public char blankCharacter = '@';
         public override bool[,] Generate(int maxRow, int maxCol)
         {
             var ret = new bool[maxRow, maxCol];
@@ -21,7 +21,7 @@ namespace Entities.BlockGenerators
                     if (i < mapArray.Length &&
                         j < mapArray[i].Length &&
                         mapArray[i][j] != ' ' &&
-                        mapArray[i][j] != '@')
+                        mapArray[i][j] != blankCharacter)
                     {
                         ret[i, j] = true;
                     }

@@ -12,11 +12,10 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
 {
     [SerializeField] private double MaxHp = 10;
     [SerializeField] private double Hp = 10;
-    [SerializeField] private Animator _animator;
+    //[SerializeField] private Animator _animator;
 
     public AnimalType animalType;
     public int reinforceLevel;
-    public GameObject jailObj;
 
     public UnityEvent onResqueEvent;
 
@@ -47,19 +46,10 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         var attackable = collision.gameObject.GetComponent<IAttackable>();
         if (attackable == null) return;
         Hp -= attackable.Atk;
-
-        switch (Hp / MaxHp)
+        if (Hp <= 0)
         {
-            case <= 0:
-                _animator.SetTrigger("0%");
-                onResqueEvent.Invoke();
-                break;
-            case <= 0.33:
-                _animator.SetTrigger("33%");
-                break;
-            case <= 0.66:
-                _animator.SetTrigger("66%");
-                break;
+            jailObj.SetActive(false);
+            // gameObject.SetActive(false);
         }
     }
 }

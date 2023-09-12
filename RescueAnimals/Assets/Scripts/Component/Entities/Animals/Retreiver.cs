@@ -12,11 +12,11 @@ public class Retreiver : Animal, IAnimalBehaviour
     private Ball ballPrefab;
     public void OnResqueMove()
     {
-        jailObj.SetActive(false);
+        this.gameObject.SetActive(false);
     }
     public void OnResqueEffect()
     {
-        CreateNewBall();
+        GameManager.Instance.player.balls.AddRange(CreateNewBall());
         //player.balls.Add(CreateNewBall());
     }
 

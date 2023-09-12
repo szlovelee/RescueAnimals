@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Entities;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
+//todo make IPoolable
 public class Ball : MonoBehaviour, IAttackable
 {
     [SerializeField] private Rigidbody2D BallRd;
@@ -11,7 +14,8 @@ public class Ball : MonoBehaviour, IAttackable
     [SerializeField] private GameObject ThrowPivot;
     [SerializeField] private GameObject ThrowPoint;
     [SerializeField] private ParticleSystem BallParticle;
-    
+
+
     [Range(100f, 400f)] public float speed = 200f;
 
     private bool _isPiercing = false;
@@ -21,6 +25,7 @@ public class Ball : MonoBehaviour, IAttackable
 
     private Touch touch;
     private Vector2 touchPos, ballDir;
+    private Vector2 _prevVelocity;
     private Camera _camera;
 
     public int Atk { get; set; }
@@ -39,6 +44,11 @@ public class Ball : MonoBehaviour, IAttackable
 
     void Update()
     {
+        if(this.transform.position.y <= GameManager.Instance.gameOverLine) {
+            GameManager.Instance.player.balls.Remove(this);
+            Destroy(this);
+        }
+
         if (Input.touchCount > 0)
         {
             Debug.Log(_isShooting);
@@ -48,14 +58,14 @@ public class Ball : MonoBehaviour, IAttackable
                 touch = Input.GetTouch(0);
                 touchPos = new Vector2(_camera.ScreenToWorldPoint(touch.position).x
                     , Mathf.Clamp(_camera.ScreenToWorldPoint(touch.position).y, -5f, (transform.position.y - 0.5f)));
-                float rotZ = Mathf.Atan2(touchPos.y - ThrowPivot.transform.position.y, touchPos.x - ThrowPivot.transform.position.x) * Mathf.Rad2Deg;
+                float rotZ = Mathf.Atan2(touchPos.y - ThrowPivot.transform.position.y,
+                    touchPos.x - ThrowPivot.transform.position.x) * Mathf.Rad2Deg;
                 ThrowPivot.transform.rotation = Quaternion.AngleAxis(rotZ + 90, Vector3.forward);
                 ThrowPoint.transform.position = touchPos;
 
                 if (touch.phase == UnityEngine.TouchPhase.Began)
                 {
                     ThrowPivot.SetActive(true);
-
                 }
                 //if (Input.GetTouch(0).phase == UnityEngine.TouchPhase.Moved)
                 //{
@@ -80,6 +90,13 @@ public class Ball : MonoBehaviour, IAttackable
 
         if (_isPiercing)
             return;
+        
+        if (PreviousVelocityEqualToCurrent(collision.GetContact(0).relativeVelocity))
+        {
+            BallRd.velocity += new Vector2(0, -2f);
+        }
+
+        _prevVelocity = collision.GetContact(0).relativeVelocity;
 
         if (collision.gameObject.tag == "Block")
         {
@@ -114,5 +131,8 @@ public class Ball : MonoBehaviour, IAttackable
         }
     }
 
-    
+    private bool PreviousVelocityEqualToCurrent(Vector2 velocity)
+    {
+        return (_prevVelocity + velocity).magnitude <= 0.5f;
+    }
 }

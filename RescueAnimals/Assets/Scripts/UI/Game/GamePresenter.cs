@@ -88,7 +88,7 @@ public class GamePresenter : MonoBehaviour
     void ActivateUIElement(GameObject obj)
     {
         obj.SetActive(true);
-        SoundManager.instance.PlayClickEffect();
+        SoundManager.instance?.PlayClickEffect();
     }
 
     void DeactivateUIElement(GameObject obj)

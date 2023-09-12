@@ -3711,12 +3711,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fbcb69714d1a4f4d8ea7f6d7d5d0e6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 1253063000}
   currentStage: {fileID: 11400000, guid: bdbeb16d10d3349a382039428b1d2c7d, type: 2}
   score: 0
   coin: 0
   wallPrefab: {fileID: 7218572055491127341, guid: a435f62d4e8684e5c8ae4f9fbcc2c939, type: 3}
   ballPrefab: {fileID: 995715049263497212, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+  gameOverLine: 0
 --- !u!4 &1070558929
 Transform:
   m_ObjectHideFlags: 0
@@ -4258,6 +4259,7 @@ GameObject:
   - component: {fileID: 1253062997}
   - component: {fileID: 1253062999}
   - component: {fileID: 1253062998}
+  - component: {fileID: 1253063000}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -4323,6 +4325,22 @@ MonoBehaviour:
   m_DefaultActionMap: Character
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1253063000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1253062996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60c3683d7fc6d33489c9ec5f50b1bacf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BallType: 1
+  balls: []
+  _ballPrefab: {fileID: 995715049263497212, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+  animator: {fileID: 0}
 --- !u!1 &1300633776
 GameObject:
   m_ObjectHideFlags: 0
