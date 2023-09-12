@@ -29,7 +29,7 @@ public class GamePresenter : MonoBehaviour
     void GameStart()
     {
         ActivateUIElement(_view.GameUI);
-        if (true) ActivateUIElement(_view.Boost); // additional condition for boost needed;
+        //if (true) ActivateUIElement(_view.Boost); // additional condition for boost needed;
         GameManager.Instance.CallGameStart();
     }
 
@@ -54,6 +54,7 @@ public class GamePresenter : MonoBehaviour
 
     void OpenGameOverPanel()
     {
+        Debug.Log("GameOverPanel Called");
         _view.FinalScoreTxt.text = GameManager.Instance.score.ToString();
         _view.FinalCoinTxt.text = GameManager.Instance.coin.ToString();
         ActivateUIElement(_view.GameOverPanel);
@@ -117,8 +118,6 @@ public class GamePresenter : MonoBehaviour
         GameManager.Instance.currentStage.ClearMap();
         GameManager.Instance.GamePause();
 
-        DeactivateUIElement(_view.GameUI);
-
         ActivateUIElement(_view.ClearMessage);
 
         StartCoroutine(BlinkTextRoutine(duration));
@@ -130,11 +129,9 @@ public class GamePresenter : MonoBehaviour
             yield return null;
         }
 
-        ActivateUIElement(_view.GameUI);
         DeactivateUIElement(_view.ClearMessage);
 
-        GameManager.Instance.GameResume();
-        GameManager.Instance.currentStage.InstantiateObjects();
+        GameManager.Instance.StartStage();
 
     }
     private IEnumerator BlinkTextRoutine(float duration)

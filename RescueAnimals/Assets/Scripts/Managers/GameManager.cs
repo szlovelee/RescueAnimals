@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
 
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
+    Vector2 ballPos = new Vector2(0, -3);
+    bool isPlaying = true;
+    int addedScore;
 
     public static GameManager Instance;
 
@@ -46,34 +49,36 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        score = 0;
-
         SetGame();
 
         OnBlockBreak += AddBlockPoint;
         OnAnimalRescue += AddAnimalPoint;
+        OnScoreAdded += ScoreCheck;
+
+        OnGameEnd += ResetBall;
+        OnGameEnd += GamePause;
     }
 
     private void Update()
     {
         Scene scene = SceneManager.GetActiveScene();
 
-        if (player.balls.Count == 0 && scene.name == "GameScene")
+        if (player.balls.Count == 0 && scene.name == "GameScene" && isPlaying)
         {
             CallGameEnd();
+            isPlaying = false;
         }
     }
 
     private void CreateBall()
     {
-        Vector2 ballPos = new Vector2(0, -3);
         Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
         player.balls.Add(newBall);
     }
 
     private void SetGame()
     {
-        score = 0;
+        Time.timeScale = 1f;
         InstantiateCharacter();
         CreateBall();
         MakeWalls();
@@ -81,6 +86,7 @@ public class GameManager : MonoBehaviour
         currentStage.ResetStage();
         currentStage.InstantiateObjects();
         score = 0;
+        isPlaying = true;
     }
 
     public void CallGameStart()
@@ -117,20 +123,42 @@ public class GameManager : MonoBehaviour
     {
         score += 10;
         coin += 2;
+        addedScore += 10;
         CallScoreAdded();
-
-        if (score >= currentStage.stageNum * 20)
-        {
-            currentStage.UpdateStageSettings();
-            CallStageClear();
-        }
     }
 
     private void AddAnimalPoint()
     {
         score += 50;
         coin += 20;
+        addedScore += 50;
         CallScoreAdded();
+    }
+
+    private void ScoreCheck()
+    {
+        if (addedScore > 10 + currentStage.stageNum)    // goal score for stage clear should be set
+        {
+            currentStage.UpdateStageSettings();
+            CallStageClear();
+            ResetBall();
+            addedScore = 0;
+        }
+    }
+
+    private void ResetBall()
+    {
+        while (player.balls.Count > 1) 
+        {
+            Destroy(player.balls[0].gameObject);
+            player.balls.RemoveAt(0);
+        }
+    }
+
+    public void StartStage()
+    {
+        GameResume();
+        currentStage.InstantiateObjects();
     }
 
     public void GamePause()

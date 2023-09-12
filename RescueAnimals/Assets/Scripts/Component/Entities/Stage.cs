@@ -91,7 +91,7 @@ namespace Entities
         {
             stageNum++;
             Debug.Log($"New Stage: {stageNum}");
-            BlockGenerator blockGen = blockGenerators[stageNum - 1];
+            BlockGenerator blockGen = blockGenerators[(stageNum - 1) % blockGenerators.Count];
             // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
             AnimalGenerator animalGen = animalGenerator; // temp
 

@@ -13,6 +13,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     [SerializeField] private double MaxHp = 10;
     [SerializeField] private double Hp = 10;
     //[SerializeField] private Animator _animator;
+    public GameObject jailObj;
 
     public AnimalType animalType;
     public int reinforceLevel;
