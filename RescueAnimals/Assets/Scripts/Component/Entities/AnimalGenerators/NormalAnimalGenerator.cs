@@ -7,7 +7,9 @@ namespace Entities.AnimalGenerators
     [CreateAssetMenu(menuName = "AnimalGenerator/NormalAnimalGenerator")]
     public class NormalAnimalGenerator : AnimalGenerator
     {
-        public override void Generate(int animalCount, int rows, int cols, MapType[,] maps)
+        public int animalCount = 5;
+
+        public override void Generate(int rows, int cols, MapType[,] maps)
         {
             bool[,] isSelected = new bool[rows, cols];
             for (int i = 0; i < animalCount && i < maps.Length; i++)
