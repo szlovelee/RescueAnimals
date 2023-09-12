@@ -20,8 +20,6 @@ public class HomePresenter : MonoBehaviour
 
     private void Start()
     {
-        SetCurrentAnimalReinforceState();
-
         _view.OnGameStartClicked += LoadGame;
         _view.OnUpgradeOpen += UpgradePanelOpen;
         _view.OnRankOpen += RankPanelOpen;
@@ -76,6 +74,7 @@ public class HomePresenter : MonoBehaviour
     
     private void UpgradePanelOpen()
     {
+        SetCurrentAnimalReinforceState();
         ActivatePanel(_view.panels, _view.upgradePanel);
     }
 

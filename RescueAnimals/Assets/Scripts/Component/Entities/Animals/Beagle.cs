@@ -5,7 +5,7 @@ using EnumTypes;
 
 public class Beagle : Animal, IAnimalBehaviour
 {
-    private float _reinforceTime = 3f;
+    public float _reinforceTime = 3f;
 
     public void OnResqueMove()
     {
