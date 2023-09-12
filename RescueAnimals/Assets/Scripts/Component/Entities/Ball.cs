@@ -85,9 +85,10 @@ public class Ball : MonoBehaviour, IAttackable
 
         if (_isPiercing)
             return;
-        if (IsPreviousVelocityScalarEqual(collision.GetContact(0).relativeVelocity))
+        
+        if (PreviousVelocityEqualToCurrent(collision.GetContact(0).relativeVelocity))
         {
-            BallRd.velocity += new Vector2(0, -1f).normalized;
+            BallRd.velocity += new Vector2(0, -2f);
         }
 
         _prevVelocity = collision.GetContact(0).relativeVelocity;
@@ -125,7 +126,7 @@ public class Ball : MonoBehaviour, IAttackable
         }
     }
 
-    private bool IsPreviousVelocityScalarEqual(Vector2 velocity)
+    private bool PreviousVelocityEqualToCurrent(Vector2 velocity)
     {
         return (_prevVelocity + velocity).magnitude <= 0.5f;
     }
