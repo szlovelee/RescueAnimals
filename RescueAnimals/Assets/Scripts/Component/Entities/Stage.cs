@@ -13,6 +13,8 @@ namespace Entities
     [CreateAssetMenu(menuName = "Stage")]
     public class Stage : ScriptableObject
     {
+        public int stageNum = 1;
+
         [SerializeField] private AnimalData animalData;
 
         [SerializeField] private float intervalX = 1f;
@@ -26,17 +28,19 @@ namespace Entities
 
         public static AnimalType[] AnimalTypes = (AnimalType[])Enum.GetValues(typeof(AnimalType));
 
-        public static BlockPattern[] BlockPatterns =
-            (BlockPattern[])Enum.GetValues(typeof(BlockPattern));
-
         public static BlockType[] BlockTypes = (BlockType[])Enum.GetValues(typeof(BlockType));
 
 
         [SerializeField] public BlockGenerator blockGenerator;
         [SerializeField] public AnimalGenerator animalGenerator;
 
+        [SerializeField] private List<BlockGenerator> blockGenerators;
+        [SerializeField] private List<AnimalGenerator> animalGenerators;
+
+
         [SerializeField] private List<GameObject> blockPrefabs;
         [SerializeField] private List<GameObject> animalPrefabs;
+
         private ObjectPool<Animal> _animalPool;
         private ObjectPool<Block> _blockPool;
         public Vector2 BoxScale = new(0.5f, 0.5f);
@@ -44,6 +48,9 @@ namespace Entities
         private MapType[,] _mapTypes;
 
         public StageType stage = StageType.None;
+
+        private List<GameObject> instantiatedObjects = new List<GameObject>();
+
         public float BricksGenTime => CalcBrickGenTime();
 
         public bool IsStageOver => false; // todo : write logic to move next stage
@@ -53,7 +60,7 @@ namespace Entities
             Initialize();
         }
 
-        public void Initialize()
+        private void Initialize()
         {
             _mapTypes = new MapType[maxRow, maxCol];
             _animalPool = new ObjectPool<Animal>(animalPrefabs);
@@ -79,16 +86,31 @@ namespace Entities
             return 0;
         }
 
-        public void ChangePattern(BlockPattern pat, BlockGenerator blockGen, AnimalGenerator animalGen)
+        public void OnClearStage()
+        {
+            // update stage information to move next stage
+            ClearMap();
+            UpdateStageSettings();
+            GameManager.Instance.CallStageClear();
+        }
+
+        public void UpdateStageSettings()
+        {
+            stageNum++;
+
+            BlockGenerator blockGen = blockGenerators[stageNum - 1];
+            // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
+            AnimalGenerator animalGen = animalGenerator; // temp
+
+            ChangePattern(blockGen, animalGen);
+        }
+
+        public void ChangePattern(BlockGenerator blockGen, AnimalGenerator animalGen)
         {
             blockGenerator = blockGen;
             animalGenerator = animalGen;
         }
 
-        public void OnClearStage()
-        {
-            // update stage information to move next stage
-        }
 
         private void CreateBlocks()
         {
@@ -127,18 +149,41 @@ namespace Entities
                         case MapType.Block:
                             //todo calc this index block
                             var idx = CalcBlockPercentage();
-                            _blockPool.Pull(idx, position, Quaternion.identity);
+                            var newBlock = _blockPool.Pull(idx, position, Quaternion.identity);
+                            instantiatedObjects.Add(newBlock.gameObject);
                             break;
                         case MapType.Animal:
                             var selectedIdx = CalcAnimalPercentage();
                             _animalPool.SelectedIndex = selectedIdx;
-                            SetAnimalReinforceState(_animalPool.Pull(selectedIdx, position, Quaternion.identity));
+                            var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
+                            instantiatedObjects.Add(newAnimal.gameObject);
+                            SetAnimalReinforceState(newAnimal);
                             break;
                     }
 
                     //todo set prefab's data to apply random block, animalType
                 }
             }
+        }
+
+
+        private void ClearMap()
+        {
+            foreach (var block in instantiatedObjects)
+            {
+                block.SetActive(false);
+            }
+        }
+
+        public void ResetStage()
+        {
+            Initialize();
+            stageNum = 1;
+            BlockGenerator blockGen = blockGenerators[stageNum - 1];
+            // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
+            AnimalGenerator animalGen = animalGenerator; // temp
+
+            ChangePattern(blockGen, animalGen);
         }
 
         private void SetAnimalReinforceState(Animal animal)

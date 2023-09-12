@@ -37,12 +37,6 @@ namespace EnumTypes
         Diamond
     }
 
-    public enum BlockPattern
-    {
-        Normal,
-        Heart,
-    }
-
     public enum MapType
     {
         Blank,

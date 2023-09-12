@@ -3,8 +3,11 @@ guid: 8fbcb69714d1a4f4d8ea7f6d7d5d0e6d
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
+  defaultReferences:
+  - currentStage: {fileID: 11400000, guid: bdbeb16d10d3349a382039428b1d2c7d, type: 2}
+  - wallPrefab: {fileID: 7218572055491127341, guid: a435f62d4e8684e5c8ae4f9fbcc2c939, type: 3}
+  - ballPrefab: {fileID: 1138692500467565962, guid: 47ebadbc244d021409ccc61785bec576, type: 3}
+  executionOrder: 5
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 
