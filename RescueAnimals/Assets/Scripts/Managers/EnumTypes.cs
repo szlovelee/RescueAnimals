@@ -12,10 +12,14 @@ namespace EnumTypes
 
     public enum BallType
     {
-        None = 0, d, c, g
+        None,
+        Baseball,
+        RugbyBall,
+        SoccerBall
     }
 
-    public enum StageType{
+    public enum StageType
+    {
         None = 1 << 0,
         Mountain = 1 << 1,
         Sea = 1 << 2,
@@ -39,5 +43,4 @@ namespace EnumTypes
         Block,
         Animal
     }
-    
 }

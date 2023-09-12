@@ -4,6 +4,7 @@ using Entities;
 using Unity.VisualScripting;
 using UnityEngine;
 
+//todo make IPoolable
 public class Ball : MonoBehaviour, IAttackable
 {
     [SerializeField] private Rigidbody2D BallRd;
