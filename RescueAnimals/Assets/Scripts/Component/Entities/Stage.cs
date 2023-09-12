@@ -48,8 +48,12 @@ namespace Entities
 
         private void OnEnable()
         {
+            Initialize();
+        }
+
+        public void Initialize()
+        {
             _mapTypes = new MapType[maxRow, maxCol];
-            //command, singleton, object pooling, state (FSM), MVP => 유니티에서 나눠준 자료에 있는 디자인 패턴 
             _animalPool = new ObjectPool<Animal>(animalPrefabs);
             _blockPool = new ObjectPool<Block>(blockPrefabs);
             CreateBlocks();
@@ -100,7 +104,7 @@ namespace Entities
 
         private void CreateAnimals()
         {
-            animalGenerator.Generate(5, maxRow, maxCol, maps: _mapTypes);
+            animalGenerator.Generate( maxRow, maxCol, maps: _mapTypes);
         }
 
         public void InstantiateObjects()
