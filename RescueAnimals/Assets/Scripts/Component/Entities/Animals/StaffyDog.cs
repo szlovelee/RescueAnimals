@@ -9,7 +9,7 @@ public class StaffyDog : Animal, IAnimalBehaviour
 
     public void OnResqueMove()
     {
-        jailObj.SetActive(false);
+        this.gameObject.SetActive(false);
     }
     public void OnResqueEffect()
     {

@@ -60,30 +60,11 @@ public class GameManager : MonoBehaviour
         {
             CallGameEnd();
         }
-
-        /*
-        if (ball != null && scene.name == "GameScene")
-        {
-            if (ball.transform.position.y <= gameOverLine)
-            {
-                CallGameEnd();
-                Destroy(ball);
-            }
-        }
-        */
     }
 
     private void CreateBall()
     {
-        /*
-        if (ball != null)
-        {
-            Destroy(ball);
-        }
-        */
-
         Vector2 ballPos = new Vector2(0, -3);
-        //ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
         Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
         player.balls.Add(newBall);
     }
