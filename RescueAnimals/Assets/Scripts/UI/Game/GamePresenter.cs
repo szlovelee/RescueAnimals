@@ -6,22 +6,23 @@ using UnityEngine.SceneManagement;
 public class GamePresenter : MonoBehaviour
 {
     [SerializeField] private GameObject _viewObj;
-
     GameView _view;
 
     void Awake()
     {
-        _view = _viewObj.GetComponent<GameView>(); 
-    }
+        _view = _viewObj.GetComponent<GameView>();
 
-    void Start()
-    {
         _view.OnGameStart += GameStart;
         _view.OnGamePause += PauseGame;
         _view.OnGameResume += ResumeGame;
         _view.OnGameOver += OpenGameOverPanel;
         _view.OnHomeClicked += ChangeToHomeScene;
         _view.OnRestartClicked += Restart;
+
+        GameManager.Instance.OnGameEnd += GameOver;
+        GameManager.Instance.OnScoreAdded += UpdateScoreUI;
+        GameManager.Instance.OnScoreAdded += UpdateCoinUI;
+
     }
 
     void GameStart()
@@ -31,16 +32,21 @@ public class GamePresenter : MonoBehaviour
         GameManager.Instance.CallGameStart();
     }
 
+    void GameOver()
+    {
+        _view.CallGameOver();
+    }
+
     void PauseGame()
     {
-        // pause logic
+        GameManager.Instance.GamePause();
         ActivateUIElement(_view.PausePanel);
         SoundManager.instance.PauseBGM();
     }
 
     void ResumeGame()
     {
-        // resume logic
+        GameManager.Instance.GameResume();
         DeactivateUIElement(_view.PausePanel);
         SoundManager.instance.ResumeBGM();
     }
@@ -58,6 +64,16 @@ public class GamePresenter : MonoBehaviour
     void ChangeToHomeScene()
     {
         LoadTargetScene("HomeScene");
+    }
+
+    void UpdateScoreUI()
+    {
+        _view.ScoreTxt.text = GameManager.Instance.score.ToString();
+    }
+
+    void UpdateCoinUI()
+    {
+        _view.CoinTxt.text = GameManager.Instance.coin.ToString();
     }
 
     void ActivateUIElement(GameObject obj)

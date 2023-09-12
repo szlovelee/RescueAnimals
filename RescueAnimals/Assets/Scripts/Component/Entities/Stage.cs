@@ -60,7 +60,7 @@ namespace Entities
             Initialize();
         }
 
-        public void Initialize()
+        private void Initialize()
         {
             _mapTypes = new MapType[maxRow, maxCol];
             _animalPool = new ObjectPool<Animal>(animalPrefabs);
@@ -157,7 +157,7 @@ namespace Entities
                             _animalPool.SelectedIndex = selectedIdx;
                             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
                             instantiatedObjects.Add(newAnimal.gameObject);
-                            SetAnimalReinforceState(_animalPool.Pull(selectedIdx, position, Quaternion.identity));
+                            SetAnimalReinforceState(newAnimal);
                             break;
                     }
 
@@ -177,6 +177,7 @@ namespace Entities
 
         public void ResetStage()
         {
+            Initialize();
             stageNum = 1;
             BlockGenerator blockGen = blockGenerators[stageNum - 1];
             // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
