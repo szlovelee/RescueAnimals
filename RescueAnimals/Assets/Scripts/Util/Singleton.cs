@@ -20,7 +20,7 @@ namespace Util
                     var go = new GameObject
                     {
                         name = typeof(T).Name,
-                        hideFlags = HideFlags.HideAndDontSave
+                        // hideFlags = HideFlags.HideAndDontSave
                     };
                     ret = _instance = go.AddComponent<T>();
                 }

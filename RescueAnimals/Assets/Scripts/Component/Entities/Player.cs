@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Entities;
 using EnumTypes;
@@ -8,7 +9,7 @@ public class Player : MonoBehaviour
 {
     private int _level;
     private float _exp;
-    public BallType BallType = BallType.BaseBall;
+    public BallType BallType = BallType.Baseball;
 
     //todo make Object pool
     public List<Ball> balls = new();
@@ -16,9 +17,12 @@ public class Player : MonoBehaviour
     private CharacterInputController _controller;
     private Movement _movement;
     [SerializeField] private GameObject _ballPrefab;
+    [SerializeField] private Animator animator;
+    private static readonly int IsHit = Animator.StringToHash("IsHit");
 
     private void Awake()
     {
+        var i = GameManager.Instance;
         _movement = GetComponent<Movement>();
         _controller = GetComponent<CharacterInputController>();
     }
@@ -40,9 +44,25 @@ public class Player : MonoBehaviour
         var ball = Instantiate(_ballPrefab, transform.position, Quaternion.identity);
         balls.Add(ball.GetComponent<Ball>());
     }
-    
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        animator.SetBool(IsHit, true);
+        StartCoroutine(TransitionToIdle());
+    }
+
+    private IEnumerator TransitionToIdle()
+    {
+        yield return new WaitForSeconds(0.3f);
+        animator.SetBool(IsHit, false);
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
     /*
-     todo migrate to manager 
+     todo migrate to manager
      *private void InstantiateCharacter()
     {
         // var characterType  =  CharacterType.
@@ -52,6 +72,6 @@ public class Player : MonoBehaviour
         _player = go.GetComponent<Player>();
         _player.InstantiateBall();
     }
-     * 
+     *
      */
 }

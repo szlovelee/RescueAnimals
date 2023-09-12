@@ -11,7 +11,7 @@ public class GamePresenter : MonoBehaviour
 
     void Awake()
     {
-        _view = _viewObj.GetComponent<GameView>(); 
+        _view = _viewObj.GetComponent<GameView>();
     }
 
     void Start()
@@ -62,7 +62,7 @@ public class GamePresenter : MonoBehaviour
     void ActivateUIElement(GameObject obj)
     {
         obj.SetActive(true);
-        SoundManager.instance.PlayClickEffect();
+        SoundManager.instance?.PlayClickEffect();
     }
 
     void DeactivateUIElement(GameObject obj)
@@ -85,5 +85,4 @@ public class GamePresenter : MonoBehaviour
             yield return null;
         }
     }
-
 }

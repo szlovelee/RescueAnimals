@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6775292131387368918}
   - component: {fileID: 8695470301389082303}
-  - component: {fileID: 8209723786923752951}
+  - component: {fileID: 6992126590800072917}
   m_Layer: 0
   m_Name: MainSprite
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &8209723786923752951
+--- !u!95 &6992126590800072917
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -115,12 +115,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3780340823074444455}
-  - component: {fileID: 3723560052381871711}
   - component: {fileID: -5667375481856454504}
   - component: {fileID: -4082391097338814837}
   - component: {fileID: 8076561642329176035}
   - component: {fileID: 1795435875386837311}
-  - component: {fileID: 7456597870095511406}
   - component: {fileID: 7240756447556803552}
   m_Layer: 0
   m_Name: BaseballPlayer
@@ -145,27 +143,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &3723560052381871711
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9161968995396019320}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bf527b1b608a44436b6386f8faaa132f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &-5667375481856454504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,6 +170,7 @@ MonoBehaviour:
   BallType: 1
   balls: []
   _ballPrefab: {fileID: 995715049263497212, guid: 3e2e09c054bdb4c9b8c40b337d2ea036, type: 3}
+  animator: {fileID: 0}
 --- !u!114 &8076561642329176035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,21 +246,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8866739, y: 0.8866741}
   m_EdgeRadius: 0
---- !u!114 &7456597870095511406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9161968995396019320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60c3683d7fc6d33489c9ec5f50b1bacf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BallType: 1
-  balls: []
-  _ballPrefab: {fileID: 995715049263497212, guid: 3e2e09c054bdb4c9b8c40b337d2ea036, type: 3}
 --- !u!114 &7240756447556803552
 MonoBehaviour:
   m_ObjectHideFlags: 0
