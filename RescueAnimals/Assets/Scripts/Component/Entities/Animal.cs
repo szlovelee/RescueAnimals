@@ -44,7 +44,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        var attackable = collision as IAttackable;
+        var attackable = collision.gameObject.GetComponent<IAttackable>();
         if (attackable == null) return;
         Hp -= attackable.Atk;
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameView : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class GameView : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject GameUI;
     public GameObject Boost;
+    public Text ScoreTxt;
+    public Text CoinTxt;
 
     private void Start()
     {
@@ -31,6 +34,7 @@ public class GameView : MonoBehaviour
     {
         OnGamePause?.Invoke();
     }
+
 
     public void CallGameResume()
     {

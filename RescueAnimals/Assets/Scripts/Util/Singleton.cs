@@ -20,12 +20,19 @@ namespace Util
                     var go = new GameObject
                     {
                         name = typeof(T).Name,
-                        hideFlags = HideFlags.HideAndDontSave
                     };
                     ret = _instance = go.AddComponent<T>();
                 }
 
                 return ret;
+            }
+        }
+
+        private void Awake()
+        {
+            if (_instance == null)
+            {
+                _instance = GetComponent<T>();
             }
         }
 

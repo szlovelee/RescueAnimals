@@ -2,32 +2,157 @@ using System;
 using System.Drawing;
 using Entities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Util;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoBehaviour
 {
     public Player player;
     public Stage currentStage;
     public int score;
+    public int coin;
+
     [SerializeField] private GameObject wallPrefab;
+    [SerializeField] private GameObject ballPrefab;
     private Camera cam;
 
-    public void ChangeStage(Stage stage)
-    {
-        currentStage = stage;
-    }
+    public event Action OnGameStart;
+    public event Action OnStageClear;
+    public event Action OnGameEnd;
+
+    public event Action OnBlockBreak;
+    public event Action OnAnimalRescue;
+    public event Action OnScoreAdded;
+
+    float ballSpeed = 0f;
+    float gameOverLine = 0f;
+
+    GameObject ball;
+
+    public static GameManager Instance;
 
     private void Awake()
     {
-        cam = Camera.main;
+        if (Instance == null)
+        {
+            Instance = this;
+            cam = Camera.main;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 
     private void Start()
     {
+        OnGameStart += SetGame;
+        OnStageClear += UpdateStage;
+
+        OnBlockBreak += AddBlockPoint;
+        OnAnimalRescue += AddAnimalPoint;
+    }
+
+    private void Update()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+
+        if (ball != null && scene.name == "GameScene")
+        {
+            if (ball.transform.position.y < -3.5f) 
+            { 
+                CallGameEnd();
+                Destroy(ball);
+            }
+        }
+    }
+
+    private void CreateBall()
+    {
+        if (ball != null)
+        {
+            Destroy(ball);
+        }
+
+        Vector2 ballPos = new Vector2(0, -3);
+        ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
+    }
+    private void SetGame()
+    {
+        score = 0;
+
+        Debug.Log("SetGameCalled");
+        CreateBall();
+
         MakeWalls();
         SetBlockStartPosition();
+        currentStage.ResetStage();
+        currentStage.InstantiateObjects();
+        Debug.Log(ball);
+        score = 0;
+    }
+
+    public void CallGameStart()
+    {
+        OnGameStart?.Invoke();
+    }
+
+    public void CallStageClear()
+    {
+        OnStageClear?.Invoke();
+    }
+
+    public void CallGameEnd()
+    {
+        OnGameEnd?.Invoke();
+    }
+
+    public void CallBlockBreak()
+    {
+        OnBlockBreak?.Invoke();
+    }
+
+    public void CallAnimalRescue()
+    {
+        OnAnimalRescue?.Invoke();
+    }
+
+    public void CallScoreAdded()
+    {
+        OnScoreAdded?.Invoke();
+    }
+
+
+    private void UpdateStage()
+    {
         currentStage.InstantiateObjects();
     }
+
+    private void AddBlockPoint()
+    {
+        score += 10;
+        coin += 2;
+        CallScoreAdded();
+    }
+
+    private void AddAnimalPoint()
+    {
+        score += 50;
+        coin += 20;
+        CallScoreAdded();
+    }
+
+    public void GamePause()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void GameResume()
+    {
+        Time.timeScale = 1;
+    }
+
 
     private void SetBlockStartPosition()
     {
@@ -44,6 +169,7 @@ public class GameManager : Singleton<GameManager>
             currentStage.SetStartPosition(startPosition);
         }
     }
+
 
     private void MakeWalls()
     {
@@ -75,5 +201,11 @@ public class GameManager : Singleton<GameManager>
             var go = Instantiate(wallPrefab, position, Quaternion.identity);
             go.transform.localScale = new Vector2(widths[i], heights[i]);
         }
+
+        float baseY = startYList[1];
+        float offsetY = heights[1] * 0.5f * dy[1];
+        gameOverLine = baseY + offsetY;
+
+        Debug.Log("WallCreated");
     }
 }
