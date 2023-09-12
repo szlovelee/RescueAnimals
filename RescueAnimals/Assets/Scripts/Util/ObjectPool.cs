@@ -45,10 +45,10 @@ namespace Util
                 t = GameObject.Instantiate(_prefabs[selectedIndex]).GetComponent<T>();
             }
 
+            t.gameObject.SetActive(true);
             var transform = t.transform;
             transform.localPosition = position;
             transform.localRotation = rotation;
-            t.gameObject.SetActive(true);
             t.Initialize(v => { Push(v, selectedIndex); });
             return t;
         }
@@ -71,10 +71,17 @@ namespace Util
             SelectedIndex = selectedIndex;
             Push(obj);
         }
+        
+        public void Clear()
+        {
+            _objectPool.Clear();
+        }
 
         public ObjectPool(List<GameObject> prefabs, int spawnNum = 0)
         {
             _prefabs = prefabs;
         }
+
+        
     }
 }

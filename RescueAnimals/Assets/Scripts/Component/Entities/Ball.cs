@@ -8,9 +8,7 @@ public class Ball : MonoBehaviour, IAttackable
 {
     [SerializeField] private Rigidbody2D BallRd;
     [SerializeField] private Collider2D BallCollider;
-
-    private Vector2 direction = new Vector2(2, 1).normalized;
-
+    
     [Range(50f, 200f)] public float speed = 100f;
 
     private bool _isPiercing = false;
@@ -20,30 +18,13 @@ public class Ball : MonoBehaviour, IAttackable
     {
         Atk = atk;
     }
-
-    private void Awake()
-    {
-        BallRd = GetComponent<Rigidbody2D>();
-        BallCollider = gameObject.GetComponent<Collider2D>();
-    }
-
+        
     void Start()
     {
+        var direction = new Vector2(2f, 1f).normalized;
         BallRd.AddForce(direction * speed);
     }
-
-    void Update()
-    {
-        //MoveBall();
-    }
-
-    //private void MoveBall()
-    //{
-    //    direction.Normalize();
-    //    direction = direction * speed;
-    //    BallRd.velocity = direction;
-    //}
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (_isPiercing)
