@@ -141,6 +141,7 @@ public class GameManager : MonoBehaviour
         {
             currentStage.UpdateStageSettings();
             CallStageClear();
+            SoundManager.instance.PlayStageClear();
             ResetBall();
             addedScore = 0;
         }

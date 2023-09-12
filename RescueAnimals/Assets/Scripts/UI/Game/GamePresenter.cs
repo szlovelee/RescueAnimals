@@ -42,6 +42,7 @@ public class GamePresenter : MonoBehaviour
     {
         GameManager.Instance.GamePause();
         ActivateUIElement(_view.PausePanel);
+        SoundManager.instance.PlayClickEffect();
         SoundManager.instance.PauseBGM();
     }
 
@@ -49,6 +50,7 @@ public class GamePresenter : MonoBehaviour
     {
         GameManager.Instance.GameResume();
         DeactivateUIElement(_view.PausePanel);
+        SoundManager.instance.PlayReturnEffect();
         SoundManager.instance.ResumeBGM();
     }
 
@@ -58,16 +60,21 @@ public class GamePresenter : MonoBehaviour
         _view.FinalScoreTxt.text = GameManager.Instance.score.ToString();
         _view.FinalCoinTxt.text = GameManager.Instance.coin.ToString();
         ActivateUIElement(_view.GameOverPanel);
+        SoundManager.instance.PlayGameOver();
+        SoundManager.instance.StopBGM();
+
     }
 
     void Restart()
     {
         LoadTargetScene("GameScene");
+        SoundManager.instance.PlayAcceptEffect();
     }
 
     void ChangeToHomeScene()
     {
         LoadTargetScene("HomeScene");
+        SoundManager.instance.PlayAcceptEffect();
     }
 
     void UpdateScoreUI()
@@ -89,13 +96,11 @@ public class GamePresenter : MonoBehaviour
     void ActivateUIElement(GameObject obj)
     {
         obj.SetActive(true);
-        SoundManager.instance?.PlayClickEffect();
     }
 
     void DeactivateUIElement(GameObject obj)
     {
         obj.SetActive(false);
-        SoundManager.instance.PlayReturnEffect();
     }
 
     void LoadTargetScene(string sceneName)
