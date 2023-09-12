@@ -26,9 +26,7 @@ public class GameManager : MonoBehaviour
     public event Action OnScoreAdded;
 
     float ballSpeed = 0f;
-    float gameOverLine = 0f;
-
-    GameObject ball;
+    public float gameOverLine = 0f;
 
     public static GameManager Instance;
 
@@ -48,9 +46,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        OnGameStart += SetGame;
+        SetGame();
         OnStageClear += UpdateStage;
-
         OnBlockBreak += AddBlockPoint;
         OnAnimalRescue += AddAnimalPoint;
     }
@@ -59,40 +56,29 @@ public class GameManager : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene();
 
-        if (ball != null && scene.name == "GameScene")
+        if (player.balls.Count == 0 && scene.name == "GameScene")
         {
-            if (ball.transform.position.y <= gameOverLine)
-            {
-                CallGameEnd();
-                Destroy(ball);
-            }
+            CallGameEnd();
         }
     }
 
     private void CreateBall()
     {
-        if (ball != null)
-        {
-            Destroy(ball);
-        }
-
         Vector2 ballPos = new Vector2(0, -3);
-        ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
+        //ball = Instantiate(ballPrefab, ballPos, Quaternion.identity);
+        Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
+        player.balls.Add(newBall);
     }
 
     private void SetGame()
     {
         score = 0;
-
-        Debug.Log("SetGameCalled");
+        InstantiateCharacter();
         CreateBall();
-
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
         currentStage.InstantiateObjects();
-        InstantiateCharacter();
-        Debug.Log(ball);
         score = 0;
     }
 
@@ -216,6 +202,7 @@ public class GameManager : MonoBehaviour
         // var characterType  =  CharacterType.
         var halfHeight = cam.ViewportToWorldPoint(new Vector2(1, 1)).y;
         var y = halfHeight * 0.7f * -1;
-        Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity);
+        player = Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity)
+            .GetComponent<Player>();
     }
 }

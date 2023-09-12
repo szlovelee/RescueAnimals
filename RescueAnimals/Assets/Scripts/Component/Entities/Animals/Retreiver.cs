@@ -16,7 +16,7 @@ public class Retreiver : Animal, IAnimalBehaviour
     }
     public void OnResqueEffect()
     {
-        CreateNewBall();
+        GameManager.Instance.player.balls.AddRange(CreateNewBall());
         //player.balls.Add(CreateNewBall());
     }
 
