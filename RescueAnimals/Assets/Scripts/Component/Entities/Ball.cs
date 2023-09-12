@@ -82,6 +82,21 @@ public class Ball : MonoBehaviour, IAttackable
         }
     }
 
+    public void SetBonusBall()
+    {
+        _isShooting = false;
+
+        int rand = UnityEngine.Random.Range(0, 2);
+
+        if (rand == 0)
+            ballDir = new Vector2(1, 1).normalized;
+        else
+            ballDir = new Vector2(-1, 1).normalized;
+
+        BallRd.AddForce(ballDir * speed);
+        ThrowPivot.SetActive(false);
+    }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

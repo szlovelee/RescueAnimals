@@ -49,7 +49,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         Hp -= attackable.Atk;
         if (Hp <= 0)
         {
-            jailObj.SetActive(false);
+            onResqueEvent.Invoke();
             // gameObject.SetActive(false);
         }
     }
