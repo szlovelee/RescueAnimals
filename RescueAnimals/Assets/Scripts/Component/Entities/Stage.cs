@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using Entities.BlockGenerators;
 using EnumTypes;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Util;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
@@ -12,7 +10,6 @@ using Vector2 = UnityEngine.Vector2;
 
 namespace Entities
 {
-    //확인좀 부탁 
     [CreateAssetMenu(menuName = "Stage")]
     public class Stage : ScriptableObject
     {
@@ -36,7 +33,7 @@ namespace Entities
         [SerializeField] public BlockGenerator blockGenerator;
         [SerializeField] public AnimalGenerator animalGenerator;
 
-        [SerializeField] public List<GameObject> blockPrefabs;
+        [SerializeField] private List<GameObject> blockPrefabs;
         [SerializeField] private List<GameObject> animalPrefabs;
         private ObjectPool<Animal> _animalPool;
         private ObjectPool<Block> _blockPool;
@@ -52,6 +49,7 @@ namespace Entities
         private void OnEnable()
         {
             _mapTypes = new MapType[maxRow, maxCol];
+            //command, singleton, object pooling, state (FSM), MVP => 유니티에서 나눠준 자료에 있는 디자인 패턴 
             _animalPool = new ObjectPool<Animal>(animalPrefabs);
             _blockPool = new ObjectPool<Block>(blockPrefabs);
             CreateBlocks();
@@ -64,23 +62,27 @@ namespace Entities
             return time < 20 ? 20 : time;
         }
 
-        //
         private int CalcAnimalPercentage()
         {
             //todo calculate animal percentage and return AnimalType
             return Random.Range(0, AnimalTypes.Length);
         }
 
-        public int CalcBlockPercentage()
+        private int CalcBlockPercentage()
         {
             return 0;
+        }
+
+        public void ChangePattern(BlockPattern pat, BlockGenerator blockGen, AnimalGenerator animalGen)
+        {
+            blockGenerator = blockGen;
+            animalGenerator = animalGen;
         }
 
         public void OnClearStage()
         {
             // update stage information to move next stage
         }
-
 
         private void CreateBlocks()
         {
