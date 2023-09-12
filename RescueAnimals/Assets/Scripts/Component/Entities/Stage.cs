@@ -36,9 +36,10 @@ namespace Entities
         [SerializeField] public BlockGenerator blockGenerator;
         [SerializeField] public AnimalGenerator animalGenerator;
 
-        [SerializeField] public GameObject blockPrefab;
+        [SerializeField] public List<GameObject> blockPrefabs;
         [SerializeField] private List<GameObject> animalPrefabs;
         private ObjectPool<Animal> _animalPool;
+        private ObjectPool<Block> _blockPool;
         public Vector2 BoxScale = new(0.5f, 0.5f);
 
         private MapType[,] _mapTypes;
@@ -46,13 +47,13 @@ namespace Entities
         public StageType stage = StageType.None;
         public float BricksGenTime => CalcBrickGenTime();
 
-        public bool IsStageOver => false; // todo : logic
+        public bool IsStageOver => false; // todo : write logic to move next stage
 
         private void OnEnable()
         {
             _mapTypes = new MapType[maxRow, maxCol];
-            blockPrefab.transform.localScale = BoxScale;
             _animalPool = new ObjectPool<Animal>(animalPrefabs);
+            _blockPool = new ObjectPool<Block>(blockPrefabs);
             CreateBlocks();
             CreateAnimals();
         }
@@ -70,17 +71,9 @@ namespace Entities
             return Random.Range(0, AnimalTypes.Length);
         }
 
-        public BlockType CalcBlockPercentage()
+        public int CalcBlockPercentage()
         {
-            //todo how to set in integer...
-            var randomValue = Random.Range(0, (int)stage);
-            foreach (var block in BlockTypes)
-            {
-                if ((int)block > randomValue)
-                    return block;
-            }
-
-            return BlockTypes[^1];
+            return 0;
         }
 
         public void OnClearStage()
@@ -121,26 +114,21 @@ namespace Entities
                         x: _startPosition.x + intervalX * col,
                         y: _startPosition.y + intervalY * row);
 
-                    if (mapType == MapType.Animal)
+                    switch (mapType)
                     {
-                        var selectedIdx = CalcAnimalPercentage();
-                        _animalPool.SelectedIndex = selectedIdx;
-                        _animalPool.Pull(selectedIdx, position, Quaternion.identity);
-                        continue;
+                        case MapType.Block:
+                            //todo calc this index block
+                            var idx = CalcBlockPercentage();
+                            _blockPool.Pull(idx, position, Quaternion.identity);
+                            break;
+                        case MapType.Animal:
+                            var selectedIdx = CalcAnimalPercentage();
+                            _animalPool.SelectedIndex = selectedIdx;
+                            _animalPool.Pull(selectedIdx, position, Quaternion.identity);
+                            break;
                     }
 
-                    //todo make block pool
-                    var prefab = mapType switch
-                    {
-                        MapType.Block => blockPrefab,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-
                     //todo set prefab's data to apply random block, animalType
-
-                    var block = CalcBlockPercentage();
-
-                    Instantiate(prefab, position, Quaternion.identity);
                 }
             }
         }

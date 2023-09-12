@@ -26,4 +26,9 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     {
         _returnAction?.Invoke(this);
     }
+
+    private void OnDisable()
+    {
+        ReturnToPool();
+    }
 }

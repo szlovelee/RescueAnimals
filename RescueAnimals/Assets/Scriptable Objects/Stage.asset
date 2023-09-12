@@ -19,7 +19,8 @@ MonoBehaviour:
   maxCol: 8
   blockGenerator: {fileID: 11400000, guid: ab8118850d59c4affad6b825704d7554, type: 2}
   animalGenerator: {fileID: 11400000, guid: b1cc9e805f69b478691e4eb4fbe479e0, type: 2}
-  blockPrefab: {fileID: 4222917890701272065, guid: 41865b16c3659ef4c9361794269f9444, type: 3}
+  blockPrefabs:
+  - {fileID: 4222917890701272065, guid: 41865b16c3659ef4c9361794269f9444, type: 3}
   animalPrefabs:
   - {fileID: 4182793997858057886, guid: bfd3773ff959b4256be85779fd2d1e59, type: 3}
   - {fileID: 5385931599158561262, guid: daa17146f6be041b0a9cecdeef00e6a9, type: 3}
