@@ -44,7 +44,8 @@ public class Ball : MonoBehaviour, IAttackable
 
     void Update()
     {
-        if(this.transform.position.y <= GameManager.Instance.gameOverLine) {
+        if (this.transform.position.y <= GameManager.Instance.gameOverLine)
+        {
             GameManager.Instance.player.balls.Remove(this);
             Destroy(this);
         }
@@ -90,10 +91,17 @@ public class Ball : MonoBehaviour, IAttackable
 
         if (_isPiercing)
             return;
-        
+
         if (PreviousVelocityEqualToCurrent(collision.GetContact(0).relativeVelocity))
         {
-            BallRd.velocity += new Vector2(0, -2f);
+            if (_prevVelocity.x <= 0.25f)
+            {
+                BallRd.velocity += new Vector2(2f, 0);
+            }
+            else
+            {
+                BallRd.velocity += new Vector2(0f, -2f);                
+            }
         }
 
         _prevVelocity = collision.GetContact(0).relativeVelocity;
