@@ -4671,6 +4671,10 @@ PrefabInstance:
       propertyPath: BallCollider
       value: 
       objectReference: {fileID: 714913333}
+    - target: {fileID: 7321661936805002925, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+      propertyPath: BallParticle
+      value: 
+      objectReference: {fileID: 5024009746357069192, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
     - target: {fileID: 8558289177867222497, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
       propertyPath: m_SortingOrder
       value: 2

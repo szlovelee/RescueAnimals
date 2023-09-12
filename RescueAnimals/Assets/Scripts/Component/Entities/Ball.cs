@@ -8,6 +8,7 @@ public class Ball : MonoBehaviour, IAttackable
 {
     [SerializeField] private Rigidbody2D BallRd;
     [SerializeField] private Collider2D BallCollider;
+    [SerializeField] private ParticleSystem BallParticle;
     
     [Range(50f, 200f)] public float speed = 100f;
 
@@ -27,6 +28,9 @@ public class Ball : MonoBehaviour, IAttackable
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        ParticleSystem effect = Instantiate(BallParticle);
+        effect.transform.position = collision.contacts[0].point;
+
         if (_isPiercing)
             return;
 
