@@ -132,7 +132,7 @@ namespace Entities
                         case MapType.Animal:
                             var selectedIdx = CalcAnimalPercentage();
                             _animalPool.SelectedIndex = selectedIdx;
-                            SetAnimalReinforcState(_animalPool.Pull(selectedIdx, position, Quaternion.identity));
+                            SetAnimalReinforceState(_animalPool.Pull(selectedIdx, position, Quaternion.identity));
                             break;
                     }
 
@@ -141,7 +141,7 @@ namespace Entities
             }
         }
 
-        private void SetAnimalReinforcState(Animal animal)
+        private void SetAnimalReinforceState(Animal animal)
         {
             AnimalReinforce data = animalData.AnimalReinforceData.Find(x=>x.animalType == animal.animalType);
 
