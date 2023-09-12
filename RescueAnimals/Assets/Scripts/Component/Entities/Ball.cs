@@ -23,10 +23,8 @@ public class Ball : MonoBehaviour, IAttackable
     private Vector2 touchPos, ballDir;
     private Camera _camera;
 
-    public Ball(int atk = 1)
-    {
-        Atk = atk;
-    }
+    public int Atk { get; set; }
+
 
     private void Awake()
     {
@@ -35,6 +33,8 @@ public class Ball : MonoBehaviour, IAttackable
         ThrowPivot = transform.GetChild(0).gameObject;
         ThrowPoint = transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
         _camera = Camera.main;
+
+        Atk = 10;
     }
 
     void Update()
@@ -114,5 +114,5 @@ public class Ball : MonoBehaviour, IAttackable
         }
     }
 
-    public int Atk { get; }
+    
 }

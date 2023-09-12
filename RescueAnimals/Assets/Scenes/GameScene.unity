@@ -3706,11 +3706,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fbcb69714d1a4f4d8ea7f6d7d5d0e6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   currentStage: {fileID: 11400000, guid: bdbeb16d10d3349a382039428b1d2c7d, type: 2}
   score: 0
   coin: 0
   wallPrefab: {fileID: 7218572055491127341, guid: a435f62d4e8684e5c8ae4f9fbcc2c939, type: 3}
-  ballPrefab: {fileID: 1138692500467565962, guid: 47ebadbc244d021409ccc61785bec576, type: 3}
+  ballPrefab: {fileID: 995715049263497212, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
 --- !u!4 &1070558929
 Transform:
   m_ObjectHideFlags: 0
