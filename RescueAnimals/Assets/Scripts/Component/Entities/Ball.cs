@@ -51,10 +51,10 @@ public class Ball : MonoBehaviour, IAttackable
 
         if (Input.touchCount > 0)
         {
-            Debug.Log(_isShooting);
+            //Debug.Log(_isShooting);
             if (_isShooting)
             {
-                Debug.Log("2");
+                //Debug.Log("2");
                 touch = Input.GetTouch(0);
                 touchPos = new Vector2(_camera.ScreenToWorldPoint(touch.position).x
                     , Mathf.Clamp(_camera.ScreenToWorldPoint(touch.position).y, -5f, (transform.position.y - 0.5f)));

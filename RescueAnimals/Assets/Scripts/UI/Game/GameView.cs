@@ -18,8 +18,15 @@ public class GameView : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject GameUI;
     public GameObject Boost;
+
     public Text ScoreTxt;
     public Text CoinTxt;
+    public Text StageTxt;
+    public Text FinalScoreTxt;
+    public Text FinalCoinTxt;
+
+    public GameObject ClearMessage;
+    public Text NextMessage;
 
     private void Start()
     {

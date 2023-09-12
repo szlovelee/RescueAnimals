@@ -31,11 +31,11 @@ namespace Entities
         public static BlockType[] BlockTypes = (BlockType[])Enum.GetValues(typeof(BlockType));
 
 
-        [SerializeField] public BlockGenerator blockGenerator;
         [SerializeField] public AnimalGenerator animalGenerator;
 
         [SerializeField] private List<BlockGenerator> blockGenerators;
         [SerializeField] private List<AnimalGenerator> animalGenerators;
+        private BlockGenerator blockGenerator;
 
 
         [SerializeField] private List<GameObject> blockPrefabs;
@@ -62,6 +62,7 @@ namespace Entities
 
         private void Initialize()
         {
+            blockGenerator = blockGenerators[0];
             _mapTypes = new MapType[maxRow, maxCol];
             _animalPool = new ObjectPool<Animal>(animalPrefabs);
             _blockPool = new ObjectPool<Block>(blockPrefabs);
@@ -86,23 +87,20 @@ namespace Entities
             return 0;
         }
 
-        public void OnClearStage()
-        {
-            // update stage information to move next stage
-            ClearMap();
-            UpdateStageSettings();
-            GameManager.Instance.CallStageClear();
-        }
-
         public void UpdateStageSettings()
         {
             stageNum++;
-
-            BlockGenerator blockGen = blockGenerators[stageNum - 1];
+            Debug.Log($"New Stage: {stageNum}");
+            BlockGenerator blockGen = blockGenerators[(stageNum - 1) % blockGenerators.Count];
             // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
             AnimalGenerator animalGen = animalGenerator; // temp
 
             ChangePattern(blockGen, animalGen);
+
+            CreateBlocks();
+            CreateAnimals();
+
+            ClearMap();
         }
 
         public void ChangePattern(BlockGenerator blockGen, AnimalGenerator animalGen)
@@ -167,11 +165,14 @@ namespace Entities
         }
 
 
-        private void ClearMap()
+        public void ClearMap()
         {
             foreach (var block in instantiatedObjects)
             {
-                block.SetActive(false);
+                if(block.gameObject != null)
+                {
+                    block.SetActive(false);
+                }
             }
         }
 
@@ -179,7 +180,7 @@ namespace Entities
         {
             Initialize();
             stageNum = 1;
-            BlockGenerator blockGen = blockGenerators[stageNum - 1];
+            BlockGenerator blockGen = blockGenerators[(stageNum - 1) % 4];
             // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
             AnimalGenerator animalGen = animalGenerator; // temp
 
