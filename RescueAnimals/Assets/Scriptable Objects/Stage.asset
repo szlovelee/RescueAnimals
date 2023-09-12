@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08bf59238bdb8524d85f4a10774119e7, type: 3}
   m_Name: Stage
   m_EditorClassIdentifier: 
+  animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
   intervalX: 0.5
   intervalY: -0.5
   generationTime: 100

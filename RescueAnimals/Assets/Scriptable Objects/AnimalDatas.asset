@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AnimalReinforceData:
   - animalType: 0
-    reinforceLevel: 1
+    reinforceLevel: 3
     bonusStatRate: 0.2
     isActive: 0
   - animalType: 2
-    reinforceLevel: 1
+    reinforceLevel: 4
     bonusStatRate: 0.3
     isActive: 1
   - animalType: 1
-    reinforceLevel: 1
+    reinforceLevel: 4
     bonusStatRate: 0.4
     isActive: 1

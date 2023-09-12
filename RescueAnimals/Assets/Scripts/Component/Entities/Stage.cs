@@ -13,6 +13,8 @@ namespace Entities
     [CreateAssetMenu(menuName = "Stage")]
     public class Stage : ScriptableObject
     {
+        [SerializeField] private AnimalData animalData;
+
         [SerializeField] private float intervalX = 1f;
         [SerializeField] private float intervalY = -0.3f;
 
@@ -130,13 +132,20 @@ namespace Entities
                         case MapType.Animal:
                             var selectedIdx = CalcAnimalPercentage();
                             _animalPool.SelectedIndex = selectedIdx;
-                            _animalPool.Pull(selectedIdx, position, Quaternion.identity);
+                            SetAnimalReinforceState(_animalPool.Pull(selectedIdx, position, Quaternion.identity));
                             break;
                     }
 
                     //todo set prefab's data to apply random block, animalType
                 }
             }
+        }
+
+        private void SetAnimalReinforceState(Animal animal)
+        {
+            AnimalReinforce data = animalData.AnimalReinforceData.Find(x=>x.animalType == animal.animalType);
+
+            animal.reinforceLevel = data.reinforceLevel;
         }
 
         public void SetStartPosition(Vector2 startPosition)

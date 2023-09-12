@@ -7,7 +7,7 @@ public class SheepDog : Animal, IAnimalBehaviour
 {
     public void OnResqueMove()
     {
-
+        jailObj.SetActive(false);
     }
     public void OnResqueEffect(Player player)
     {

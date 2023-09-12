@@ -46,8 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00f081e16a95e24da944eaf74523ce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animalType: 0
+  animalType: 1
   reinforceLevel: 0
+  jailObj: {fileID: 8599664904601279201}
 --- !u!1 &7867104047201618259
 GameObject:
   m_ObjectHideFlags: 0
