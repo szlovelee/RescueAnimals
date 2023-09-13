@@ -38,19 +38,13 @@ namespace EnumTypes
             }
         }
 
-        public Player LoadPlayerInfo(AnimalData animalData, RankSystem rankSystem)
+        public SaveData LoadPlayerInfo(AnimalData animalData, RankSystem rankSystem)
         {
             var parent = Application.persistentDataPath;
             var filePath = Path.Combine(parent, FileName);
             var json = File.ReadAllText(filePath);
             var saveData = JsonUtility.FromJson<SaveData>(json);
             Debug.Log(json);
-            var player = gameObject.AddComponent<Player>();
-            player.level = saveData.Level;
-            player.atk = saveData.Atk;
-            player.gold = saveData.Gold;
-            player.exp = saveData.Exp;
-            player.maxScore = saveData.MaxScore;
             var reinforce = animalData.AnimalReinforceData;
             rankSystem.rankings = saveData.RankSystemData;
             for (int i = 0; i < saveData.ReinforceSaveData.Count; i++)
@@ -59,7 +53,7 @@ namespace EnumTypes
                 reinforce[i].reinforceLevel = saveData.ReinforceSaveData[i].reinforceLevel;
             }
 
-            return player;
+            return saveData;
         }
 
         public void SavePlayer(Player player, AnimalData animalData, RankSystem rankSystem)
@@ -76,9 +70,9 @@ namespace EnumTypes
                 player.level,
                 player.exp,
                 player.gold,
-                player.maxScore,
                 player.atk,
-                reinforceSaveData: reinforce
+                reinforceSaveData: reinforce,
+                rankSystemData: rankSystem.rankings
             );
             saveData.RankSystemData = rankSystem.GetRankings();
             var json = JsonUtility.ToJson(saveData);
