@@ -14,6 +14,7 @@ namespace Component.Entities
         public int Atk;
 
         public List<ReinforceSaveData> ReinforceSaveData;
+        public List<Rank> RankSystemData;
 
         public SaveData(int level, int exp, int gold, int maxScore, int atk, List<ReinforceSaveData> reinforceSaveData)
         {

@@ -38,7 +38,7 @@ namespace EnumTypes
             }
         }
 
-        public Player LoadPlayerInfo(AnimalData animalData)
+        public Player LoadPlayerInfo(AnimalData animalData, RankSystem rankSystem)
         {
             var parent = Application.persistentDataPath;
             var filePath = Path.Combine(parent, FileName);
@@ -52,6 +52,7 @@ namespace EnumTypes
             player.exp = saveData.Exp;
             player.maxScore = saveData.MaxScore;
             var reinforce = animalData.AnimalReinforceData;
+            rankSystem.rankings = saveData.RankSystemData;
             for (int i = 0; i < saveData.ReinforceSaveData.Count; i++)
             {
                 if (i >= reinforce.Count) break;
@@ -61,7 +62,7 @@ namespace EnumTypes
             return player;
         }
 
-        public void SavePlayer(Player player, AnimalData animalData)
+        public void SavePlayer(Player player, AnimalData animalData, RankSystem rankSystem)
         {
             var reinforce = animalData
                 .AnimalReinforceData
@@ -79,6 +80,7 @@ namespace EnumTypes
                 player.atk,
                 reinforceSaveData: reinforce
             );
+            saveData.RankSystemData = rankSystem.GetRankings();
             var json = JsonUtility.ToJson(saveData);
             File.WriteAllText(filePath, json);
             IsWrite = false;

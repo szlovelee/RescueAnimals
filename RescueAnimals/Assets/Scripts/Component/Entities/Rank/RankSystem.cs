@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RankSystem : MonoBehaviour
+[Serializable]
+[CreateAssetMenu(menuName = "Ranking System")]
+public class RankSystem :ScriptableObject
 {
     private const int MaxRankings = 5;
-    private List<Rank> rankings = new List<Rank>();
+    public List<Rank> rankings = new List<Rank>();
 
     public void AddRank(Rank rank)
     {
