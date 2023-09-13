@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using EnumTypes;
 using TMPro;
+using Component.Entities;
 
 public class HomePresenter : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class HomePresenter : MonoBehaviour
         _view.OnPlayerOpen += PlayerPanelOpen;
         _view.OnPanelClose += PanelClose;
         _view.OnAnimalReinforce += ReinforceAnimal;
+
+        UpdateCoin();
     }
 
     private void SetCurrentAnimalReinforceState()
@@ -110,7 +113,12 @@ public class HomePresenter : MonoBehaviour
         SoundManager.instance.PlayReturnEffect();
     }
 
-
+    private void UpdateCoin()
+    {
+        SaveData gameData = DataManager.Instance.LoadPlayerInfo(reinforceData, rankSystem);
+        _view.coin.text = gameData.Gold.ToString();
+        Debug.Log($"UpdateCoin, {DataManager.Instance.LoadPlayerInfo(reinforceData, rankSystem).Gold}");
+    }
 
     private void ActivatePanel(GameObject[] panels, GameObject targetPanel)
     {

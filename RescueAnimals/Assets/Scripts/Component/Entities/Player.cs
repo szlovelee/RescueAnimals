@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
     public int exp;
     public int atk;
     public int gold;
-    public int maxScore;
     public BallType BallType = BallType.Baseball;
 
     //todo make Object pool

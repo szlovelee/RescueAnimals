@@ -53,10 +53,6 @@ public class HomeView : MonoBehaviour
         panels = new GameObject[] { upgradePanel, rankPanel, playerPanel };
     }
 
-    private void Update()
-    {
-        coin.text = "2000";  //Retreive information from the GameManager
-    }
 
     public void CallRetreiverReinforce()
     {

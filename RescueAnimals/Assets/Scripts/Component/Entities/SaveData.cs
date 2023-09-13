@@ -10,20 +10,19 @@ namespace Component.Entities
         public int Level;
         public int Exp;
         public int Gold;
-        public int MaxScore;
         public int Atk;
 
         public List<ReinforceSaveData> ReinforceSaveData;
         public List<Rank> RankSystemData;
 
-        public SaveData(int level, int exp, int gold, int maxScore, int atk, List<ReinforceSaveData> reinforceSaveData)
+        public SaveData(int level, int exp, int gold, int atk, List<ReinforceSaveData> reinforceSaveData, List<Rank> rankSystemData)
         {
             Level = level;
             Exp = exp;
             Gold = gold;
-            MaxScore = maxScore;
             Atk = atk;
             ReinforceSaveData = reinforceSaveData;
+            RankSystemData = rankSystemData;
         }
     }
 
@@ -39,4 +38,17 @@ namespace Component.Entities
             this.reinforceLevel = reinforceLevel;
         }
     }
+
+
+    [Serializable]
+    public class RankSystemData
+    {
+        List<Rank> rankList;
+
+        public RankSystemData(List<Rank> rankList)
+        {
+            this.rankList = rankList;
+        }
+    }
+
 }

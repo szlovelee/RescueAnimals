@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
     private Vector2 ballPos = new Vector2(0, -2.8f);
+    private SaveData gameData;
 
     private bool isPlaying = true;
     private int addedScore;
@@ -86,6 +87,7 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        player.gold += coin;
         isPlaying = false;
         UpdateRank();
         OnGameEnd?.Invoke();
@@ -108,6 +110,7 @@ public class GameManager : MonoBehaviour
 
     private void SetGame()
     {
+        gameData = DataManager.Instance.LoadPlayerInfo(animalData, Rank);
         currentStage.Initialize();
         Time.timeScale = 1f;
         MakeWalls();
@@ -123,7 +126,19 @@ public class GameManager : MonoBehaviour
         CreateBall();
         StartCoroutine(RegenerateBlockOnTime());
         ListenStageEvent();
+        DataSetting();
     }
+
+    private void DataSetting()
+    {
+        player.level = gameData.Level;
+        player.exp = gameData.Exp;
+        player.atk = gameData.Atk;
+        player.gold = gameData.Gold;
+        //동물 강화 기능 추가
+        Rank.rankings = gameData.RankSystemData;
+    }
+
 
     private IEnumerator RegenerateBlockOnTime()
     {
