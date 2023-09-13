@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5f7968a7e54f48b8ec03945565516a, type: 3}
   m_Name: NormalAnimalGenerator
   m_EditorClassIdentifier: 
-  animalCount: 10
+  animalCount: 3

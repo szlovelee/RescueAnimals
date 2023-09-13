@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Component.Entities;
+using Component.Entities.Database;
 using Entities;
 using EnumTypes;
 using Unity.Mathematics;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject beaglePrefab;
     [SerializeField] private AnimalData animalData;
+    [SerializeField] private Coefficient reinforceCoef;
     [SerializeField] private ParticleSystem ballParticle;
     [SerializeField] private GameObject satellitePrefab;
 
@@ -46,7 +48,7 @@ public class GameManager : MonoBehaviour
     public float gameOverLine = 0f;
     private Vector2 ballPos = new Vector2(0, -2.8f);
     private SaveData gameData;
-
+    [SerializeField] private int _ballCount;
     private bool isPlaying = true;
     private int addedScore;
 
@@ -59,9 +61,9 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             cam = Camera.main;
-            _ballObjectPool = new(prefab: ballPrefab, 1);
-            _satellitePool = new(prefab: satellitePrefab, 1);
-            _beaglePool = new(prefab: beaglePrefab, 10);
+            _ballObjectPool = new(prefab: ballPrefab,5);
+            _satellitePool = new(prefab: satellitePrefab, 0);
+            _beaglePool = new(prefab: beaglePrefab, 0);
         }
         else
         {
@@ -75,12 +77,23 @@ public class GameManager : MonoBehaviour
         SetGame();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (IsGameOver())
         {
             GameOver();
+            return;
         }
+
+        if (!IsStageClear) return;
+        GamePause();
+        ResetBall();
+        ClearBeagles();
+        ClearSatellites();
+        addedScore = 0;
+        SoundManager.instance.PlayStageClear();
+        currentStage.StageClear();
+        OnStageClear?.Invoke();
     }
 
     private void OnDestroy()
@@ -103,13 +116,14 @@ public class GameManager : MonoBehaviour
     private bool IsGameOver()
     {
         Scene scene = SceneManager.GetActiveScene();
-        return player.balls.Count == 0 && scene.name == "GameScene" && isPlaying;
+        return _ballCount <= 0 && scene.name == "GameScene" && isPlaying;
     }
 
 
     private void CreateBall()
     {
         //todo ball make pool-able
+        _ballCount = 1;
         Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
         player.balls.Add(newBall);
     }
@@ -190,16 +204,6 @@ public class GameManager : MonoBehaviour
 
     private void ScoreCheck()
     {
-        if (IsStageClear)
-        {
-            ResetBall();
-            ClearBeagles();
-            ClearSatellites();
-            currentStage.StageClear();
-            addedScore = 0;
-            SoundManager.instance.PlayStageClear();
-            OnStageClear?.Invoke();
-        }
     }
 
     private void ResetBall()
@@ -210,6 +214,7 @@ public class GameManager : MonoBehaviour
             player.balls[i].gameObject.SetActive(false);
         }
 
+        _ballCount = 0;
         player.balls.Clear();
         CreateBall();
     }
@@ -231,7 +236,7 @@ public class GameManager : MonoBehaviour
             beagle.SetActive(false);
         }
 
-        _satellites.Clear();
+        _beagles.Clear();
     }
 
 
@@ -260,13 +265,14 @@ public class GameManager : MonoBehaviour
 
     public void AddBalls(Vector2 position, int ballCount)
     {
-        for (int i = 0; i < ballCount; i++)
+        for (var i = 0; i < ballCount; i++)
         {
             var ball = _ballObjectPool.Pull();
             ball.transform.position = position;
             ball.SetBonusBall();
             ball.OnBallCollide += ShowParticle;
             player.balls.Add(ball);
+            _ballCount++;
         }
     }
 
@@ -352,9 +358,16 @@ public class GameManager : MonoBehaviour
         var idx = UnityEngine.Random.Range(0, player.balls.Count);
         var pivot = player.balls[idx];
         if (pivot == null) return;
-        for (int i = 0; i < 5; i++)
+        var reinforceLevel = animalData
+            .AnimalReinforceData
+            .Find(it => it.animalType == AnimalType.BlackCat)
+            .reinforceLevel;
+        var count = reinforceCoef.satelliteCountPerLevel * reinforceLevel;
+        for (int i = 0; i < count; i++)
         {
             var satellite = _satellitePool.Pull();
+            satellite.SetLastingTime(3f);
+            satellite.Attack = reinforceCoef.satelliteAtkPerLevel * reinforceLevel;
             _satellites.Add(satellite);
             satellite.Radian = (Mathf.PI / 4) * i;
             satellite.Pivot = pivot.transform;
@@ -367,7 +380,7 @@ public class GameManager : MonoBehaviour
             .Find(it => it.animalType == AnimalType.Beagle)
             .reinforceLevel;
 
-        var count = beagleLevel * 5;
+        var count = beagleLevel * reinforceCoef.beagleCountPerLevel;
         var worldPoint = cam.ViewportToWorldPoint(new Vector3(1, 1));
         var x = worldPoint.x;
         var y = worldPoint.y;
@@ -376,7 +389,7 @@ public class GameManager : MonoBehaviour
         {
             var randomY = Random.Range(-y, y);
             var beagle = _beaglePool.Pull(new Vector3(-x, randomY));
-            beagle.attack = beagleLevel + 10;
+            beagle.attack = beagleLevel * reinforceCoef.beagleAtkPerLevel;
             _beagles.Add(beagle.gameObject);
         }
 
@@ -395,8 +408,7 @@ public class GameManager : MonoBehaviour
                 if (IsStageClear) break;
 
                 var beagleTransform = beagle.transform;
-                beagleTransform.position +=
-                    new Vector3(1, 0) * Time.deltaTime * 5f;
+                beagleTransform.position += new Vector3(1, 0) * Time.deltaTime * 5f;
             }
 
             yield return new WaitForNextFrameUnit();
@@ -406,5 +418,10 @@ public class GameManager : MonoBehaviour
         {
             beagle.SetActive(false);
         }
+    }
+
+    public void DecreaseBallCount()
+    {
+        _ballCount--;
     }
 }

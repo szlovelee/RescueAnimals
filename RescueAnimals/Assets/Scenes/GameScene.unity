@@ -3576,6 +3576,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 9161968995396019320, guid: f4a61f78d5e0a47e1aa42368d010529f, type: 3}
   beaglePrefab: {fileID: 4182793997858057886, guid: cd52543425fb24f1fb086fe25027ccfd, type: 3}
   animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
+  reinforceCoef: {fileID: 11400000, guid: f8d4eca7be556452c842ad65ba35bc62, type: 2}
   ballParticle: {fileID: 5024009746357069192, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   satellitePrefab: {fileID: 9216076269219349978, guid: a19bfb874373448b98e80ad81a616391, type: 3}
   gameOverLine: 0
