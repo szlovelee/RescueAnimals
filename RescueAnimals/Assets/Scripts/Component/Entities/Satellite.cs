@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Entities;
 using UnityEngine;
 using Util;
@@ -12,23 +13,35 @@ namespace Component.Entities
         [HideInInspector] public Transform Pivot;
         public float Radian;
         private float radius = 0.7f;
-        private int _atk = 5;
+        private float lastingTime;
         private Action<Satellite> _returnAction;
+        public int Attack = 1;
 
-        public int Reinforce
+        public void SetLastingTime(float time)
         {
-            set => _atk = Mathf.CeilToInt(value * 0.5f);
+            lastingTime = time;
         }
 
         private void Update()
         {
-            if (Pivot == null) return;
-            
+            if (Pivot == null)
+            {
+                ReturnToPool();
+                return;
+            }
+
+            if (lastingTime <= 0f)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            lastingTime -= Time.deltaTime;
             _timeSinceLastAttack += Time.deltaTime;
-            Radian += Mathf.PI * 10f * Time.deltaTime;
+            Radian += Mathf.PI * 1f * Time.deltaTime;
             radius += 0.1f;
             if (radius >= 3) radius = 0.7f;
-
+            
             gameObject.transform.position = new Vector3(
                 x: radius * Mathf.Cos(Radian),
                 y: radius * Mathf.Sin(Radian)
@@ -41,13 +54,13 @@ namespace Component.Entities
         {
             get
             {
-                if (_timeSinceLastAttack >= 0.01f)
+                if (_timeSinceLastAttack >= 0.5f)
                 {
                     _timeSinceLastAttack = 0f;
                     _canAttack = true;
                 }
 
-                return _canAttack ? _atk : 0;
+                return _canAttack ? Attack : 0;
             }
         }
 
