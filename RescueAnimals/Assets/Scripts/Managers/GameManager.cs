@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 {
     public Player player;
     public Stage currentStage;
+    public RankSystem Rank;
     public int score;
     public int coin;
 
@@ -61,6 +62,7 @@ public class GameManager : MonoBehaviour
 
         OnGameEnd += ResetBall;
         OnGameEnd += GamePause;
+        OnGameEnd += UpdateRank;
     }
 
     private void Update()
@@ -71,7 +73,7 @@ public class GameManager : MonoBehaviour
         {
             isPlaying = false;
             CallGameEnd();
-            DataManager.Instance.SavePlayer(player, animalData);
+            DataManager.Instance.SavePlayer(player, animalData, Rank);
         }
     }
 
@@ -159,6 +161,12 @@ public class GameManager : MonoBehaviour
             Destroy(player.balls[0].gameObject);
             player.balls.RemoveAt(0);
         }
+    }
+
+    private void UpdateRank()
+    {
+        Rank rank = new Rank(score, currentStage.stageNum);
+        Rank.AddRank(rank);
     }
 
     public void StartStage()

@@ -3713,6 +3713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   currentStage: {fileID: 11400000, guid: bdbeb16d10d3349a382039428b1d2c7d, type: 2}
+  Rank: {fileID: 11400000, guid: 5ad59c720087b8645b9b40eb02cf82ea, type: 2}
   score: 0
   coin: 0
   wallPrefab: {fileID: 7218572055491127341, guid: a435f62d4e8684e5c8ae4f9fbcc2c939, type: 3}
