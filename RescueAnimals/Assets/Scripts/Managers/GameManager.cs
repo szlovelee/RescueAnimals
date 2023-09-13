@@ -65,19 +65,10 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        Scene scene = SceneManager.GetActiveScene();
-
-        if (player.balls.Count == 0 && scene.name == "GameScene" && isPlaying)
+        if (IsGameOver())
         {
-            Gameover();
+            GameOver();
         }
-    }
-
-    private void Gameover()
-    {
-        isPlaying = false;
-        OnGameEnd?.Invoke();
-        DataManager.Instance.SavePlayer(player, animalData);
     }
 
     private void OnDestroy()
@@ -86,6 +77,20 @@ public class GameManager : MonoBehaviour
         currentStage.OnAnimalSaved -= AddAnimalPoint;
         StopCoroutine(RegenerateBlockOnTime());
     }
+
+    private void GameOver()
+    {
+        isPlaying = false;
+        OnGameEnd?.Invoke();
+        DataManager.Instance.SavePlayer(player, animalData);
+    }
+
+    private bool IsGameOver()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        return player.balls.Count == 0 && scene.name == "GameScene" && isPlaying;
+    }
+
 
     private void CreateBall()
     {
@@ -103,7 +108,6 @@ public class GameManager : MonoBehaviour
         currentStage.ResetStage();
         score = 0;
         isPlaying = true;
-        ListenStageEvent();
         OnScoreAdded += ScoreCheck;
         OnGameEnd += ResetBall;
         OnGameEnd += GamePause;
@@ -111,6 +115,7 @@ public class GameManager : MonoBehaviour
         InstantiateCharacter();
         CreateBall();
         StartCoroutine(RegenerateBlockOnTime());
+        ListenStageEvent();
     }
 
     private IEnumerator RegenerateBlockOnTime()
@@ -131,6 +136,7 @@ public class GameManager : MonoBehaviour
     {
         currentStage.OnBlockDestroyed += AddBlockPoint;
         currentStage.OnAnimalSaved += AddAnimalPoint;
+        currentStage.OnBlockMoved += OnBlockMoved;
     }
 
     public void CallGameStart()
@@ -273,5 +279,15 @@ public class GameManager : MonoBehaviour
     {
         var particle = Instantiate(ballParticle);
         particle.transform.position = position;
+    }
+
+    private void OnBlockMoved(Vector2 position)
+    {
+        if (!isPlaying) return;
+        var playerTransform = player.gameObject.transform;
+        if (position.y <= playerTransform.position.y + playerTransform.localScale.y * 0.5f)
+        {
+            GameOver();
+        }
     }
 }

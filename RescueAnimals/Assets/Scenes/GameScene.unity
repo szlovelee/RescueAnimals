@@ -3792,10 +3792,12 @@ MonoBehaviour:
   currentStage: {fileID: 11400000, guid: bdbeb16d10d3349a382039428b1d2c7d, type: 2}
   score: 0
   coin: 0
+  _lastTimeRegenerateBlock: 0
   wallPrefab: {fileID: 7218572055491127341, guid: a435f62d4e8684e5c8ae4f9fbcc2c939, type: 3}
   ballPrefab: {fileID: 995715049263497212, guid: a0b8ae9cbe2884c46a19f28a500fd759, type: 3}
   playerPrefab: {fileID: 9161968995396019320, guid: f4a61f78d5e0a47e1aa42368d010529f, type: 3}
   animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
+  ballParticle: {fileID: 5024009746357069192, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   gameOverLine: 0
 --- !u!4 &1070558929
 Transform:
@@ -4625,7 +4627,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1325449526}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bea9ae5717a82141a770a7729a9e4a4, type: 3}
   m_Name: 

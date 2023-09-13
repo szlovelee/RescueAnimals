@@ -55,10 +55,11 @@ namespace Entities
         private int _blockGenRowIndex;
         public float BricksGenTime => 1f;
 
-        [HideInInspector] public int aliveCount;
+        [HideInInspector] public int aliveCount => aliveObjects.Count;
 
         public event Action OnBlockDestroyed;
         public event Action<AnimalType> OnAnimalSaved;
+        public event Action<Vector2> OnBlockMoved;
 
         private void OnEnable()
         {
@@ -137,7 +138,6 @@ namespace Entities
                 for (var col = 0; col < maxCol; col++)
                 {
                     var mapType = _mapTypes[row, col];
-                    aliveCount += mapType == MapType.Blank ? 0 : 1;
                     if (mapType == MapType.Blank) continue;
 
                     var position = new Vector2(
@@ -206,10 +206,17 @@ namespace Entities
                 InstantiateBlock(position);
             }
 
+            Vector2 minYPos = Vector2.positiveInfinity;
             foreach (var obj in aliveObjects)
             {
                 obj.transform.localPosition += new Vector3(0, intervalY);
+                if (obj.transform.position.y <= minYPos.y)
+                {
+                    minYPos = obj.transform.position;
+                }
             }
+
+            OnBlockMoved?.Invoke(minYPos);
         }
 
         public void ResetStage()
@@ -235,14 +242,12 @@ namespace Entities
 
         private void BlockDestroyed(Block block)
         {
-            aliveCount--;
             aliveObjects.Remove(block.gameObject);
             OnBlockDestroyed?.Invoke();
         }
 
         private void AnimalSaved(Animal animal)
         {
-            aliveCount--;
             aliveObjects.Remove(animal.gameObject);
             OnAnimalSaved?.Invoke(animal.animalType);
         }
