@@ -19,7 +19,6 @@ MonoBehaviour:
   generationTime: 100
   maxRow: 8
   maxCol: 8
-  blockGenerator: {fileID: 11400000, guid: a8ed15048cc894068b0337cc0eb61e1e, type: 2}
   animalGenerator: {fileID: 11400000, guid: 22cb8ac5ef9004cd7ab9901676ef96a1, type: 2}
   blockGenerators:
   - {fileID: 11400000, guid: a8ed15048cc894068b0337cc0eb61e1e, type: 2}
@@ -37,5 +36,6 @@ MonoBehaviour:
   - {fileID: 1519063363925240311, guid: 7427a7ebd78b844d3878d6103cfcddf9, type: 3}
   - {fileID: 5226164755119570723, guid: 52f64bd10a687468c99cb37b20284bb5, type: 3}
   - {fileID: 2471607681302050439, guid: f7bfd3420e4844ca09b86ccd0bb17ad7, type: 3}
+  - {fileID: 4182793997858057886, guid: 4a960ebf301bd41cdb68cfc14612ef3b, type: 3}
   BoxScale: {x: 0.5, y: 0.5}
   stage: 1

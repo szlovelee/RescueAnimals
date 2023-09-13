@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private AnimalData animalData;
     [SerializeField] private ParticleSystem ballParticle;
+    [SerializeField] private GameObject satellitePrefab;
 
 
     private Camera cam;
@@ -34,6 +35,8 @@ public class GameManager : MonoBehaviour
     public event Action OnScoreAdded; // todo make Action<int> send score value to presenter 
 
     private SinglePrefabObjectPool<Ball> _ballObjectPool;
+    private SinglePrefabObjectPool<Satellite> _satellitePool;
+    private List<Satellite> _satellites;
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
     private Vector2 ballPos = new Vector2(0, -2.8f);
@@ -51,6 +54,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
             cam = Camera.main;
             _ballObjectPool = new(prefab: ballPrefab, 1);
+            _satellitePool = new(prefab: satellitePrefab, 1);
         }
         else
         {
@@ -172,6 +176,7 @@ public class GameManager : MonoBehaviour
         if (IsStageClear)
         {
             ResetBall();
+            ClearSatellites();
             currentStage.StageClear();
             addedScore = 0;
             SoundManager.instance.PlayStageClear();
@@ -189,6 +194,16 @@ public class GameManager : MonoBehaviour
 
         player.balls.Clear();
         CreateBall();
+    }
+
+    private void ClearSatellites()
+    {
+        foreach (var satellite in _satellites)
+        {
+            satellite.gameObject.SetActive(false);
+        }
+
+        _satellites.Clear();
     }
 
     private void UpdateRank()
@@ -300,6 +315,20 @@ public class GameManager : MonoBehaviour
         if (position.y <= playerTransform.position.y - playerTransform.localScale.y * 0.5f)
         {
             GameOver();
+        }
+    }
+
+    public void SatelliteEffect()
+    {
+        var idx = UnityEngine.Random.Range(0, player.balls.Count);
+        var pivot = player.balls[idx];
+        if (pivot == null) return;
+        for (int i = 0; i < 5; i++)
+        {
+            var satellite = _satellitePool.Pull();
+            _satellites.Add(satellite);
+            satellite.Radian = (Mathf.PI / 4) * i;
+            satellite.Pivot = pivot.transform;
         }
     }
 }
