@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6775292131387368918}
   - component: {fileID: 8695470301389082303}
   - component: {fileID: 6992126590800072917}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MainSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 8076561642329176035}
   - component: {fileID: 1795435875386837311}
   - component: {fileID: 7240756447556803552}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BaseballPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,6 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60c3683d7fc6d33489c9ec5f50b1bacf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  level: 0
+  exp: 0
+  atk: 0
+  gold: 0
+  maxScore: 0
   BallType: 1
   balls: []
   _ballPrefab: {fileID: 995715049263497212, guid: a0b8ae9cbe2884c46a19f28a500fd759, type: 3}
