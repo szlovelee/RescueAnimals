@@ -12,7 +12,7 @@ namespace Component.Entities
         [HideInInspector] public Transform Pivot;
         public float Radian;
         private float radius = 0.7f;
-        private int _atk = 1;
+        private int _atk = 5;
         private Action<Satellite> _returnAction;
 
         public int Reinforce

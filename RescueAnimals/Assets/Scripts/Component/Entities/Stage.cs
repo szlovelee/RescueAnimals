@@ -51,7 +51,7 @@ namespace Entities
 
         private List<GameObject> aliveObjects = new();
         private int _blockGenRowIndex;
-        public float BricksGenTime => 1f;
+        public float BricksGenTime => generationTime;
 
         public int aliveCount => aliveObjects.Count;
 
@@ -161,7 +161,7 @@ namespace Entities
 
         private void InstantiateAnimal(Vector2 position)
         {
-            var selectedIdx = (int)AnimalType.BlackCat;
+            var selectedIdx = (int)AnimalType.Dragon;
             _animalPool.SelectedIndex = selectedIdx;
             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
             aliveObjects.Add(newAnimal.gameObject);
@@ -254,6 +254,6 @@ namespace Entities
             OnAnimalSaved?.Invoke(animal.animalType);
             animal.OnAnimalSave -= AnimalSaved;
         }
-        //todo to manipulate retry make function that clear and init  
+
     }
 }

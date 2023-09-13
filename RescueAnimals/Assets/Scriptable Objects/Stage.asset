@@ -16,16 +16,16 @@ MonoBehaviour:
   animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
   intervalX: 0.5
   intervalY: -0.5
-  generationTime: 100
+  generationTime: 142.6
   maxRow: 8
   maxCol: 8
   animalGenerator: {fileID: 11400000, guid: 22cb8ac5ef9004cd7ab9901676ef96a1, type: 2}
   blockGenerators:
-  - {fileID: 11400000, guid: a8ed15048cc894068b0337cc0eb61e1e, type: 2}
-  - {fileID: 11400000, guid: a1e7d3639b24e462ca20cf5383624d0c, type: 2}
-  - {fileID: 11400000, guid: f45bee710e92b41519422bddce6fb506, type: 2}
-  - {fileID: 11400000, guid: 512c00b935a034ac7b39a1e742cbb7d0, type: 2}
   - {fileID: 11400000, guid: 1dde9952ee232436f8f3bf7917a58ff4, type: 2}
+  - {fileID: 11400000, guid: f45bee710e92b41519422bddce6fb506, type: 2}
+  - {fileID: 11400000, guid: a1e7d3639b24e462ca20cf5383624d0c, type: 2}
+  - {fileID: 11400000, guid: a8ed15048cc894068b0337cc0eb61e1e, type: 2}
+  - {fileID: 11400000, guid: 512c00b935a034ac7b39a1e742cbb7d0, type: 2}
   animalGenerators: []
   blockPrefabs:
   - {fileID: 4222917890701272065, guid: 41865b16c3659ef4c9361794269f9444, type: 3}
