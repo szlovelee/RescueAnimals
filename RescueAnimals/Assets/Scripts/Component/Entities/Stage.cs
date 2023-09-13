@@ -53,7 +53,7 @@ namespace Entities
 
         public float BricksGenTime => CalcBrickGenTime();
 
-        public bool IsStageOver => false; // todo : write logic to move next stage
+        public int AliveCount => aliveObjects.Count;
 
         public event Action OnBlockDestroyed;
         public event Action<AnimalType> OnAnimalSaved;
@@ -63,7 +63,7 @@ namespace Entities
             Initialize();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             blockGenerator = blockGenerators[0];
             _mapTypes = new MapType[maxRow, maxCol];
@@ -90,19 +90,15 @@ namespace Entities
             return 0;
         }
 
-        public void UpdateStageSettings()
+        public void StageClear()
         {
             stageNum++;
-            Debug.Log($"New Stage: {stageNum}");
             BlockGenerator blockGen = blockGenerators[(stageNum - 1) % blockGenerators.Count];
             // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
             AnimalGenerator animalGen = animalGenerator; // temp
-
             ChangePattern(blockGen, animalGen);
-
             CreateBlocks();
             CreateAnimals();
-
             ClearMap();
         }
 
@@ -159,7 +155,7 @@ namespace Entities
                             _animalPool.SelectedIndex = selectedIdx;
                             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
                             aliveObjects.Add(newAnimal.gameObject);
-                            newAnimal.OnAnimalSave += OnAnimalSaved;
+                            newAnimal.OnAnimalSave += (t) => { OnAnimalSaved?.Invoke(t); };
                             SetAnimalReinforceState(newAnimal);
                             break;
                     }
@@ -183,12 +179,10 @@ namespace Entities
 
         public void ResetStage()
         {
-            Initialize();
             stageNum = 1;
             BlockGenerator blockGen = blockGenerators[(stageNum - 1) % 4];
             // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
             AnimalGenerator animalGen = animalGenerator; // temp
-
             ChangePattern(blockGen, animalGen);
         }
 

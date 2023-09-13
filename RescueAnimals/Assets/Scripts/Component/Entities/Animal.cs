@@ -68,12 +68,12 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         if (attackable == null) return;
 
         Hp -= attackable.Atk;
+        if (Hp <= 0 && !_isSaved && gameObject.activeSelf)
         {
-        if (Hp <= 0 && !_isSaved)
             _isSaved = true;
-            jailObj.SetActive(false);
             OnAnimalSave?.Invoke(animalType);
             StartCoroutine(Fadeout());
+            jailObj.SetActive(false);
         }
     }
 
