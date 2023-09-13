@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 663607166513995293}
   m_Layer: 0
   m_Name: Retreiver
-  m_TagString: Untagged
+  m_TagString: Animal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,6 +51,7 @@ MonoBehaviour:
   Hp: 10
   animalType: 3
   reinforceLevel: 0
+  jailObj: {fileID: 0}
   onResqueEvent:
     m_PersistentCalls:
       m_Calls:
