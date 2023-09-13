@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private AnimalData animalData;
     private Camera cam;
 
     public event Action OnGameStart;
@@ -68,8 +69,9 @@ public class GameManager : MonoBehaviour
 
         if (player.balls.Count == 0 && scene.name == "GameScene" && isPlaying)
         {
-            CallGameEnd();
             isPlaying = false;
+            CallGameEnd();
+            DataManager.Instance.SavePlayer(player, animalData);
         }
     }
 
@@ -104,11 +106,6 @@ public class GameManager : MonoBehaviour
 
     public void CallGameEnd()
     {
-        if (!DataManager.Instance.IsWrite)
-        {
-            DataManager.Instance.SavePlayer(player);
-        }
-
         OnGameEnd?.Invoke();
     }
 
@@ -145,7 +142,7 @@ public class GameManager : MonoBehaviour
 
     private void ScoreCheck()
     {
-        if (addedScore > 10 + currentStage.stageNum)    // goal score for stage clear should be set
+        if (addedScore > 10 + currentStage.stageNum) // goal score for stage clear should be set
         {
             currentStage.UpdateStageSettings();
             CallStageClear();
@@ -157,7 +154,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetBall()
     {
-        while (player.balls.Count > 1) 
+        while (player.balls.Count > 1)
         {
             Destroy(player.balls[0].gameObject);
             player.balls.RemoveAt(0);
