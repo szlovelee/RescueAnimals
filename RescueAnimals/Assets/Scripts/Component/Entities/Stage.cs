@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using Entities.BlockGenerators;
 using EnumTypes;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Util;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
@@ -55,7 +53,7 @@ namespace Entities
         private int _blockGenRowIndex;
         public float BricksGenTime => 5f;
 
-        [HideInInspector] public int aliveCount => aliveObjects.Count;
+        public int aliveCount => aliveObjects.Count;
 
         public event Action OnBlockDestroyed;
         public event Action<AnimalType> OnAnimalSaved;
@@ -163,7 +161,7 @@ namespace Entities
 
         private void InstantiateAnimal(Vector2 position)
         {
-            var selectedIdx = (int)AnimalType.Retreiver;
+            var selectedIdx = (int)AnimalType.BlackCat;
             _animalPool.SelectedIndex = selectedIdx;
             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
             aliveObjects.Add(newAnimal.gameObject);

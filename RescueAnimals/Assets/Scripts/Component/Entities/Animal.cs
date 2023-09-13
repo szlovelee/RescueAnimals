@@ -33,7 +33,6 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     private void Awake()
     {
         _renderer = gameObject.GetComponentInChildren<SpriteRenderer>();
-        
     }
 
     public void Initialize(Action<Animal> returnAction)
@@ -80,7 +79,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         if (attackable == null) return;
 
         Hp -= attackable.Atk;
-        if (Hp <= 0 && !_isSaved && gameObject.activeSelf)
+        if (Hp <= 0 && !_isSaved && gameObject.activeInHierarchy)
         {
             _isSaved = true;
             OnAnimalSave?.Invoke(this);
@@ -99,7 +98,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
             _renderer.color = color;
             yield return new WaitForSeconds(0.1f);
         }
-        
+
         if (!gameObject.activeInHierarchy) yield break;
         gameObject.SetActive(false);
     }
