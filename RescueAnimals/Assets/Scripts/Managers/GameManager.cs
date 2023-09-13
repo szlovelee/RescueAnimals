@@ -22,20 +22,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AnimalData animalData;
     private Camera cam;
 
-    public event Action OnGameStart;
     public event Action OnStageClear;
     public event Action OnGameEnd;
-
-    public event Action OnBlockBreak;
-    public event Action OnAnimalRescue;
-    public event Action OnScoreAdded;
+    public event Action OnScoreAdded; // todo make Action<int> send score value to presenter 
 
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
-    Vector2 ballPos = new Vector2(0, -2.8f);
-    bool isPlaying = true;
-    int addedScore;
+    private Vector2 ballPos = Vector2.zero;
 
+    private bool isPlaying = true;
+    private int addedScore;
+
+    private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.AliveCount <= 0;
     public static GameManager Instance;
 
     private void Awake()
@@ -55,14 +53,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetGame();
-
-        OnBlockBreak += AddBlockPoint;
-        OnAnimalRescue += AddAnimalPoint;
-        OnScoreAdded += ScoreCheck;
-
-        OnGameEnd += ResetBall;
-        OnGameEnd += GamePause;
-        OnGameEnd += UpdateRank;
     }
 
     private void Update()
@@ -71,86 +61,89 @@ public class GameManager : MonoBehaviour
 
         if (player.balls.Count == 0 && scene.name == "GameScene" && isPlaying)
         {
-            isPlaying = false;
-            CallGameEnd();
-            DataManager.Instance.SavePlayer(player, animalData, Rank);
+            Gameover();
         }
+    }
+
+    private void Gameover()
+    {
+        isPlaying = false;
+        OnGameEnd?.Invoke();
+        DataManager.Instance.SavePlayer(player, animalData);
+    }
+
+    private void OnDestroy()
+    {
+        currentStage.OnBlockDestroyed -= AddBlockPoint;
+        currentStage.OnAnimalSaved -= AddAnimalPoint;
     }
 
     private void CreateBall()
     {
+        //todo ball make pool-able
         Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
         player.balls.Add(newBall);
     }
 
     private void SetGame()
     {
+        currentStage.Initialize();
         Time.timeScale = 1f;
-        InstantiateCharacter();
-        CreateBall();
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
-        currentStage.InstantiateObjects();
         score = 0;
         isPlaying = true;
+        ListenStageEvent();
+        OnScoreAdded += ScoreCheck;
+        OnGameEnd += ResetBall;
+        OnGameEnd += GamePause;
+        currentStage.InstantiateObjects();
+        InstantiateCharacter();
+        CreateBall();
+    }
+
+
+    private void ListenStageEvent()
+    {
+        currentStage.OnBlockDestroyed += AddBlockPoint;
+        currentStage.OnAnimalSaved += AddAnimalPoint;
     }
 
     public void CallGameStart()
     {
-        OnGameStart?.Invoke();
+        //todo delete
     }
 
-    public void CallStageClear()
+    private void AddScoreAndMoney(int addedScore, int addedCoin)
     {
-        OnStageClear?.Invoke();
-    }
-
-    public void CallGameEnd()
-    {
-        OnGameEnd?.Invoke();
-    }
-
-    public void CallBlockBreak()
-    {
-        OnBlockBreak?.Invoke();
-    }
-
-    public void CallAnimalRescue()
-    {
-        OnAnimalRescue?.Invoke();
-    }
-
-    public void CallScoreAdded()
-    {
+        score += addedScore;
+        coin += addedCoin;
+        this.addedScore += addedScore;
         OnScoreAdded?.Invoke();
     }
 
     private void AddBlockPoint()
     {
-        score += 10;
-        coin += 2;
-        addedScore += 10;
-        CallScoreAdded();
+        AddScoreAndMoney(10, 2);
+        SoundManager.instance.PlayBallEffect();
     }
 
-    private void AddAnimalPoint()
+    private void AddAnimalPoint(AnimalType t)
     {
-        score += 50;
-        coin += 20;
-        addedScore += 50;
-        CallScoreAdded();
+        AddScoreAndMoney(50, 25);
+        SoundManager.instance.PlayBallEffectOnCage();
     }
 
     private void ScoreCheck()
     {
-        if (addedScore > 10 + currentStage.stageNum) // goal score for stage clear should be set
+        if (IsStageClear)
         {
-            currentStage.UpdateStageSettings();
-            CallStageClear();
+            currentStage.StageClear();
+            addedScore = 0;
             SoundManager.instance.PlayStageClear();
             ResetBall();
-            addedScore = 0;
+            OnStageClear?.Invoke();
         }
     }
 
@@ -177,19 +170,18 @@ public class GameManager : MonoBehaviour
 
     public void GamePause()
     {
-        Time.timeScale = 0;
+        Time.timeScale = 0f;
     }
 
     public void GameResume()
     {
-        Time.timeScale = 1;
+        Time.timeScale = 1f;
     }
 
 
     private void SetBlockStartPosition()
     {
         //todo Be camera in member variable 
-
         if (cam != null)
         {
             var worldRect = cam.ViewportToWorldPoint(new Vector3(1, 1));
@@ -236,8 +228,6 @@ public class GameManager : MonoBehaviour
 
         float baseY = startYList[1];
         gameOverLine = baseY + heights[1] * 0.5f * dy[1] * -1;
-
-        Debug.Log("WallCreated");
     }
 
     private void InstantiateCharacter()

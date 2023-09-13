@@ -20,6 +20,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     public GameObject jailObj;
     private SpriteRenderer _renderer;
     public UnityEvent onResqueEvent;
+    public event Action<AnimalType> OnAnimalSave;
     private bool _isSaved = false;
 
     public void SetAnimalReinforceLevel(int level)
@@ -66,11 +67,14 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         var attackable = collision.gameObject.GetComponent<IAttackable>();
         if (attackable == null) return;
 
-        // Sound Added
-
-        SoundManager.instance.PlayBallEffectOnCage();
-
-        GetDamaged(attackable.Atk);
+        Hp -= attackable.Atk;
+        if (Hp <= 0 && !_isSaved && gameObject.activeSelf)
+        {
+            _isSaved = true;
+            OnAnimalSave?.Invoke(animalType);
+            StartCoroutine(Fadeout());
+            jailObj.SetActive(false);
+        }
     }
 
     private IEnumerator Fadeout()
