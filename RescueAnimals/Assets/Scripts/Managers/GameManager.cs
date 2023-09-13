@@ -146,10 +146,7 @@ public class GameManager : MonoBehaviour
         currentStage.OnBlockMoved += OnBlockMoved;
     }
 
-    public void CallGameStart()
-    {
-        //todo delete
-    }
+
 
     private void AddScoreAndMoney(int addedScore, int addedCoin)
     {

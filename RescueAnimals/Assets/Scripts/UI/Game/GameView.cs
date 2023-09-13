@@ -21,6 +21,11 @@ public class GameView : MonoBehaviour
     public Transform Rank;
     public GameObject rankPrefab;
 
+    public Image Timer;
+
+    public List<Sprite> Background;
+    public SpriteRenderer BackgroundSprite;
+
     public Text ScoreTxt;
     public Text CoinTxt;
     public Text StageTxt;
