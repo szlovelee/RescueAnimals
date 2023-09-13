@@ -27,7 +27,7 @@ public class HomePresenter : MonoBehaviour
         _view.OnRankOpen += RankPanelOpen;
         _view.OnPlayerOpen += PlayerPanelOpen;
         _view.OnPanelClose += PanelClose;
-        _view.OnBeagleReinforce += ReinforceAnimal;
+        _view.OnAnimalReinforce += ReinforceAnimal;
     }
 
     private void SetCurrentAnimalReinforceState()
@@ -42,20 +42,25 @@ public class HomePresenter : MonoBehaviour
     {
         switch (data.animalType)
         {
-            case AnimalType.Beagle:
-                _view.beagleNotActivePanel.SetActive(!data.isActive);
-                _view.beagleLevelText.text = $"레벨 {data.reinforceLevel}";
-                _view.beagleExplanationText.text = $"공이 {data.reinforceLevel * data.bonusStatRate}초 동안 관통!";
+            case AnimalType.Retreiver:
+                _view.retreiverNotActivePanel.SetActive(!data.isActive);
+                _view.retreiverLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.retreiverExplanationText.text = $"보너스 공을 {data.reinforceLevel}개 만큼 생성!";
                 break;
             case AnimalType.Panda:
                 _view.pandaNotActivePanel.SetActive(!data.isActive);
                 _view.pandaLevelText.text = $"레벨 {data.reinforceLevel}";
-                _view.pandaExplanationText.text = $"공이 {data.reinforceLevel * data.bonusStatRate}초 동안 관통!";
+                _view.pandaExplanationText.text = $"{5 + (data.reinforceLevel * data.bonusStatRate)}초 동안 도와주는 판다를 부름!";
                 break;
             case AnimalType.Dragon:
                 _view.dragonNotActivePanel.SetActive(!data.isActive);
                 _view.dragonLevelText.text = $"레벨 {data.reinforceLevel}";
-                _view.dragonExplanationText.text = $"공이 {data.reinforceLevel * data.bonusStatRate}초 동안 관통!";
+                _view.dragonExplanationText.text = $"아직 미정!";
+                break;
+            case AnimalType.BlackCat:
+                _view.catNotActivePanel.SetActive(!data.isActive);
+                _view.catLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.catExplanationText.text = $"아직 미정!";
                 break;
         }
     }
