@@ -71,7 +71,8 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
                 if (touch.phase == TouchPhase.Began)
                 {
                     ThrowPivot.SetActive(true);
-                
+                }
+
                 if (touch.phase == TouchPhase.Ended)
                 {
                     ballDir = ((Vector2)transform.position - touchPos).normalized;
