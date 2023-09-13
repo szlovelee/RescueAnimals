@@ -1,37 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using EnumTypes;
 
 public class Dragon : Animal, IAnimalBehaviour
 {
-    private float _bombScale = 2f;
+    private float _bombScale = 30f;
     private float _bombDamage = 1f;
 
-    [SerializeField]
-    private ParticleSystem _bombEffect;
-    
+    [SerializeField] private ParticleSystem _bombEffect;
+
     public void OnResqueMove()
     {
         this.gameObject.SetActive(false);
     }
+
     public void OnResqueEffect()
     {
-        ParticleSystem effect = Instantiate(_bombEffect);
-        effect.transform.position = this.transform.position;
-
+        var bomb = Instantiate(_bombEffect);
         Collider2D[] hits = Physics2D.OverlapCircleAll(this.transform.position, _bombScale);
-
-        for(int i = 0; i < hits.Length; i++)
+        foreach (var hit in hits)
         {
-            if (hits[i].tag == "Animal")
+            if (hit.CompareTag("Block"))
             {
-                hits[i].GetComponent<Animal>().GetDamaged(_bombDamage + (reinforceLevel * 0.5f));
+                var block = hit.gameObject.GetComponent<Block>();
+                block.GetDamaged(reinforceLevel * 5);
             }
-            else if(hits[i].tag == "Block")
+            else if (hit.CompareTag("Animal"))
             {
-                hits[i].GetComponent<Block>().GetDamaged(_bombDamage + (reinforceLevel * 0.5f));
+                var animal = hit.gameObject.GetComponent<Animal>();
+                animal.GetDamaged(reinforceLevel * 5);
             }
         }
+
+        bomb.Stop();
+        var mainModule = bomb.main;
+        bomb.transform.localScale *= 5f;
+        mainModule.duration = 3f;
+        bomb.Play();
     }
 }
