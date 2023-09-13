@@ -7,18 +7,20 @@ using Util;
 using UnityEngine.Events;
 using Entities;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 
 public class Animal : MonoBehaviour, IPoolable<Animal>
 {
     [SerializeField] private double MaxHp = 10;
     [SerializeField] private double Hp = 10;
     //[SerializeField] private Animator _animator;
-    public GameObject jailObj;
 
     public AnimalType animalType;
     public int reinforceLevel;
-
+    public GameObject jailObj;
+    private SpriteRenderer _renderer;
     public UnityEvent onResqueEvent;
+    private bool _isSaved = false;
 
     public void SetAnimalReinforceLevel(int level)
     {
@@ -26,6 +28,11 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     }
 
     private Action<Animal> _returnAction;
+
+    private void Awake()
+    {
+        _renderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+    }
 
     public void Initialize(Action<Animal> returnAction)
     {
@@ -39,6 +46,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
 
     private void OnDisable()
     {
+        StopCoroutine(Fadeout());
         ReturnToPool();
     }
 
@@ -52,10 +60,27 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         SoundManager.instance.PlayBallEffectOnCage();
 
         Hp -= attackable.Atk;
-        if (Hp <= 0)
+        if (Hp <= 0 && !_isSaved)
         {
-            onResqueEvent.Invoke();
-            // gameObject.SetActive(false);
+            _isSaved = true;
+            jailObj.SetActive(false);
+            StartCoroutine(Fadeout());
         }
+    }
+
+    private IEnumerator Fadeout()
+    {
+        var color = _renderer.color;
+        for (var i = 10; i >= 0; i -= 2)
+        {
+            color.a = i * 0.1f;
+            _renderer.color = color;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        color.a = 1f;
+        _renderer.color = color;
+        gameObject.SetActive(false);
+        onResqueEvent?.Invoke();
     }
 }
