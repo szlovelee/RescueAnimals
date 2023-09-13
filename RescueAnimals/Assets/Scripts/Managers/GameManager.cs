@@ -6,10 +6,12 @@ using System.Linq;
 using Component.Entities;
 using Entities;
 using EnumTypes;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Util;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject beaglePrefab;
     [SerializeField] private AnimalData animalData;
     [SerializeField] private ParticleSystem ballParticle;
     [SerializeField] private GameObject satellitePrefab;
@@ -36,7 +39,9 @@ public class GameManager : MonoBehaviour
 
     private SinglePrefabObjectPool<Ball> _ballObjectPool;
     private SinglePrefabObjectPool<Satellite> _satellitePool;
+    private SinglePrefabObjectPool<RunningBeagle> _beaglePool;
     private List<Satellite> _satellites = new();
+    private List<GameObject> _beagles = new();
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
     private Vector2 ballPos = new Vector2(0, -2.8f);
@@ -56,6 +61,7 @@ public class GameManager : MonoBehaviour
             cam = Camera.main;
             _ballObjectPool = new(prefab: ballPrefab, 1);
             _satellitePool = new(prefab: satellitePrefab, 1);
+            _beaglePool = new(prefab: beaglePrefab, 10);
         }
         else
         {
@@ -162,7 +168,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
     private void AddScoreAndMoney(int addedScore, int addedCoin)
     {
         score += addedScore;
@@ -188,6 +193,7 @@ public class GameManager : MonoBehaviour
         if (IsStageClear)
         {
             ResetBall();
+            ClearBeagles();
             ClearSatellites();
             currentStage.StageClear();
             addedScore = 0;
@@ -217,6 +223,17 @@ public class GameManager : MonoBehaviour
 
         _satellites.Clear();
     }
+
+    private void ClearBeagles()
+    {
+        foreach (var beagle in _beagles)
+        {
+            beagle.SetActive(false);
+        }
+
+        _satellites.Clear();
+    }
+
 
     private void UpdateRank()
     {
@@ -344,4 +361,50 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void BeagleTime()
+    {
+        var beagleLevel = animalData.AnimalReinforceData
+            .Find(it => it.animalType == AnimalType.Beagle)
+            .reinforceLevel;
+
+        var count = beagleLevel * 5;
+        var worldPoint = cam.ViewportToWorldPoint(new Vector3(1, 1));
+        var x = worldPoint.x;
+        var y = worldPoint.y;
+
+        for (int i = 0; i < count; i++)
+        {
+            var randomY = Random.Range(-y, y);
+            var beagle = _beaglePool.Pull(new Vector3(-x, randomY));
+            beagle.attack = beagleLevel + 10;
+            _beagles.Add(beagle.gameObject);
+        }
+
+        StartCoroutine(BeagleMovement(_beagles, seconds: beagleLevel * 0.5f));
+    }
+
+    private IEnumerator BeagleMovement(List<GameObject> beagles, float seconds)
+    {
+        var time = 0f;
+
+        while (seconds >= time && !IsStageClear)
+        {
+            time += Time.deltaTime;
+            foreach (var beagle in beagles)
+            {
+                if (IsStageClear) break;
+
+                var beagleTransform = beagle.transform;
+                beagleTransform.position +=
+                    new Vector3(1, 0) * Time.deltaTime * 5f;
+            }
+
+            yield return new WaitForNextFrameUnit();
+        }
+
+        foreach (var beagle in beagles)
+        {
+            beagle.SetActive(false);
+        }
+    }
 }

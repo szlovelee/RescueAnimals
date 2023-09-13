@@ -5,7 +5,7 @@ using EnumTypes;
 
 public class Panda : Animal, IAnimalBehaviour
 {
-    private float _spawnTime = 5f;
+    private float _spawnTime = 100f;
 
     // Temp!!!
     [SerializeField]

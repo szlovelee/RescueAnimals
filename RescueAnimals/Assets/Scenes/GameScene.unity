@@ -2000,37 +2000,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &540587404
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 540587405}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &540587405
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 540587404}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.052134, y: -0.53725976, z: 0.0023741722}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &544585638
 GameObject:
   m_ObjectHideFlags: 0
@@ -3605,6 +3574,7 @@ MonoBehaviour:
   wallPrefab: {fileID: 7218572055491127341, guid: a435f62d4e8684e5c8ae4f9fbcc2c939, type: 3}
   ballPrefab: {fileID: 995715049263497212, guid: a0b8ae9cbe2884c46a19f28a500fd759, type: 3}
   playerPrefab: {fileID: 9161968995396019320, guid: f4a61f78d5e0a47e1aa42368d010529f, type: 3}
+  beaglePrefab: {fileID: 4182793997858057886, guid: cd52543425fb24f1fb086fe25027ccfd, type: 3}
   animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
   ballParticle: {fileID: 5024009746357069192, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   satellitePrefab: {fileID: 9216076269219349978, guid: a19bfb874373448b98e80ad81a616391, type: 3}

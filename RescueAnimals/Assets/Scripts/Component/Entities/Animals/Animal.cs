@@ -83,6 +83,13 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         GetDamaged(attackable.Atk);
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        var attackable = other.gameObject.GetComponent<IAttackable>();
+        if (attackable == null) return;
+        GetDamaged(attackable.Atk);
+    }
+
     private IEnumerator Fadeout()
     {
         var color = _renderer.color;

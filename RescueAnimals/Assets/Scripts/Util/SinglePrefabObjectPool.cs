@@ -28,6 +28,13 @@ namespace Util
             return t;
         }
 
+        public T Pull(Vector3 position)
+        {
+            var t = Pull();
+            t.transform.position = position;
+            return t;
+        }
+
         public void Push(T obj)
         {
             obj.gameObject.SetActive(false);
