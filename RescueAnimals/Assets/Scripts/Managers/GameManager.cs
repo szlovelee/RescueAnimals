@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public event Action OnStageClear;
     public event Action OnGameEnd;
     public event Action OnScoreAdded; // todo make Action<int> send score value to presenter 
+    public event Action OnSetGame;
 
     private SinglePrefabObjectPool<Ball> _ballObjectPool;
     float ballSpeed = 0f;
@@ -118,6 +119,7 @@ public class GameManager : MonoBehaviour
         CreateBall();
         StartCoroutine(RegenerateBlockOnTime());
         ListenStageEvent();
+        OnSetGame?.Invoke();
     }
 
     private IEnumerator RegenerateBlockOnTime()
@@ -141,10 +143,7 @@ public class GameManager : MonoBehaviour
         currentStage.OnBlockMoved += OnBlockMoved;
     }
 
-    public void CallGameStart()
-    {
-        //todo delete
-    }
+
 
     private void AddScoreAndMoney(int addedScore, int addedCoin)
     {

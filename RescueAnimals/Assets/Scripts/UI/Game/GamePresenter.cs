@@ -2,11 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GamePresenter : MonoBehaviour
 {
     [SerializeField] private GameObject _viewObj;
     GameView _view;
+
+    GameManager gameManager;
+
+    float regenTime;
+    float remainingTime;
 
     void Awake()
     {
@@ -19,29 +25,42 @@ public class GamePresenter : MonoBehaviour
         _view.OnHomeClicked += ChangeToHomeScene;
         _view.OnRestartClicked += Restart;
 
-        GameManager.Instance.OnGameEnd += GameOver;
-        GameManager.Instance.OnScoreAdded += UpdateScoreUI;
-        GameManager.Instance.OnScoreAdded += UpdateCoinUI;
-        GameManager.Instance.OnStageClear += StageClearUI;
+        gameManager = GameManager.Instance;
+        gameManager.OnGameEnd += GameOver;
+        gameManager.OnScoreAdded += UpdateScoreUI;
+        gameManager.OnScoreAdded += UpdateCoinUI;
+        gameManager.OnStageClear += StageClearUI;
+        gameManager.OnSetGame += ResetTimer;
 
     }
+
+    void Update()
+    {
+        float fillAmount = remainingTime / regenTime;
+        _view.Timer.fillAmount = fillAmount;
+
+        if (remainingTime < 0.3f)
+        {
+            _view.Timer.color = new Color32(255, 0, 31, 174);
+        }
+    }
+
 
     void GameStart()
     {
         ActivateUIElement(_view.GameUI);
         //if (true) ActivateUIElement(_view.Boost); // additional condition for boost needed;
-        GameManager.Instance.CallGameStart();
     }
 
     void GameOver()
     {
         _view.CallGameOver();
-        GameManager.Instance.Rank.CreateRankUI(_view.rankPrefab, _view.Rank);
+        gameManager.Rank.CreateRankUI(_view.rankPrefab, _view.Rank);
     }
 
     void PauseGame()
     {
-        GameManager.Instance.GamePause();
+        gameManager.GamePause();
         ActivateUIElement(_view.PausePanel);
         SoundManager.instance.PlayClickEffect();
         SoundManager.instance.PauseBGM();
@@ -49,7 +68,7 @@ public class GamePresenter : MonoBehaviour
 
     void ResumeGame()
     {
-        GameManager.Instance.GameResume();
+        gameManager.GameResume();
         DeactivateUIElement(_view.PausePanel);
         SoundManager.instance.PlayReturnEffect();
         SoundManager.instance.ResumeBGM();
@@ -58,8 +77,8 @@ public class GamePresenter : MonoBehaviour
     void OpenGameOverPanel()
     {
         Debug.Log("GameOverPanel Called");
-        _view.FinalScoreTxt.text = GameManager.Instance.score.ToString();
-        _view.FinalCoinTxt.text = GameManager.Instance.coin.ToString();
+        _view.FinalScoreTxt.text = gameManager.score.ToString();
+        _view.FinalCoinTxt.text = gameManager.coin.ToString();
         ActivateUIElement(_view.GameOverPanel);
         SoundManager.instance.PlayGameOver();
         SoundManager.instance.StopBGM();
@@ -78,19 +97,27 @@ public class GamePresenter : MonoBehaviour
         SoundManager.instance.PlayAcceptEffect();
     }
 
+    void ResetTimer()
+    {
+        regenTime = gameManager.currentStage.BricksGenTime;
+        remainingTime = regenTime - gameManager._lastTimeRegenerateBlock;
+        _view.Timer.color = new Color32(204, 255, 153, 174);
+        _view.Timer.fillAmount = 1;
+    }
+
     void UpdateScoreUI()
     {
-        _view.ScoreTxt.text = GameManager.Instance.score.ToString();
+        _view.ScoreTxt.text = gameManager.score.ToString();
     }
 
     void UpdateCoinUI()
     {
-        _view.CoinTxt.text = GameManager.Instance.coin.ToString();
+        _view.CoinTxt.text = gameManager.coin.ToString();
     }
 
     void StageClearUI()
     {
-        _view.StageTxt.text = string.Format($"stage {GameManager.Instance.currentStage.stageNum}");
+        _view.StageTxt.text = string.Format($"stage {gameManager.currentStage.stageNum}");
         StartCoroutine(PauseRoutine(3f));
     }
 
@@ -121,8 +148,8 @@ public class GamePresenter : MonoBehaviour
 
     private IEnumerator PauseRoutine(float duration)
     {
-        GameManager.Instance.currentStage.ClearMap();
-        GameManager.Instance.GamePause();
+        gameManager.currentStage.ClearMap();
+        gameManager.GamePause();
 
         ActivateUIElement(_view.ClearMessage);
 
@@ -137,7 +164,7 @@ public class GamePresenter : MonoBehaviour
 
         DeactivateUIElement(_view.ClearMessage);
 
-        GameManager.Instance.StartStage();
+        gameManager.StartStage();
 
     }
     private IEnumerator BlinkTextRoutine(float duration)

@@ -21,6 +21,8 @@ public class GameView : MonoBehaviour
     public Transform Rank;
     public GameObject rankPrefab;
 
+    public Image Timer;
+
     public Text ScoreTxt;
     public Text CoinTxt;
     public Text StageTxt;
