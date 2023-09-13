@@ -25,4 +25,9 @@ public class RankSystem :ScriptableObject
     {
         return new List<Rank>(rankings);
     }
+
+    public void ClearRankings()
+    {
+        rankings.Clear();
+    }
 }

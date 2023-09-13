@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
-    private Vector2 ballPos = Vector2.zero;
+    private Vector2 ballPos = new Vector2 (0, -2.8f);
 
     private bool isPlaying = true;
     private int addedScore;
@@ -68,8 +68,9 @@ public class GameManager : MonoBehaviour
     private void Gameover()
     {
         isPlaying = false;
+        UpdateRank();
         OnGameEnd?.Invoke();
-        DataManager.Instance.SavePlayer(player, animalData);
+        DataManager.Instance.SavePlayer(player, animalData, Rank);
     }
 
     private void OnDestroy()
