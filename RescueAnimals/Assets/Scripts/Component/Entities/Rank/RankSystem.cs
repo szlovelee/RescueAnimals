@@ -8,7 +8,7 @@ using UnityEngine;
 public class RankSystem :ScriptableObject
 {
     private const int MaxRankings = 5;
-    public List<Rank> rankings = new List<Rank>();
+    public List<Rank> rankings = new();
 
     public void AddRank(Rank rank)
     {

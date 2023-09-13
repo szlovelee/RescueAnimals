@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 7240756447556803552}
   m_Layer: 6
   m_Name: BaseballPlayer
-  m_TagString: Block
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

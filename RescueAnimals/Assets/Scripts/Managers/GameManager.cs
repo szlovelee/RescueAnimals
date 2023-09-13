@@ -343,4 +343,5 @@ public class GameManager : MonoBehaviour
             satellite.Pivot = pivot.transform;
         }
     }
+
 }

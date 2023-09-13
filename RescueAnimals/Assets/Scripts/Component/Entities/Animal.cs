@@ -51,11 +51,13 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     public void GetDamaged(float damage)
     {
         Hp -= damage;
-        if (Hp <= 0 && !_isSaved)
+        if (Hp <= 0 && !_isSaved && gameObject.activeInHierarchy)
         {
             _isSaved = true;
-            jailObj.SetActive(false);
             StartCoroutine(Fadeout());
+            OnAnimalSave?.Invoke(this);
+            onResqueEvent?.Invoke();
+            jailObj.SetActive(false);
         }
     }
 
@@ -78,15 +80,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         var attackable = collision.gameObject.GetComponent<IAttackable>();
         if (attackable == null) return;
 
-        Hp -= attackable.Atk;
-        if (Hp <= 0 && !_isSaved && gameObject.activeInHierarchy)
-        {
-            _isSaved = true;
-            OnAnimalSave?.Invoke(this);
-            onResqueEvent?.Invoke();
-            jailObj.SetActive(false);
-            StartCoroutine(Fadeout());
-        }
+        GetDamaged(attackable.Atk);
     }
 
     private IEnumerator Fadeout()
