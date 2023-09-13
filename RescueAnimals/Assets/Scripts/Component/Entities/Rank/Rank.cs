@@ -6,8 +6,8 @@ using UnityEngine;
 [Serializable]
 public class Rank : IComparable<Rank>
 {
-    public int Score { get; set; }
-    public int StageNumber { get; set; }
+    public int Score;
+    public int StageNumber;
 
     public Rank(int score, int stageNumber)
     {

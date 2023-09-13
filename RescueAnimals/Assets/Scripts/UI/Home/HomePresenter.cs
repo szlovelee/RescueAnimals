@@ -115,9 +115,9 @@ public class HomePresenter : MonoBehaviour
 
     private void UpdateCoin()
     {
-        SaveData gameData = DataManager.Instance.LoadPlayerInfo(reinforceData, rankSystem);
+        SaveData gameData = DataManager.Instance.LoadPlayerInfo(reinforceData);
         _view.coin.text = gameData.Gold.ToString();
-        Debug.Log($"UpdateCoin, {DataManager.Instance.LoadPlayerInfo(reinforceData, rankSystem).Gold}");
+        Debug.Log($"UpdateCoin, {DataManager.Instance.LoadPlayerInfo(reinforceData).Gold}");
     }
 
     private void ActivatePanel(GameObject[] panels, GameObject targetPanel)
