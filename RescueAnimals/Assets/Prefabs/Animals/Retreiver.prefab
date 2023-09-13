@@ -51,7 +51,7 @@ MonoBehaviour:
   Hp: 10
   animalType: 3
   reinforceLevel: 0
-  jailObj: {fileID: 0}
+  jailObj: {fileID: 2611822572965229373}
   onResqueEvent:
     m_PersistentCalls:
       m_Calls:
