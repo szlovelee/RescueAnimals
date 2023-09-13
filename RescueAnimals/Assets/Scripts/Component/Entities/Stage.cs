@@ -54,7 +54,7 @@ namespace Entities
         public float BricksGenTime => generationTime;
 
         public int aliveCount => aliveObjects.Count;
-
+        [SerializeField] private string onlyGenAnimal;
         public event Action OnBlockDestroyed;
         public event Action<AnimalType> OnAnimalSaved;
         public event Action<Vector2> OnBlockMoved;
@@ -84,7 +84,14 @@ namespace Entities
         private int CalcAnimalPercentage()
         {
             //todo calculate animal percentage and return AnimalType
-            return Random.Range(0, AnimalTypes.Length);
+            if (Enum.TryParse(onlyGenAnimal, out AnimalType animalType))
+            {
+                return (int)animalType;
+            }
+            else
+            {
+                return Random.Range(0, AnimalTypes.Length);
+            }
         }
 
         private int CalcBlockPercentage()
@@ -161,7 +168,7 @@ namespace Entities
 
         private void InstantiateAnimal(Vector2 position)
         {
-            var selectedIdx = (int)AnimalType.BlackCat;
+            var selectedIdx = CalcAnimalPercentage();
             _animalPool.SelectedIndex = selectedIdx;
             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
             aliveObjects.Add(newAnimal.gameObject);
@@ -254,6 +261,5 @@ namespace Entities
             OnAnimalSaved?.Invoke(animal.animalType);
             animal.OnAnimalSave -= AnimalSaved;
         }
-
     }
 }
