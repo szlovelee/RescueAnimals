@@ -235,6 +235,7 @@ namespace Entities
             // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
             AnimalGenerator animalGen = animalGenerator; // temp
             ChangePattern(blockGen, animalGen);
+            generationTime = 30f;
         }
 
         private void SetAnimalReinforceState(Animal animal)
