@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private AnimalData animalData;
     private Camera cam;
 
     public event Action OnGameStart;
@@ -68,8 +69,9 @@ public class GameManager : MonoBehaviour
 
         if (player.balls.Count == 0 && scene.name == "GameScene" && isPlaying)
         {
-            CallGameEnd();
             isPlaying = false;
+            CallGameEnd();
+            DataManager.Instance.SavePlayer(player, animalData);
         }
     }
 
