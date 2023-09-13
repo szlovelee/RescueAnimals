@@ -49,7 +49,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHp: 10
   Hp: 10
-  _animator: {fileID: 0}
   animalType: 1
   reinforceLevel: 0
   jailObj: {fileID: 8599664904601279201}
@@ -80,6 +79,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _bombEffect: {fileID: 7226583673155636403, guid: a2ab56839e1c9504ea9d141e95d0b16b, type: 3}
 --- !u!61 &87598850365973835
 BoxCollider2D:
   m_ObjectHideFlags: 0
