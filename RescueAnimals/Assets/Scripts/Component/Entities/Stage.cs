@@ -22,7 +22,7 @@ namespace Entities
 
         private Vector2 _startPosition = Vector2.zero;
 
-        [SerializeField] private float generationTime = 100f;
+        [SerializeField] private float generationTime = 30f;
         public int maxRow = 8;
         public int maxCol = 8;
 
@@ -77,8 +77,8 @@ namespace Entities
 
         private float CalcBrickGenTime()
         {
-            var time = generationTime - (float)stage;
-            return time < 20 ? 20 : time;
+            var time = generationTime - ((float)stageNum  * 2);
+            return time < 5 ? 5 : time;
         }
 
         private int CalcAnimalPercentage()
@@ -103,6 +103,7 @@ namespace Entities
         {
             ClearMap();
             stageNum++;
+            generationTime = CalcBrickGenTime();
             BlockGenerator blockGen = blockGenerators[(stageNum - 1) % blockGenerators.Count];
             AnimalGenerator animalGen = animalGenerator; // temp
             ChangePattern(blockGen, animalGen);
