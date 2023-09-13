@@ -14,7 +14,7 @@ public class Block : MonoBehaviour, IPoolable<Block>
     [SerializeField] private Animator _animator;
 
 
-    public Action OnBlockDestroyed;
+    public Action<Block> OnBlockDestroyed;
     public Action OnHitBlock;
 
     private Action<Block> _returnToPool;
@@ -42,7 +42,7 @@ public class Block : MonoBehaviour, IPoolable<Block>
             case <= 0:
                 _animator.SetTrigger("0%");
                 gameObject.SetActive(false);
-                OnBlockDestroyed?.Invoke();
+                OnBlockDestroyed?.Invoke(this);
                 break;
             case <= 0.33:
                 _animator.SetTrigger("33%");
@@ -61,14 +61,13 @@ public class Block : MonoBehaviour, IPoolable<Block>
 
 
     public void ReturnToPool()
-
     {
+        Hp = MaxHp;
         _returnToPool?.Invoke(this);
     }
 
 
     private void OnDisable()
-
     {
         ReturnToPool();
     }

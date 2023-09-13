@@ -118,11 +118,11 @@ GameObject:
   - component: {fileID: -5667375481856454504}
   - component: {fileID: -4082391097338814837}
   - component: {fileID: 8076561642329176035}
-  - component: {fileID: 1795435875386837311}
+  - component: {fileID: 6438706098920003882}
   - component: {fileID: 7240756447556803552}
   m_Layer: 6
   m_Name: BaseballPlayer
-  m_TagString: Untagged
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -206,8 +206,8 @@ MonoBehaviour:
   m_DefaultActionMap: Character
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!61 &1795435875386837311
-BoxCollider2D:
+--- !u!58 &6438706098920003882
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -238,19 +238,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.049580097, y: 0.047219187}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0.051231265, y: 0}
   serializedVersion: 2
-  m_Size: {x: 0.8866739, y: 0.8866741}
-  m_EdgeRadius: 0
+  m_Radius: 0.55123127
 --- !u!114 &7240756447556803552
 MonoBehaviour:
   m_ObjectHideFlags: 0

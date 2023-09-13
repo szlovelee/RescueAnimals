@@ -20,7 +20,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     public GameObject jailObj;
     private SpriteRenderer _renderer;
     public UnityEvent onResqueEvent;
-    public event Action<AnimalType> OnAnimalSave;
+    public event Action<Animal> OnAnimalSave;
     private bool _isSaved = false;
 
     public void SetAnimalReinforceLevel(int level)
@@ -33,6 +33,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     private void Awake()
     {
         _renderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+        
     }
 
     public void Initialize(Action<Animal> returnAction)
@@ -42,7 +43,10 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
 
     public void ReturnToPool()
     {
+        _isSaved = false;
+        jailObj.SetActive(true);
         _returnAction?.Invoke(this);
+        Hp = MaxHp;
     }
 
     public void GetDamaged(float damage)
@@ -62,6 +66,14 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         ReturnToPool();
     }
 
+    private void OnEnable()
+    {
+        jailObj.SetActive(true);
+        var color = _renderer.color;
+        color.a = 1f;
+        _renderer.color = color;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         var attackable = collision.gameObject.GetComponent<IAttackable>();
@@ -71,25 +83,24 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         if (Hp <= 0 && !_isSaved && gameObject.activeSelf)
         {
             _isSaved = true;
-            OnAnimalSave?.Invoke(animalType);
-            StartCoroutine(Fadeout());
+            OnAnimalSave?.Invoke(this);
+            onResqueEvent?.Invoke();
             jailObj.SetActive(false);
+            StartCoroutine(Fadeout());
         }
     }
 
     private IEnumerator Fadeout()
     {
         var color = _renderer.color;
-        for (var i = 10; i >= 0; i -= 2)
+        for (var i = 10; i >= 0 && gameObject.activeSelf; i -= 2)
         {
             color.a = i * 0.1f;
             _renderer.color = color;
             yield return new WaitForSeconds(0.1f);
         }
-
-        color.a = 1f;
-        _renderer.color = color;
+        
+        if (!gameObject.activeInHierarchy) yield break;
         gameObject.SetActive(false);
-        onResqueEvent?.Invoke();
     }
 }

@@ -23,6 +23,7 @@ namespace Util
                 t = GameObject.Instantiate(_prefab).AddComponent<T>();
                 t.Initialize(Push);
             }
+
             t.gameObject.SetActive(true);
             return t;
         }
@@ -46,6 +47,7 @@ namespace Util
             {
                 T t = GameObject.Instantiate(_prefab).AddComponent<T>();
                 t.Initialize(Push);
+                t.gameObject.SetActive(false);
                 _stack.Push(t);
             }
         }

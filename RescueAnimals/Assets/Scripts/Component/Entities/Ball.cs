@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Entities;
+using TreeEditor;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
+using Util;
 
 //todo make IPoolable
-public class Ball : MonoBehaviour, IAttackable
+public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
 {
     [SerializeField] private Rigidbody2D BallRd;
     [SerializeField] private Collider2D BallCollider;
@@ -28,6 +30,10 @@ public class Ball : MonoBehaviour, IAttackable
     private Vector2 _prevVelocity;
     private Camera _camera;
 
+    private Vector2[] ballTransform = new Vector2[2];
+
+    private Action<Ball> _returnAction;
+    public Action<Vector2> OnBallCollide;
     public int Atk { get; set; }
 
 
@@ -42,20 +48,18 @@ public class Ball : MonoBehaviour, IAttackable
         Atk = 10;
     }
 
-    void Update()
+    private void Update()
     {
-        if (this.transform.position.y <= GameManager.Instance.gameOverLine)
+        if (transform.position.y <= GameManager.Instance.gameOverLine)
         {
             GameManager.Instance.player.balls.Remove(this);
-            Destroy(this.gameObject);
+            gameObject.SetActive(false);
         }
 
         if (Input.touchCount > 0)
         {
-            //Debug.Log(_isShooting);
             if (_isShooting)
             {
-                //Debug.Log("2");
                 touch = Input.GetTouch(0);
                 touchPos = new Vector2(_camera.ScreenToWorldPoint(touch.position).x
                     , Mathf.Clamp(_camera.ScreenToWorldPoint(touch.position).y, -5f, (transform.position.y - 0.5f)));
@@ -64,15 +68,11 @@ public class Ball : MonoBehaviour, IAttackable
                 ThrowPivot.transform.rotation = Quaternion.AngleAxis(rotZ + 90, Vector3.forward);
                 ThrowPoint.transform.position = touchPos;
 
-                if (touch.phase == UnityEngine.TouchPhase.Began)
+                if (touch.phase == TouchPhase.Began)
                 {
                     ThrowPivot.SetActive(true);
-                }
-                //if (Input.GetTouch(0).phase == UnityEngine.TouchPhase.Moved)
-                //{
-
-                //}
-                if (Input.GetTouch(0).phase == UnityEngine.TouchPhase.Ended)
+                
+                if (touch.phase == TouchPhase.Ended)
                 {
                     ballDir = ((Vector2)transform.position - touchPos).normalized;
                     BallRd.AddForce(ballDir * speed);
@@ -94,16 +94,16 @@ public class Ball : MonoBehaviour, IAttackable
         else
             ballDir = new Vector2(-1, 1).normalized;
 
-        BallRd.AddForce(ballDir * speed);
+        // BallRd.AddForce(ballDir * speed);
         ThrowPivot.SetActive(false);
     }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        ParticleSystem effect = Instantiate(BallParticle);
-        effect.transform.position = collision.contacts[0].point;
-
+        var position = collision.GetContact(0).point;
+        OnBallCollide?.Invoke(position);
+        
         if (_isPiercing)
             return;
 
@@ -115,15 +115,48 @@ public class Ball : MonoBehaviour, IAttackable
             }
             else
             {
-                BallRd.velocity += new Vector2(0f, -2f);                
+                BallRd.velocity += new Vector2(0f, -2f);
             }
         }
 
         _prevVelocity = collision.GetContact(0).relativeVelocity;
 
-        if (collision.gameObject.tag == "Block")
+        if (ballTransform[0] == null)
         {
-            Debug.Log("1212");
+            ballTransform[0] = this.gameObject.transform.position;
+        }
+        else
+        {
+            ballTransform[1] = ballTransform[0];
+            ballTransform[0] = this.gameObject.transform.position;
+        }
+
+        if (ballTransform[0] != null && ballTransform[1] != null)
+        {
+            Vector2 BP = (ballTransform[0] - ballTransform[1]);
+            BP.Normalize();
+            if (Mathf.Abs(BP.x) < 0.1f)
+            {
+                if(BP.x < 0)
+                {
+                    BallRd.AddForce(new Vector2(-50f, 0));
+                }
+                else
+                {
+                    BallRd.AddForce(new Vector2(50f, 0));
+                }
+            }
+            else if (Mathf.Abs(BP.y) < 0.1f)
+            {
+                if (BP.y < 0)
+                {
+                    BallRd.AddForce(new Vector2(0, -50f));
+                }
+                else
+                {
+                    BallRd.AddForce(new Vector2(0, 50f));
+                }
+            }
         }
     }
 
@@ -134,7 +167,7 @@ public class Ball : MonoBehaviour, IAttackable
 
         if (collision.gameObject.tag == "Block")
         {
-            Debug.Log("1212");
+            Debug.Log("Ʈ�����浹");
         }
     }
 
@@ -157,5 +190,20 @@ public class Ball : MonoBehaviour, IAttackable
     private bool PreviousVelocityEqualToCurrent(Vector2 velocity)
     {
         return (_prevVelocity + velocity).magnitude <= 0.5f;
+    }
+
+    public void Initialize(Action<Ball> returnAction)
+    {
+        _returnAction = returnAction;
+    }
+
+    public void ReturnToPool()
+    {
+        _returnAction?.Invoke(this);
+    }
+
+    private void OnDisable()
+    {
+        ReturnToPool();
     }
 }

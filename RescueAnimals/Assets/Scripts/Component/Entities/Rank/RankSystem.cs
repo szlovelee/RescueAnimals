@@ -30,4 +30,16 @@ public class RankSystem :ScriptableObject
     {
         rankings.Clear();
     }
+
+    public void CreateRankUI(GameObject rankPrefab, Transform rankPos)
+    {
+        for (int i = 0; i < rankings.Count; i++)
+        {
+            GameObject component = Instantiate(rankPrefab, rankPos);
+            int score = rankings[i].Score;
+            int stage = rankings[i].StageNumber;
+            RankUI ui = component.GetComponent<RankUI>();
+            ui.UpdateRankUI(i + 1, score, stage);
+        }
+    }
 }

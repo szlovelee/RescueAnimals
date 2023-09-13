@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class GamePresenter : MonoBehaviour
 {
     [SerializeField] private GameObject _viewObj;
-    [SerializeField] private GameObject rankPrefab;
     GameView _view;
 
     void Awake()
@@ -37,20 +36,7 @@ public class GamePresenter : MonoBehaviour
     void GameOver()
     {
         _view.CallGameOver();
-        CreateRankUI();
-    }
-
-    void CreateRankUI()
-    {
-        List<Rank> rankdata = GameManager.Instance.Rank.GetRankings();
-        for (int i = 0; i < rankdata.Count; i++)
-        {
-            GameObject component = Instantiate(rankPrefab, _view.Rank);
-            int score = rankdata[i].Score;
-            int stage = rankdata[i].StageNumber;
-            RankUI ui = component.GetComponent<RankUI>();
-            ui.UpdateRankUI(i + 1, score, stage);
-        }
+        GameManager.Instance.Rank.CreateRankUI(_view.rankPrefab, _view.Rank);
     }
 
     void PauseGame()
