@@ -29,6 +29,8 @@ public class HomePresenter : MonoBehaviour
         _view.OnPlayerOpen += PlayerPanelOpen;
         _view.OnPanelClose += PanelClose;
         _view.OnAnimalReinforce += ReinforceAnimal;
+
+        UpdateCoin();
     }
 
     private void SetCurrentAnimalReinforceState()
