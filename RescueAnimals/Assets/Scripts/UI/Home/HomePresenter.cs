@@ -9,9 +9,11 @@ using TMPro;
 public class HomePresenter : MonoBehaviour
 {
     public AnimalData reinforceData;
+    public RankSystem rankSystem;
 
     [SerializeField] private GameObject _viewObj;
     private HomeView _view;
+
 
     private void Awake()
     {
@@ -80,6 +82,7 @@ public class HomePresenter : MonoBehaviour
 
     private void RankPanelOpen()
     {
+        rankSystem.CreateRankUI(_view.rankPrefab, _view.Rank);
         ActivatePanel(_view.panels, _view.rankPanel);
     }
 
@@ -97,6 +100,8 @@ public class HomePresenter : MonoBehaviour
 
         SoundManager.instance.PlayReturnEffect();
     }
+
+
 
     private void ActivatePanel(GameObject[] panels, GameObject targetPanel)
     {
