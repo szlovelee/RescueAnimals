@@ -24,16 +24,15 @@ public class GameManager : MonoBehaviour
     public event Action OnGameStart;
     public event Action OnStageClear;
     public event Action OnGameEnd;
-
-    public event Action OnBlockBreak;
     public event Action OnAnimalRescue;
     public event Action OnScoreAdded;
 
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
-    Vector2 ballPos = new Vector2(0, -2.8f);
-    bool isPlaying = true;
-    int addedScore;
+    private Vector2 ballPos = Vector2.zero;
+   
+    private bool isPlaying = true;
+    private int addedScore;
 
     public static GameManager Instance;
 
@@ -54,11 +53,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetGame();
-
-        OnBlockBreak += AddBlockPoint;
-        OnAnimalRescue += AddAnimalPoint;
         OnScoreAdded += ScoreCheck;
-
         OnGameEnd += ResetBall;
         OnGameEnd += GamePause;
     }
@@ -70,9 +65,15 @@ public class GameManager : MonoBehaviour
         if (player.balls.Count == 0 && scene.name == "GameScene" && isPlaying)
         {
             isPlaying = false;
-            CallGameEnd();
+            OnGameEnd?.Invoke();
             DataManager.Instance.SavePlayer(player, animalData);
         }
+    }
+
+    private void OnDestroy()
+    {
+        currentStage.OnBlockDestroyed -= AddBlockPoint;
+        currentStage.OnAnimalSaved -= AddAnimalPoint;
     }
 
     private void CreateBall()
@@ -89,6 +90,8 @@ public class GameManager : MonoBehaviour
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
+        currentStage.OnBlockDestroyed += AddBlockPoint;
+        currentStage.OnAnimalSaved += AddAnimalPoint;
         currentStage.InstantiateObjects();
         score = 0;
         isPlaying = true;
@@ -109,35 +112,24 @@ public class GameManager : MonoBehaviour
         OnGameEnd?.Invoke();
     }
 
-    public void CallBlockBreak()
+    private void AddScoreAndMoney(int s, int c)
     {
-        OnBlockBreak?.Invoke();
-    }
-
-    public void CallAnimalRescue()
-    {
-        OnAnimalRescue?.Invoke();
-    }
-
-    public void CallScoreAdded()
-    {
+        score += s;
+        coin += c;
+        addedScore += s;
         OnScoreAdded?.Invoke();
     }
 
     private void AddBlockPoint()
     {
-        score += 10;
-        coin += 2;
-        addedScore += 10;
-        CallScoreAdded();
+        AddScoreAndMoney(10, 2);
+        // SoundManager.instance.PlayBallEffect();
     }
 
-    private void AddAnimalPoint()
+    private void AddAnimalPoint(AnimalType t)
     {
-        score += 50;
-        coin += 20;
-        addedScore += 50;
-        CallScoreAdded();
+        AddScoreAndMoney(50, 25);
+        // SoundManager.instance.PlayBallEffectOnCage();
     }
 
     private void ScoreCheck()
@@ -169,19 +161,18 @@ public class GameManager : MonoBehaviour
 
     public void GamePause()
     {
-        Time.timeScale = 0;
+        Time.timeScale = 0f;
     }
 
     public void GameResume()
     {
-        Time.timeScale = 1;
+        Time.timeScale = 1f;
     }
 
 
     private void SetBlockStartPosition()
     {
         //todo Be camera in member variable 
-
         if (cam != null)
         {
             var worldRect = cam.ViewportToWorldPoint(new Vector3(1, 1));
