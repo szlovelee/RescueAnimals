@@ -104,10 +104,10 @@ public class GameManager : MonoBehaviour
 
     public void CallGameEnd()
     {
-        if (!DataManager.Instance.IsWrite)
-        {
-            DataManager.Instance.SavePlayer(player);
-        }
+        //if (!DataManager.Instance.IsWrite)
+        //{
+        //    DataManager.Instance.SavePlayer(player);
+        //}
 
         OnGameEnd?.Invoke();
     }
