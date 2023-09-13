@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Component.Entities;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -20,35 +21,63 @@ namespace EnumTypes
             {
                 if (_instance != null) return _instance;
 
-                var go = new GameObject();
-                go.name = nameof(DataManager);
+                var go = new GameObject
+                {
+                    name = nameof(DataManager)
+                };
                 _instance = go.AddComponent<DataManager>();
                 return _instance;
             }
         }
 
-        public Player LoadPlayerInfo()
+        private void Awake()
+        {
+            if (_instance != this && _instance != null)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        public Player LoadPlayerInfo(AnimalData animalData)
         {
             var parent = Application.persistentDataPath;
             var filePath = Path.Combine(parent, FileName);
             var json = File.ReadAllText(filePath);
-            var ret = JsonUtility.FromJson<SaveData>(json);
+            var saveData = JsonUtility.FromJson<SaveData>(json);
             Debug.Log(json);
-            return new Player();
+            var player = gameObject.AddComponent<Player>();
+            player.level = saveData.Level;
+            player.atk = saveData.Atk;
+            player.gold = saveData.Gold;
+            player.exp = saveData.Exp;
+            player.maxScore = saveData.MaxScore;
+            var reinforce = animalData.AnimalReinforceData;
+            for (int i = 0; i < saveData.ReinforceSaveData.Count; i++)
+            {
+                if (i >= reinforce.Count) break;
+                reinforce[i].reinforceLevel = saveData.ReinforceSaveData[i].reinforceLevel;
+            }
+
+            return player;
         }
 
-        public void SavePlayer(Player player)
+        public void SavePlayer(Player player, AnimalData animalData)
         {
+            var reinforce = animalData
+                .AnimalReinforceData
+                .Select(data => new ReinforceSaveData(data.animalType, data.reinforceLevel))
+                .ToList();
+
             IsWrite = true;
             var parent = Application.persistentDataPath;
             var filePath = Path.Combine(parent, FileName);
             SaveData saveData = new SaveData(
-                1,
-                0,
-                1000,
-                10,
-                100,
-                new Dictionary<AnimalType, int>()
+                player.level,
+                player.exp,
+                player.gold,
+                player.maxScore,
+                player.atk,
+                reinforceSaveData: reinforce
             );
             var json = JsonUtility.ToJson(saveData);
             File.WriteAllText(filePath, json);

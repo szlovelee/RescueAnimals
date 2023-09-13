@@ -1,15 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Component.Entities;
 using Entities;
 using EnumTypes;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    
     public int level;
-    public float exp;
+    public int exp;
+    public int atk;
+    public int gold;
+    public int maxScore;
     public BallType BallType = BallType.Baseball;
 
     //todo make Object pool
