@@ -18,6 +18,7 @@ public class GameView : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject GameUI;
     public GameObject Boost;
+    public Transform Rank;
 
     public Text ScoreTxt;
     public Text CoinTxt;
