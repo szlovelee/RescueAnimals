@@ -15,10 +15,10 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Magic Shield",
+                    "name": "MagicShield",
                     "type": "Value",
-                    "id": "212df443-8c76-496c-b2f9-b68e9617a8d9",
-                    "expectedControlType": "Vector2",
+                    "id": "72302970-8edc-41a5-99b7-cdd0f53455d3",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -35,28 +35,6 @@
                     "action": "Move",
                     "isComposite": true,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "46191800-fd5f-4e07-a7d2-ae29536989da",
-                    "path": "<Touchscreen>/primaryTouch/delta/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "TouchScreen",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "ee729552-d3e9-410a-9d90-6cbd7f6993bc",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "TouchScreen",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 },
                 {
                     "name": "left",
@@ -81,59 +59,15 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "c517d0f2-fe66-4706-b77b-22a6c06828de",
-                    "path": "2DVector",
+                    "name": "",
+                    "id": "08fc1149-8bc4-4d45-813b-3ddda7ed3f3e",
+                    "path": "<Touchscreen>/delta/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Magic Shield",
-                    "isComposite": true,
+                    "action": "MagicShield",
+                    "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "85384062-bf91-4cfb-a996-05bab86abfcb",
-                    "path": "<Touchscreen>/primaryTouch/delta/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "TouchScreen",
-                    "action": "Magic Shield",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "3983d95b-622b-45f0-b265-3b0ee8c6ea74",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "TouchScreen",
-                    "action": "Magic Shield",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "c3c4f0b6-dd3c-4f8d-a077-9265207bf02f",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "TouchScreen",
-                    "action": "Magic Shield",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "bac27c7e-a508-4ed3-9975-d74096ce08b5",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "TouchScreen",
-                    "action": "Magic Shield",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 }
             ]
         }

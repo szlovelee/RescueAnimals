@@ -9,7 +9,7 @@ public class RescueAnimalsMagicShield : MonoBehaviour
     [SerializeField] private Transform projectileSpawnPosition;
     private Vector2 _aimDirection = Vector2.right;
 
-    public GameObject Wizard;
+    public GameObject MagicShield;
 
 
     private void Awake()
@@ -21,7 +21,6 @@ public class RescueAnimalsMagicShield : MonoBehaviour
     void Start()
     {
         _controller.OnMagicShieldEvent += OnMagicShield;
-        _controller.OnLookEvent += OnAim;
     }
 
 
@@ -39,7 +38,6 @@ public class RescueAnimalsMagicShield : MonoBehaviour
 
     private void CreateProjectile()
     {
-        //Debug.Log("Fire");
-        Instantiate(Wizard, projectileSpawnPosition.position, Quaternion.identity);
+        Instantiate(MagicShield, projectileSpawnPosition.position, Quaternion.identity);
     }
 }

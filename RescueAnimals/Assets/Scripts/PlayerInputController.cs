@@ -20,20 +20,7 @@ public class PlayerInputController : RescueAnimalsCharacterController
         CallMoveEvent(moveInput);
     }
 
-    public void OnLook(InputValue value)
-    {
-        //Debug.Log("OnLock" + Value.ToString());
-        Vector2 newAim = value.Get<Vector2>();
-        Vector2 worldPos = _camera.ScreenToWorldPoint(newAim);
-        newAim = (worldPos - (Vector2)transform.position).normalized;
-
-        if (newAim.magnitude >= .9f)
-        {
-            CallLookEvent(newAim);
-        }
-    }
-
-    public void OnFire(InputValue value)
+    public void OnMagicShield(InputValue value)
     {
         //Debug.Log("OnFire" + Value.ToString());
         IsMagicShield = value.isPressed;
