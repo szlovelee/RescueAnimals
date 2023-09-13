@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 4293936294566112522}
   m_Layer: 0
   m_Name: Panda
-  m_TagString: Untagged
+  m_TagString: Animal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -155,7 +155,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHp: 10
   Hp: 10
-  _animator: {fileID: 0}
   animalType: 2
   reinforceLevel: 0
   jailObj: {fileID: 2904408813000938979}

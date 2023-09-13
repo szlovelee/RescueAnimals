@@ -23,6 +23,9 @@ public class HomeView : MonoBehaviour
 
     public GameObject[] panels;
 
+    public Transform Rank;
+    public GameObject rankPrefab;
+
     [Header("Beagle")]
     public Text beagleLevelText;
     public Text beaglePriceText;
@@ -90,4 +93,5 @@ public class HomeView : MonoBehaviour
     {
         OnPanelClose?.Invoke();
     }
+
 }

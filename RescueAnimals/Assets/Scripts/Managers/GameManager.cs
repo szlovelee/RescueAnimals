@@ -1,9 +1,12 @@
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Component.Entities;
 using Entities;
 using EnumTypes;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Util;
@@ -12,28 +15,33 @@ public class GameManager : MonoBehaviour
 {
     public Player player;
     public Stage currentStage;
+    public RankSystem Rank;
     public int score;
     public int coin;
+    public float _lastTimeRegenerateBlock = 0f;
 
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private AnimalData animalData;
+    [SerializeField] private ParticleSystem ballParticle;
+
+
     private Camera cam;
 
-    public event Action OnGameStart;
     public event Action OnStageClear;
     public event Action OnGameEnd;
+    public event Action OnScoreAdded; // todo make Action<int> send score value to presenter 
 
-    public event Action OnBlockBreak;
-    public event Action OnAnimalRescue;
-    public event Action OnScoreAdded;
-
+    private SinglePrefabObjectPool<Ball> _ballObjectPool;
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
-    Vector2 ballPos = new Vector2(0, -2.8f);
-    bool isPlaying = true;
-    int addedScore;
+    private Vector2 ballPos = new Vector2(0, -2.8f);
 
+    private bool isPlaying = true;
+    private int addedScore;
+
+    private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.aliveCount <= 0;
     public static GameManager Instance;
 
     private void Awake()
@@ -42,6 +50,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             cam = Camera.main;
+            _ballObjectPool = new(prefab: ballPrefab, 1);
         }
         else
         {
@@ -53,138 +62,174 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetGame();
-
-        OnBlockBreak += AddBlockPoint;
-        OnAnimalRescue += AddAnimalPoint;
-        OnScoreAdded += ScoreCheck;
-
-        OnGameEnd += ResetBall;
-        OnGameEnd += GamePause;
     }
 
     private void Update()
     {
-        Scene scene = SceneManager.GetActiveScene();
-
-        if (player.balls.Count == 0 && scene.name == "GameScene" && isPlaying)
+        if (IsGameOver())
         {
-            CallGameEnd();
-            isPlaying = false;
+            GameOver();
         }
     }
 
+    private void OnDestroy()
+    {
+        currentStage.OnBlockDestroyed -= AddBlockPoint;
+        currentStage.OnAnimalSaved -= AddAnimalPoint;
+        currentStage.OnBlockMoved -= OnBlockMoved;
+        StopCoroutine(RegenerateBlockOnTime());
+    }
+
+    private void GameOver()
+    {
+        isPlaying = false;
+        UpdateRank();
+        OnGameEnd?.Invoke();
+        DataManager.Instance.SavePlayer(player, animalData, Rank);
+    }
+
+    private bool IsGameOver()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        return player.balls.Count == 0 && scene.name == "GameScene" && isPlaying;
+    }
+
+
     private void CreateBall()
     {
+        //todo ball make pool-able
         Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
         player.balls.Add(newBall);
     }
 
     private void SetGame()
     {
+        currentStage.Initialize();
         Time.timeScale = 1f;
-        InstantiateCharacter();
-        CreateBall();
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
-        currentStage.InstantiateObjects();
         score = 0;
         isPlaying = true;
+        OnScoreAdded += ScoreCheck;
+        OnGameEnd += ResetBall;
+        OnGameEnd += GamePause;
+        currentStage.InstantiateObjects();
+        InstantiateCharacter();
+        CreateBall();
+        StartCoroutine(RegenerateBlockOnTime());
+        ListenStageEvent();
+    }
+
+    private IEnumerator RegenerateBlockOnTime()
+    {
+        while (isPlaying)
+        {
+            yield return new WaitForNextFrameUnit();
+            _lastTimeRegenerateBlock += Time.deltaTime;
+            if (_lastTimeRegenerateBlock >= currentStage.BricksGenTime)
+            {
+                currentStage.AddBlockLine();
+                _lastTimeRegenerateBlock = 0;
+            }
+        }
+    }
+
+    private void ListenStageEvent()
+    {
+        currentStage.OnBlockDestroyed += AddBlockPoint;
+        currentStage.OnAnimalSaved += AddAnimalPoint;
+        currentStage.OnBlockMoved += OnBlockMoved;
     }
 
     public void CallGameStart()
     {
-        OnGameStart?.Invoke();
+        //todo delete
     }
 
-    public void CallStageClear()
+    private void AddScoreAndMoney(int addedScore, int addedCoin)
     {
-        OnStageClear?.Invoke();
-    }
-
-    public void CallGameEnd()
-    {
-        if (!DataManager.Instance.IsWrite)
-        {
-            DataManager.Instance.SavePlayer(player);
-        }
-
-        OnGameEnd?.Invoke();
-    }
-
-    public void CallBlockBreak()
-    {
-        OnBlockBreak?.Invoke();
-    }
-
-    public void CallAnimalRescue()
-    {
-        OnAnimalRescue?.Invoke();
-    }
-
-    public void CallScoreAdded()
-    {
+        score += addedScore;
+        coin += addedCoin;
+        this.addedScore += addedScore;
         OnScoreAdded?.Invoke();
     }
 
     private void AddBlockPoint()
     {
-        score += 10;
-        coin += 2;
-        addedScore += 10;
-        CallScoreAdded();
+        AddScoreAndMoney(10, 2);
+        SoundManager.instance.PlayBallEffect();
     }
 
-    private void AddAnimalPoint()
+    private void AddAnimalPoint(AnimalType t)
     {
-        score += 50;
-        coin += 20;
-        addedScore += 50;
-        CallScoreAdded();
+        AddScoreAndMoney(50, 25);
+        SoundManager.instance.PlayBallEffectOnCage();
     }
 
     private void ScoreCheck()
     {
-        if (addedScore > 10 + currentStage.stageNum)    // goal score for stage clear should be set
+        if (IsStageClear)
         {
-            currentStage.UpdateStageSettings();
-            CallStageClear();
-            SoundManager.instance.PlayStageClear();
             ResetBall();
+            currentStage.StageClear();
             addedScore = 0;
+            SoundManager.instance.PlayStageClear();
+            OnStageClear?.Invoke();
         }
     }
 
     private void ResetBall()
     {
-        while (player.balls.Count > 1) 
+        for (int i = 0; i < player.balls.Count; i++)
         {
-            Destroy(player.balls[0].gameObject);
-            player.balls.RemoveAt(0);
+            player.balls[i].OnBallCollide -= ShowParticle;
+            player.balls[i].gameObject.SetActive(false);
         }
+
+        player.balls.Clear();
+        CreateBall();
+    }
+
+    private void UpdateRank()
+    {
+        Rank rank = new Rank(score, currentStage.stageNum);
+        Rank.AddRank(rank);
     }
 
     public void StartStage()
     {
-        GameResume();
+        _lastTimeRegenerateBlock = 0f;
         currentStage.InstantiateObjects();
+        GameResume();
     }
 
     public void GamePause()
     {
-        Time.timeScale = 0;
+        Time.timeScale = 0f;
     }
 
     public void GameResume()
     {
-        Time.timeScale = 1;
+        Time.timeScale = 1f;
+    }
+
+    public void AddBalls(Vector2 position, int ballCount)
+    {
+        for (int i = 0; i < ballCount; i++)
+        {
+            var ball = _ballObjectPool.Pull();
+            ball.transform.position = position;
+            ball.SetBonusBall();
+            ball.OnBallCollide += ShowParticle;
+            player.balls.Add(ball);
+        }
     }
 
 
     private void SetBlockStartPosition()
     {
         //todo Be camera in member variable 
-
         if (cam != null)
         {
             var worldRect = cam.ViewportToWorldPoint(new Vector3(1, 1));
@@ -231,8 +276,6 @@ public class GameManager : MonoBehaviour
 
         float baseY = startYList[1];
         gameOverLine = baseY + heights[1] * 0.5f * dy[1] * -1;
-
-        Debug.Log("WallCreated");
     }
 
     private void InstantiateCharacter()
@@ -242,5 +285,21 @@ public class GameManager : MonoBehaviour
         var y = halfHeight * 0.7f * -1;
         player = Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity)
             .GetComponent<Player>();
+    }
+
+    private void ShowParticle(Vector2 position)
+    {
+        var particle = Instantiate(ballParticle);
+        particle.transform.position = position;
+    }
+
+    private void OnBlockMoved(Vector2 position)
+    {
+        if (!isPlaying) return;
+        var playerTransform = player.gameObject.transform;
+        if (position.y <= playerTransform.position.y - playerTransform.localScale.y * 0.5f)
+        {
+            GameOver();
+        }
     }
 }

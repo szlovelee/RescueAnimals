@@ -36,6 +36,7 @@ public class GamePresenter : MonoBehaviour
     void GameOver()
     {
         _view.CallGameOver();
+        GameManager.Instance.Rank.CreateRankUI(_view.rankPrefab, _view.Rank);
     }
 
     void PauseGame()

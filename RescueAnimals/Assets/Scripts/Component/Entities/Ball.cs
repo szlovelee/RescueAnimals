@@ -6,9 +6,10 @@ using TreeEditor;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
+using Util;
 
 //todo make IPoolable
-public class Ball : MonoBehaviour, IAttackable
+public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
 {
     [SerializeField] private Rigidbody2D BallRd;
     [SerializeField] private Collider2D BallCollider;
@@ -31,6 +32,8 @@ public class Ball : MonoBehaviour, IAttackable
 
     private Vector2[] ballTransform = new Vector2[2];
 
+    private Action<Ball> _returnAction;
+    public Action<Vector2> OnBallCollide;
     public int Atk { get; set; }
 
 
@@ -47,10 +50,10 @@ public class Ball : MonoBehaviour, IAttackable
 
     private void Update()
     {
-        if (this.transform.position.y <= GameManager.Instance.gameOverLine)
+        if (transform.position.y <= GameManager.Instance.gameOverLine)
         {
             GameManager.Instance.player.balls.Remove(this);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         if (Input.touchCount > 0)
@@ -68,7 +71,7 @@ public class Ball : MonoBehaviour, IAttackable
                 if (touch.phase == TouchPhase.Began)
                 {
                     ThrowPivot.SetActive(true);
-                }
+                
                 if (touch.phase == TouchPhase.Ended)
                 {
                     ballDir = ((Vector2)transform.position - touchPos).normalized;
@@ -98,9 +101,9 @@ public class Ball : MonoBehaviour, IAttackable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        ParticleSystem effect = Instantiate(BallParticle);
-        effect.transform.position = collision.contacts[0].point;
-
+        var position = collision.GetContact(0).point;
+        OnBallCollide?.Invoke(position);
+        
         if (_isPiercing)
             return;
 
@@ -164,7 +167,7 @@ public class Ball : MonoBehaviour, IAttackable
 
         if (collision.gameObject.tag == "Block")
         {
-            Debug.Log("Æ®¸®°ÅÃæµ¹");
+            Debug.Log("Æ®ï¿½ï¿½ï¿½ï¿½ï¿½æµ¹");
         }
     }
 
@@ -187,5 +190,20 @@ public class Ball : MonoBehaviour, IAttackable
     private bool PreviousVelocityEqualToCurrent(Vector2 velocity)
     {
         return (_prevVelocity + velocity).magnitude <= 0.5f;
+    }
+
+    public void Initialize(Action<Ball> returnAction)
+    {
+        _returnAction = returnAction;
+    }
+
+    public void ReturnToPool()
+    {
+        _returnAction?.Invoke(this);
+    }
+
+    private void OnDisable()
+    {
+        ReturnToPool();
     }
 }

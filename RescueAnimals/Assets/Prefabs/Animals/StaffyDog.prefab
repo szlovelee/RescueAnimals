@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 6162167570835450184}
   m_Layer: 0
   m_Name: StaffyDog
-  m_TagString: Untagged
+  m_TagString: Animal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,7 +133,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHp: 10
   Hp: 10
-  _animator: {fileID: 0}
   animalType: 0
   reinforceLevel: 0
   jailObj: {fileID: 2185140357229777132}

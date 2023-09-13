@@ -5,8 +5,11 @@ using EnumTypes;
 
 public class Dragon : Animal, IAnimalBehaviour
 {
-    // ex) 용은 n초 동안 모든 공이 블럭을 관통하게 만듬
-    private float _reinforceTime = 3f;
+    private float _bombScale = 2f;
+    private float _bombDamage = 1f;
+
+    [SerializeField]
+    private ParticleSystem _bombEffect;
     
     public void OnResqueMove()
     {
@@ -14,6 +17,21 @@ public class Dragon : Animal, IAnimalBehaviour
     }
     public void OnResqueEffect()
     {
-        //player.balls.강화(_reinforceTime);
+        ParticleSystem effect = Instantiate(_bombEffect);
+        effect.transform.position = this.transform.position;
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(this.transform.position, _bombScale);
+
+        for(int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].tag == "Animal")
+            {
+                hits[i].GetComponent<Animal>().GetDamaged(_bombDamage + (reinforceLevel * 0.5f));
+            }
+            else if(hits[i].tag == "Block")
+            {
+                hits[i].GetComponent<Block>().GetDamaged(_bombDamage + (reinforceLevel * 0.5f));
+            }
+        }
     }
 }
