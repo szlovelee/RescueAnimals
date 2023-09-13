@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Component.Entities;
 using Entities;
 using EnumTypes;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Util;
@@ -15,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Stage currentStage;
     public int score;
     public int coin;
+    public float _lastTimeRegenerateBlock = 0f;
 
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
@@ -37,7 +40,7 @@ public class GameManager : MonoBehaviour
     private bool isPlaying = true;
     private int addedScore;
 
-    private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.AliveCount <= 0;
+    private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.aliveCount <= 0;
     public static GameManager Instance;
 
     private void Awake()
@@ -81,6 +84,7 @@ public class GameManager : MonoBehaviour
     {
         currentStage.OnBlockDestroyed -= AddBlockPoint;
         currentStage.OnAnimalSaved -= AddAnimalPoint;
+        StopCoroutine(RegenerateBlockOnTime());
     }
 
     private void CreateBall()
@@ -106,8 +110,22 @@ public class GameManager : MonoBehaviour
         currentStage.InstantiateObjects();
         InstantiateCharacter();
         CreateBall();
+        StartCoroutine(RegenerateBlockOnTime());
     }
 
+    private IEnumerator RegenerateBlockOnTime()
+    {
+        while (isPlaying)
+        {
+            yield return new WaitForNextFrameUnit();
+            _lastTimeRegenerateBlock += Time.deltaTime;
+            if (_lastTimeRegenerateBlock >= currentStage.BricksGenTime)
+            {
+                currentStage.AddBlockLine();
+                _lastTimeRegenerateBlock = 0;
+            }
+        }
+    }
 
     private void ListenStageEvent()
     {
