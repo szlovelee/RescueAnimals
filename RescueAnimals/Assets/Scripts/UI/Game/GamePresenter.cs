@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -166,7 +166,7 @@ public class GamePresenter : MonoBehaviour
 
         StartCoroutine(BlinkTextRoutine(duration));
 
-        // duration µ¿¾È ´ë±â
+        // duration ë™ì•ˆ ëŒ€ê¸°
         float pauseEndTime = Time.realtimeSinceStartup + duration;
         while (Time.realtimeSinceStartup < pauseEndTime)
         {
@@ -194,7 +194,7 @@ public class GamePresenter : MonoBehaviour
             elapsedTime += 1.0f;
         }
 
-        _view.NextMessage.color = clearColor;   //  ¿ø·¡ ÄÃ·¯·Î º¹±¸
+        _view.NextMessage.color = clearColor;   //  ì›ë˜ ì»¬ëŸ¬ë¡œ ë³µêµ¬
     }
 
 }

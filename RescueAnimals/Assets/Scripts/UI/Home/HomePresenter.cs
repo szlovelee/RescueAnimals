@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -47,23 +47,23 @@ public class HomePresenter : MonoBehaviour
         {
             case AnimalType.Retreiver:
                 _view.retreiverNotActivePanel.SetActive(!data.isActive);
-                _view.retreiverLevelText.text = $"·¹º§ {data.reinforceLevel}";
-                _view.retreiverExplanationText.text = $"º¸³Ê½º °øÀ» {data.reinforceLevel}°³ ¸¸Å­ »ı¼º!";
+                _view.retreiverLevelText.text = $"ë ˆë²¨ {data.reinforceLevel}";
+                _view.retreiverExplanationText.text = $"ë³´ë„ˆìŠ¤ ê³µì„ {data.reinforceLevel}ê°œ ë§Œí¼ ìƒì„±!";
                 break;
             case AnimalType.Panda:
                 _view.pandaNotActivePanel.SetActive(!data.isActive);
-                _view.pandaLevelText.text = $"·¹º§ {data.reinforceLevel}";
-                _view.pandaExplanationText.text = $"{5 + (data.reinforceLevel * data.bonusStatRate)}ÃÊ µ¿¾È µµ¿ÍÁÖ´Â ÆÇ´Ù¸¦ ºÎ¸§!";
+                _view.pandaLevelText.text = $"ë ˆë²¨ {data.reinforceLevel}";
+                _view.pandaExplanationText.text = $"{5 + (data.reinforceLevel * data.bonusStatRate)}ì´ˆ ë™ì•ˆ ë„ì™€ì£¼ëŠ” íŒë‹¤ë¥¼ ë¶€ë¦„!";
                 break;
             case AnimalType.Dragon:
                 _view.dragonNotActivePanel.SetActive(!data.isActive);
-                _view.dragonLevelText.text = $"·¹º§ {data.reinforceLevel}";
-                _view.dragonExplanationText.text = $"¾ÆÁ÷ ¹ÌÁ¤!";
+                _view.dragonLevelText.text = $"ë ˆë²¨ {data.reinforceLevel}";
+                _view.dragonExplanationText.text = $"ì•„ì§ ë¯¸ì •!";
                 break;
             case AnimalType.BlackCat:
                 _view.catNotActivePanel.SetActive(!data.isActive);
-                _view.catLevelText.text = $"·¹º§ {data.reinforceLevel}";
-                _view.catExplanationText.text = $"¾ÆÁ÷ ¹ÌÁ¤!";
+                _view.catLevelText.text = $"ë ˆë²¨ {data.reinforceLevel}";
+                _view.catExplanationText.text = $"ì•„ì§ ë¯¸ì •!";
                 break;
         }
     }
