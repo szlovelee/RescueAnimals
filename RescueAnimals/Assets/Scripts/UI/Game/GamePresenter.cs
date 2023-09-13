@@ -30,18 +30,23 @@ public class GamePresenter : MonoBehaviour
         gameManager.OnScoreAdded += UpdateScoreUI;
         gameManager.OnScoreAdded += UpdateCoinUI;
         gameManager.OnStageClear += StageClearUI;
-        gameManager.OnSetGame += ResetTimer;
-
+        gameManager.OnStageClear += ChangeBackground;
     }
 
     void Update()
     {
+        regenTime = gameManager.currentStage.BricksGenTime;
+        remainingTime = regenTime - gameManager._lastTimeRegenerateBlock;
         float fillAmount = remainingTime / regenTime;
         _view.Timer.fillAmount = fillAmount;
 
-        if (remainingTime < 0.3f)
+        if (fillAmount < 0.3f)
         {
             _view.Timer.color = new Color32(255, 0, 31, 174);
+        }
+        else
+        {
+            _view.Timer.color = new Color32(204, 255, 153, 174);
         }
     }
 
@@ -85,6 +90,20 @@ public class GamePresenter : MonoBehaviour
 
     }
 
+    void ChangeBackground()
+    {
+        int stage = gameManager.currentStage.stageNum;
+        if (stage < 5) _view.BackgroundSprite.sprite = _view.Background[0];
+        else if (stage < 10) _view.BackgroundSprite.sprite = _view.Background[1];
+        else if (stage < 15) _view.BackgroundSprite.sprite = _view.Background[2];
+        else if (stage < 20) _view.BackgroundSprite.sprite = _view.Background[3];
+        else if (stage < 25) _view.BackgroundSprite.sprite = _view.Background[4];
+        else if (stage < 30) _view.BackgroundSprite.sprite = _view.Background[5];
+        else if (stage < 35) _view.BackgroundSprite.sprite = _view.Background[6];
+        else _view.BackgroundSprite.sprite = _view.Background[6];
+        Debug.Log($"stage: {stage}");
+    }
+
     void Restart()
     {
         LoadTargetScene("GameScene");
@@ -95,14 +114,6 @@ public class GamePresenter : MonoBehaviour
     {
         LoadTargetScene("HomeScene");
         SoundManager.instance.PlayAcceptEffect();
-    }
-
-    void ResetTimer()
-    {
-        regenTime = gameManager.currentStage.BricksGenTime;
-        remainingTime = regenTime - gameManager._lastTimeRegenerateBlock;
-        _view.Timer.color = new Color32(204, 255, 153, 174);
-        _view.Timer.fillAmount = 1;
     }
 
     void UpdateScoreUI()

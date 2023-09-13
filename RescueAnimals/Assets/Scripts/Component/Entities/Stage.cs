@@ -53,7 +53,7 @@ namespace Entities
 
         private List<GameObject> aliveObjects = new();
         private int _blockGenRowIndex;
-        public float BricksGenTime => 1f;
+        public float BricksGenTime => 5f;
 
         [HideInInspector] public int aliveCount => aliveObjects.Count;
 
