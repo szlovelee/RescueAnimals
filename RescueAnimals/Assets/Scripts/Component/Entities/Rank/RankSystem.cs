@@ -8,6 +8,8 @@ using UnityEngine;
 public class RankSystem :ScriptableObject
 {
     private const int MaxRankings = 5;
+
+    [SerializeField]
     public List<Rank> rankings = new();
 
     public void AddRank(Rank rank)

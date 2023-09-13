@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetGame();
+        Debug.Log(Rank);
     }
 
     private void Update()
@@ -88,10 +89,10 @@ public class GameManager : MonoBehaviour
     private void GameOver()
     {
         player.gold += coin;
-        isPlaying = false;
         UpdateRank();
+        isPlaying = false;
+        DataManager.Instance.SavePlayer(player, animalData, Rank.GetRankings());
         OnGameEnd?.Invoke();
-        DataManager.Instance.SavePlayer(player, animalData, Rank);
     }
 
     private bool IsGameOver()
@@ -110,7 +111,7 @@ public class GameManager : MonoBehaviour
 
     private void SetGame()
     {
-        gameData = DataManager.Instance.LoadPlayerInfo(animalData, Rank);
+        gameData = DataManager.Instance.LoadPlayerInfo(animalData);
         currentStage.Initialize();
         Time.timeScale = 1f;
         MakeWalls();
@@ -222,6 +223,7 @@ public class GameManager : MonoBehaviour
     {
         Rank rank = new Rank(score, currentStage.stageNum);
         Rank.AddRank(rank);
+        Debug.Log("Rank Added On GameEnd");
     }
 
     public void StartStage()

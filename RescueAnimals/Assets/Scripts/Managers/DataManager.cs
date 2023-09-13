@@ -38,15 +38,13 @@ namespace EnumTypes
             }
         }
 
-        public SaveData LoadPlayerInfo(AnimalData animalData, RankSystem rankSystem)
+        public SaveData LoadPlayerInfo(AnimalData animalData)
         {
             var parent = Application.persistentDataPath;
             var filePath = Path.Combine(parent, FileName);
             var json = File.ReadAllText(filePath);
             var saveData = JsonUtility.FromJson<SaveData>(json);
-            Debug.Log(json);
             var reinforce = animalData.AnimalReinforceData;
-            rankSystem.rankings = saveData.RankSystemData;
             for (int i = 0; i < saveData.ReinforceSaveData.Count; i++)
             {
                 if (i >= reinforce.Count) break;
@@ -56,7 +54,7 @@ namespace EnumTypes
             return saveData;
         }
 
-        public void SavePlayer(Player player, AnimalData animalData, RankSystem rankSystem)
+        public void SavePlayer(Player player, AnimalData animalData, List<Rank> rankings)
         {
             var reinforce = animalData
                 .AnimalReinforceData
@@ -72,12 +70,13 @@ namespace EnumTypes
                 player.gold,
                 player.atk,
                 reinforceSaveData: reinforce,
-                rankSystemData: rankSystem.rankings
-            );
-            saveData.RankSystemData = rankSystem.GetRankings();
+                rankSystemData: rankings
+            ); 
             var json = JsonUtility.ToJson(saveData);
             File.WriteAllText(filePath, json);
             IsWrite = false;
+            Debug.Log(json);
+
         }
     }
 }
