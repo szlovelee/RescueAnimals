@@ -12,9 +12,7 @@ public class HomeView : MonoBehaviour
     public event Action OnRankOpen;
     public event Action OnPlayerOpen;
     public event Action OnPanelClose;
-    public event Action<AnimalType> OnBeagleReinforce;
-    public event Action<AnimalType> OnPandaReinforce;
-    public event Action<AnimalType> OnDragonReinforce;
+    public event Action<AnimalType> OnAnimalReinforce;
 
     public GameObject upgradePanel;
     public GameObject rankPanel;
@@ -26,11 +24,11 @@ public class HomeView : MonoBehaviour
     public Transform Rank;
     public GameObject rankPrefab;
 
-    [Header("Beagle")]
-    public Text beagleLevelText;
-    public Text beaglePriceText;
-    public Text beagleExplanationText;
-    public GameObject beagleNotActivePanel;
+    [Header("Retreiver")]
+    public Text retreiverLevelText;
+    public Text retreiverPriceText;
+    public Text retreiverExplanationText;
+    public GameObject retreiverNotActivePanel;
 
     [Header("Panda")]
     public Text pandaLevelText;
@@ -44,25 +42,36 @@ public class HomeView : MonoBehaviour
     public Text dragonExplanationText;
     public GameObject dragonNotActivePanel;
 
+    [Header("Cat")]
+    public Text catLevelText;
+    public Text catPriceText;
+    public Text catExplanationText;
+    public GameObject catNotActivePanel;
+
     private void Start()
     {
         panels = new GameObject[] { upgradePanel, rankPanel, playerPanel };
     }
 
 
-    public void CallBeagleReinforce()
+    public void CallRetreiverReinforce()
     {
-        OnBeagleReinforce?.Invoke(AnimalType.Beagle);
+        OnAnimalReinforce?.Invoke(AnimalType.Retreiver);
     }
 
     public void CallPandaReinforce()
     {
-        OnBeagleReinforce?.Invoke(AnimalType.Panda);
+        OnAnimalReinforce?.Invoke(AnimalType.Panda);
     }
 
     public void CallDragonReinforce()
     {
-        OnBeagleReinforce?.Invoke(AnimalType.Dragon);
+        OnAnimalReinforce?.Invoke(AnimalType.Dragon);
+    }
+
+    public void CallCatReinforce()
+    {
+        OnAnimalReinforce?.Invoke(AnimalType.BlackCat);
     }
 
     public void CallGameStartClicked()

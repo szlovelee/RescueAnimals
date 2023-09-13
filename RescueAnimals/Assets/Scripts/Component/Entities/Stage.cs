@@ -161,7 +161,7 @@ namespace Entities
 
         private void InstantiateAnimal(Vector2 position)
         {
-            var selectedIdx = (int)AnimalType.BlackCat;
+            var selectedIdx = (int)AnimalType.Panda;
             _animalPool.SelectedIndex = selectedIdx;
             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
             aliveObjects.Add(newAnimal.gameObject);
