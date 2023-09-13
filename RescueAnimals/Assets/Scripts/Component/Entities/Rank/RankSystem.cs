@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class RankSystem :ScriptableObject
 
         if (rankings.Count > MaxRankings)
         {
-            rankings.RemoveAt(MaxRankings); // ÃÊ°úÇÏ´Â Ç×¸ñ Á¦°Å
+            rankings.RemoveAt(MaxRankings); // ì´ˆê³¼í•˜ëŠ” í•­ëª© ì œê±°
         }
     }
 

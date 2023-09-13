@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,8 +19,8 @@ public class Rank : IComparable<Rank>
     {
         if (Score != other.Score)
         {
-            return other.Score.CompareTo(Score); // Á¡¼ö°¡ ³ôÀº ¼øÀ¸·Î Á¤·Ä
+            return other.Score.CompareTo(Score); // ì ìˆ˜ê°€ ë†’ì€ ìˆœìœ¼ë¡œ ì •ë ¬
         }
-        return StageNumber.CompareTo(other.StageNumber); // Á¡¼ö°¡ °°À¸¸é ½ºÅ×ÀÌÁö ¹øÈ£·Î Á¤·Ä
+        return StageNumber.CompareTo(other.StageNumber); // ì ìˆ˜ê°€ ê°™ìœ¼ë©´ ìŠ¤í…Œì´ì§€ ë²ˆí˜¸ë¡œ ì •ë ¬
     }
 }
