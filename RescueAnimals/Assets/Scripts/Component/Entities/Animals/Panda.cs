@@ -11,6 +11,6 @@ public class Panda : Animal, IAnimalBehaviour
     }
     public void OnResqueEffect()
     {
-
+        
     }
 }

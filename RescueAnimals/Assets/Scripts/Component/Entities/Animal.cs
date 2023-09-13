@@ -33,6 +33,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     private void Awake()
     {
         _renderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+        
     }
 
     public void Initialize(Action<Animal> returnAction)
@@ -65,6 +66,14 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         ReturnToPool();
     }
 
+    private void OnEnable()
+    {
+        jailObj.SetActive(true);
+        var color = _renderer.color;
+        color.a = 1f;
+        _renderer.color = color;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         var attackable = collision.gameObject.GetComponent<IAttackable>();
@@ -75,8 +84,9 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         {
             _isSaved = true;
             OnAnimalSave?.Invoke(this);
-            StartCoroutine(Fadeout());
+            onResqueEvent?.Invoke();
             jailObj.SetActive(false);
+            StartCoroutine(Fadeout());
         }
     }
 
@@ -89,10 +99,8 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
             _renderer.color = color;
             yield return new WaitForSeconds(0.1f);
         }
-        color.a = 1f;
-        _renderer.color = color;
-        if (!gameObject.activeSelf) yield break;
+        
+        if (!gameObject.activeInHierarchy) yield break;
         gameObject.SetActive(false);
-        onResqueEvent?.Invoke();
     }
 }
