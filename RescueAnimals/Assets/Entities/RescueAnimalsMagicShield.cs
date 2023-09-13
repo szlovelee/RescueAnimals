@@ -20,7 +20,7 @@ public class RescueAnimalsMagicShield : MonoBehaviour
 
     void Start()
     {
-        _controller.OnMagicShield += OnMagicShield;
+        _controller.OnMagicShieldEvent += OnMagicShield;
         _controller.OnLookEvent += OnAim;
     }
 
