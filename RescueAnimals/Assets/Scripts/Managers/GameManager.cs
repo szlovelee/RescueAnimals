@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Component.Entities;
 using Entities;
 using EnumTypes;
 using UnityEngine;
@@ -19,12 +20,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private AnimalData animalData;
+    [SerializeField] private ParticleSystem ballParticle;
+
+
     private Camera cam;
 
     public event Action OnStageClear;
     public event Action OnGameEnd;
     public event Action OnScoreAdded; // todo make Action<int> send score value to presenter 
 
+    private SinglePrefabObjectPool<Ball> _ballObjectPool;
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
     private Vector2 ballPos = Vector2.zero;
@@ -41,6 +46,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             cam = Camera.main;
+            _ballObjectPool = new(prefab: ballPrefab, 1);
         }
         else
         {
@@ -150,6 +156,7 @@ public class GameManager : MonoBehaviour
     {
         while (player.balls.Count > 1)
         {
+            player.balls[0].OnBallCollide -= ShowParticle;
             Destroy(player.balls[0].gameObject);
             player.balls.RemoveAt(0);
         }
@@ -169,6 +176,18 @@ public class GameManager : MonoBehaviour
     public void GameResume()
     {
         Time.timeScale = 1f;
+    }
+
+    public void AddBalls(Vector2 position, int ballCount)
+    {
+        for (int i = 0; i < ballCount; i++)
+        {
+            var ball = _ballObjectPool.Pull();
+            ball.transform.position = position;
+            ball.SetBonusBall();
+            ball.OnBallCollide += ShowParticle;
+            player.balls.Add(ball);
+        }
     }
 
 
@@ -230,5 +249,11 @@ public class GameManager : MonoBehaviour
         var y = halfHeight * 0.7f * -1;
         player = Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity)
             .GetComponent<Player>();
+    }
+
+    private void ShowParticle(Vector2 position)
+    {
+        var particle = Instantiate(ballParticle);
+        particle.transform.position = position;
     }
 }

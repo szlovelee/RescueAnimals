@@ -5,9 +5,10 @@ using Entities;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
+using Util;
 
 //todo make IPoolable
-public class Ball : MonoBehaviour, IAttackable
+public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
 {
     [SerializeField] private Rigidbody2D BallRd;
     [SerializeField] private Collider2D BallCollider;
@@ -28,6 +29,8 @@ public class Ball : MonoBehaviour, IAttackable
     private Vector2 _prevVelocity;
     private Camera _camera;
 
+    private Action<Ball> _returnAction;
+    public Action<Vector2> OnBallCollide;
     public int Atk { get; set; }
 
 
@@ -41,21 +44,19 @@ public class Ball : MonoBehaviour, IAttackable
 
         Atk = 10;
     }
-
+    
     void Update()
     {
-        if (this.transform.position.y <= GameManager.Instance.gameOverLine)
+        if (transform.position.y <= GameManager.Instance.gameOverLine)
         {
             GameManager.Instance.player.balls.Remove(this);
-            Destroy(this);
+            gameObject.SetActive(false);
         }
 
         if (Input.touchCount > 0)
         {
-            //Debug.Log(_isShooting);
             if (_isShooting)
             {
-                //Debug.Log("2");
                 touch = Input.GetTouch(0);
                 touchPos = new Vector2(_camera.ScreenToWorldPoint(touch.position).x
                     , Mathf.Clamp(_camera.ScreenToWorldPoint(touch.position).y, -5f, (transform.position.y - 0.5f)));
@@ -68,10 +69,6 @@ public class Ball : MonoBehaviour, IAttackable
                 {
                     ThrowPivot.SetActive(true);
                 }
-                //if (Input.GetTouch(0).phase == UnityEngine.TouchPhase.Moved)
-                //{
-
-                //}
                 if (Input.GetTouch(0).phase == UnityEngine.TouchPhase.Ended)
                 {
                     ballDir = ((Vector2)transform.position - touchPos).normalized;
@@ -101,9 +98,9 @@ public class Ball : MonoBehaviour, IAttackable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        ParticleSystem effect = Instantiate(BallParticle);
-        effect.transform.position = collision.contacts[0].point;
-
+        var position = collision.GetContact(0).point;
+        OnBallCollide?.Invoke(position);
+        
         if (_isPiercing)
             return;
 
@@ -115,7 +112,7 @@ public class Ball : MonoBehaviour, IAttackable
             }
             else
             {
-                BallRd.velocity += new Vector2(0f, -2f);                
+                BallRd.velocity += new Vector2(0f, -2f);
             }
         }
 
@@ -157,5 +154,20 @@ public class Ball : MonoBehaviour, IAttackable
     private bool PreviousVelocityEqualToCurrent(Vector2 velocity)
     {
         return (_prevVelocity + velocity).magnitude <= 0.5f;
+    }
+
+    public void Initialize(Action<Ball> returnAction)
+    {
+        _returnAction = returnAction;
+    }
+
+    public void ReturnToPool()
+    {
+        _returnAction?.Invoke(this);
+    }
+
+    private void OnDisable()
+    {
+        ReturnToPool();
     }
 }

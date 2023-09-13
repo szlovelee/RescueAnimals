@@ -3793,7 +3793,7 @@ MonoBehaviour:
   score: 0
   coin: 0
   wallPrefab: {fileID: 7218572055491127341, guid: a435f62d4e8684e5c8ae4f9fbcc2c939, type: 3}
-  ballPrefab: {fileID: 995715049263497212, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+  ballPrefab: {fileID: 995715049263497212, guid: a0b8ae9cbe2884c46a19f28a500fd759, type: 3}
   playerPrefab: {fileID: 9161968995396019320, guid: f4a61f78d5e0a47e1aa42368d010529f, type: 3}
   animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
   gameOverLine: 0

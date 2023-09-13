@@ -101,8 +101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27657b8561c89f6459d8451c39ba5c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BallRd: {fileID: 0}
-  BallCollider: {fileID: 0}
+  BallRd: {fileID: 3093811770252103605}
+  BallCollider: {fileID: 939229430747075610}
   ThrowPivot: {fileID: 0}
   ThrowPoint: {fileID: 0}
   BallParticle: {fileID: 5024009746357069192, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
