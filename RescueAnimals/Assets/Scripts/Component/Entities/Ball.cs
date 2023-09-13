@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Entities;
+using TreeEditor;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
@@ -29,6 +30,8 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
     private Vector2 _prevVelocity;
     private Camera _camera;
 
+    private Vector2[] ballTransform = new Vector2[2];
+
     private Action<Ball> _returnAction;
     public Action<Vector2> OnBallCollide;
     public int Atk { get; set; }
@@ -44,8 +47,8 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
 
         Atk = 10;
     }
-    
-    void Update()
+
+    private void Update()
     {
         if (transform.position.y <= GameManager.Instance.gameOverLine)
         {
@@ -65,11 +68,12 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
                 ThrowPivot.transform.rotation = Quaternion.AngleAxis(rotZ + 90, Vector3.forward);
                 ThrowPoint.transform.position = touchPos;
 
-                if (touch.phase == UnityEngine.TouchPhase.Began)
+                if (touch.phase == TouchPhase.Began)
                 {
                     ThrowPivot.SetActive(true);
                 }
-                if (Input.GetTouch(0).phase == UnityEngine.TouchPhase.Ended)
+
+                if (touch.phase == TouchPhase.Ended)
                 {
                     ballDir = ((Vector2)transform.position - touchPos).normalized;
                     BallRd.AddForce(ballDir * speed);
@@ -91,7 +95,7 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
         else
             ballDir = new Vector2(-1, 1).normalized;
 
-        BallRd.AddForce(ballDir * speed);
+        // BallRd.AddForce(ballDir * speed);
         ThrowPivot.SetActive(false);
     }
 
@@ -118,9 +122,42 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
 
         _prevVelocity = collision.GetContact(0).relativeVelocity;
 
-        if (collision.gameObject.tag == "Block")
+        if (ballTransform[0] == null)
         {
-            Debug.Log("1212");
+            ballTransform[0] = this.gameObject.transform.position;
+        }
+        else
+        {
+            ballTransform[1] = ballTransform[0];
+            ballTransform[0] = this.gameObject.transform.position;
+        }
+
+        if (ballTransform[0] != null && ballTransform[1] != null)
+        {
+            Vector2 BP = (ballTransform[0] - ballTransform[1]);
+            BP.Normalize();
+            if (Mathf.Abs(BP.x) < 0.1f)
+            {
+                if(BP.x < 0)
+                {
+                    BallRd.AddForce(new Vector2(-50f, 0));
+                }
+                else
+                {
+                    BallRd.AddForce(new Vector2(50f, 0));
+                }
+            }
+            else if (Mathf.Abs(BP.y) < 0.1f)
+            {
+                if (BP.y < 0)
+                {
+                    BallRd.AddForce(new Vector2(0, -50f));
+                }
+                else
+                {
+                    BallRd.AddForce(new Vector2(0, 50f));
+                }
+            }
         }
     }
 
@@ -131,7 +168,7 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
 
         if (collision.gameObject.tag == "Block")
         {
-            Debug.Log("1212");
+            Debug.Log("Ʈ�����浹");
         }
     }
 

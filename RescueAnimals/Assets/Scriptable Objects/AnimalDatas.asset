@@ -19,7 +19,7 @@ MonoBehaviour:
     isActive: 0
   - animalType: 2
     reinforceLevel: 4
-    bonusStatRate: 0.3
+    bonusStatRate: 0.5
     isActive: 1
   - animalType: 1
     reinforceLevel: 1
