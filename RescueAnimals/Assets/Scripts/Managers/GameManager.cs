@@ -114,11 +114,11 @@ public class GameManager : MonoBehaviour
         //todo delete
     }
 
-    private void AddScoreAndMoney(int s, int c)
+    private void AddScoreAndMoney(int addedScore, int addedCoin)
     {
-        score += s;
-        coin += c;
-        addedScore += s;
+        score += addedScore;
+        coin += addedCoin;
+        this.addedScore += addedScore;
         OnScoreAdded?.Invoke();
     }
 
