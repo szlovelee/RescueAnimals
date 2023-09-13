@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
-    Vector2 ballPos = new Vector2(0, -3);
+    Vector2 ballPos = new Vector2(0, -2.8f);
     bool isPlaying = true;
     int addedScore;
 
