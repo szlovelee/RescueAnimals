@@ -13,11 +13,13 @@ public class Beagle : Animal, IAnimalBehaviour
     }
     public void OnResqueEffect()
     {
+        /*
         Player player = GameManager.Instance.player;
 
         for(int i = 0; i < player.balls.Count; i++)
         {
             player.balls[i].OnPiercingMode(true, _reinforceTime + (reinforceLevel * 0.2f));
         }
+        */
     }
 }

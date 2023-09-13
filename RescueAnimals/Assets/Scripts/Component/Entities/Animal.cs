@@ -45,6 +45,17 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         _returnAction?.Invoke(this);
     }
 
+    public void GetDamaged(float damage)
+    {
+        Hp -= damage;
+        if (Hp <= 0 && !_isSaved)
+        {
+            _isSaved = true;
+            jailObj.SetActive(false);
+            StartCoroutine(Fadeout());
+        }
+    }
+
     private void OnDisable()
     {
         StopCoroutine(Fadeout());
@@ -57,8 +68,8 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
         if (attackable == null) return;
 
         Hp -= attackable.Atk;
-        if (Hp <= 0 && !_isSaved)
         {
+        if (Hp <= 0 && !_isSaved)
             _isSaved = true;
             jailObj.SetActive(false);
             OnAnimalSave?.Invoke(animalType);
