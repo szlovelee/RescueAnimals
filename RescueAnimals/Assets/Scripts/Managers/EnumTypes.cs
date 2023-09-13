@@ -7,7 +7,8 @@ namespace EnumTypes
         Panda,
         Retreiver,
         SheepDog,
-        StaffyDog
+        StaffyDog,
+        BlackCat
     }
 
     public enum BallType

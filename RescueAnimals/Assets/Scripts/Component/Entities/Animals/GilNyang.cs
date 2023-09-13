@@ -8,7 +8,7 @@ namespace Component.Entities.Animals
 
         public void OnResqueEffect()
         {
-            
+            GameManager.Instance.SatelliteEffect();
         }
     }
 }
