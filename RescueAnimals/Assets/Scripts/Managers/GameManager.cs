@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     private SinglePrefabObjectPool<Ball> _ballObjectPool;
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
-    private Vector2 ballPos = new Vector2 (0, -2.8f);
+    private Vector2 ballPos = new Vector2(0, -2.8f);
 
     private bool isPlaying = true;
     private int addedScore;
@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
     {
         currentStage.OnBlockDestroyed -= AddBlockPoint;
         currentStage.OnAnimalSaved -= AddAnimalPoint;
+        currentStage.OnBlockMoved -= OnBlockMoved;
         StopCoroutine(RegenerateBlockOnTime());
     }
 
@@ -170,22 +171,24 @@ public class GameManager : MonoBehaviour
     {
         if (IsStageClear)
         {
+            ResetBall();
             currentStage.StageClear();
             addedScore = 0;
             SoundManager.instance.PlayStageClear();
-            ResetBall();
             OnStageClear?.Invoke();
         }
     }
 
     private void ResetBall()
     {
-        while (player.balls.Count > 1)
+        for (int i = 0; i < player.balls.Count; i++)
         {
-            player.balls[0].OnBallCollide -= ShowParticle;
-            Destroy(player.balls[0].gameObject);
-            player.balls.RemoveAt(0);
+            player.balls[i].OnBallCollide -= ShowParticle;
+            player.balls[i].gameObject.SetActive(false);
         }
+
+        player.balls.Clear();
+        CreateBall();
     }
 
     private void UpdateRank()
@@ -196,8 +199,9 @@ public class GameManager : MonoBehaviour
 
     public void StartStage()
     {
-        GameResume();
+        _lastTimeRegenerateBlock = 0f;
         currentStage.InstantiateObjects();
+        GameResume();
     }
 
     public void GamePause()
@@ -293,7 +297,7 @@ public class GameManager : MonoBehaviour
     {
         if (!isPlaying) return;
         var playerTransform = player.gameObject.transform;
-        if (position.y <= playerTransform.position.y + playerTransform.localScale.y * 0.5f)
+        if (position.y <= playerTransform.position.y - playerTransform.localScale.y * 0.5f)
         {
             GameOver();
         }

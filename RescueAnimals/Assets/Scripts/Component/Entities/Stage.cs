@@ -96,13 +96,13 @@ namespace Entities
 
         public void StageClear()
         {
+            ClearMap();
             stageNum++;
             BlockGenerator blockGen = blockGenerators[(stageNum - 1) % blockGenerators.Count];
             AnimalGenerator animalGen = animalGenerator; // temp
             ChangePattern(blockGen, animalGen);
             CreateBlocks();
             CreateAnimals();
-            ClearMap();
         }
 
         public void ChangePattern(BlockGenerator blockGen, AnimalGenerator animalGen)
@@ -163,11 +163,11 @@ namespace Entities
 
         private void InstantiateAnimal(Vector2 position)
         {
-            var selectedIdx = CalcAnimalPercentage();
+            var selectedIdx = (int)AnimalType.Retreiver;
             _animalPool.SelectedIndex = selectedIdx;
             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
             aliveObjects.Add(newAnimal.gameObject);
-            newAnimal.OnAnimalSave += _ => AnimalSaved(newAnimal);
+            newAnimal.OnAnimalSave += AnimalSaved;
             SetAnimalReinforceState(newAnimal);
         }
 
@@ -176,19 +176,22 @@ namespace Entities
             var idx = CalcBlockPercentage();
             var newBlock = _blockPool.Pull(idx, position, Quaternion.identity);
             aliveObjects.Add(newBlock.gameObject);
-            newBlock.OnBlockDestroyed += () => BlockDestroyed(newBlock);
+            newBlock.OnBlockDestroyed += BlockDestroyed;
         }
 
 
         public void ClearMap()
         {
-            foreach (var block in aliveObjects)
+            for (int i = aliveCount - 1; i >= 0; i--)
             {
+                var block = aliveObjects[i];
                 if (block.gameObject != null && block.activeSelf)
                 {
                     block.SetActive(false);
                 }
             }
+
+            aliveObjects.Clear();
         }
 
         public void AddBlockLine()
@@ -244,12 +247,14 @@ namespace Entities
         {
             aliveObjects.Remove(block.gameObject);
             OnBlockDestroyed?.Invoke();
+            block.OnBlockDestroyed -= BlockDestroyed;
         }
 
         private void AnimalSaved(Animal animal)
         {
             aliveObjects.Remove(animal.gameObject);
             OnAnimalSaved?.Invoke(animal.animalType);
+            animal.OnAnimalSave -= AnimalSaved;
         }
         //todo to manipulate retry make function that clear and init  
     }
