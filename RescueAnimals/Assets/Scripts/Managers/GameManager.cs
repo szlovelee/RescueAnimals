@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
 
     private SinglePrefabObjectPool<Ball> _ballObjectPool;
     private SinglePrefabObjectPool<Satellite> _satellitePool;
-    private List<Satellite> _satellites;
+    private List<Satellite> _satellites = new();
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
     private Vector2 ballPos = new Vector2(0, -2.8f);
