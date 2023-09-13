@@ -108,6 +108,7 @@ MonoBehaviour:
   BallParticle: {fileID: 5024009746357069192, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   speed: 200
   _isShooting: 1
+  _isBonusBall: 0
 --- !u!58 &939229430747075610
 CircleCollider2D:
   m_ObjectHideFlags: 0

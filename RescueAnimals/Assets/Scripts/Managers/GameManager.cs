@@ -49,11 +49,14 @@ public class GameManager : MonoBehaviour
     private Vector2 ballPos = new Vector2(0, -2.8f);
     private SaveData gameData;
     [SerializeField] private int _ballCount;
+    [SerializeField] private float _timeScale = 1f;
     private bool isPlaying = true;
     private int addedScore;
 
     private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.aliveCount <= 0;
     public static GameManager Instance;
+
+    public bool IsStarted { get; set; } = false;
 
     private void Awake()
     {
@@ -61,7 +64,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             cam = Camera.main;
-            _ballObjectPool = new(prefab: ballPrefab,5);
+            _ballObjectPool = new(prefab: ballPrefab, 5);
             _satellitePool = new(prefab: satellitePrefab, 0);
             _beaglePool = new(prefab: beaglePrefab, 0);
         }
@@ -74,6 +77,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = _timeScale;
         SetGame();
     }
 
@@ -132,7 +136,7 @@ public class GameManager : MonoBehaviour
     {
         gameData = DataManager.Instance.LoadPlayerInfo(animalData, Rank);
         currentStage.Initialize();
-        Time.timeScale = 1f;
+        Time.timeScale = _timeScale;
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
@@ -216,6 +220,7 @@ public class GameManager : MonoBehaviour
 
         _ballCount = 0;
         player.balls.Clear();
+        IsStarted = false;
         CreateBall();
     }
 
@@ -268,8 +273,8 @@ public class GameManager : MonoBehaviour
         for (var i = 0; i < ballCount; i++)
         {
             var ball = _ballObjectPool.Pull();
-            ball.transform.position = position;
             ball.SetBonusBall();
+            ball.transform.position = position;
             ball.OnBallCollide += ShowParticle;
             player.balls.Add(ball);
             _ballCount++;

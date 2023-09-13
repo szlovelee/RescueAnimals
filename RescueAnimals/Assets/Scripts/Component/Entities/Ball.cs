@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using Util;
 
-//todo make IPoolable
 public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
 {
     [SerializeField] private Rigidbody2D BallRd;
@@ -51,7 +50,7 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
         Atk = 10;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (BallRd.velocity.magnitude <= 1f && !_isShooting)
         {
@@ -64,31 +63,31 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
             gameObject.SetActive(false);
         }
 
-        if (Input.touchCount > 0 && _isShooting)
+        if (Input.touchCount <= 0 || GameManager.Instance.IsStarted) return;
+        
+        touch = Input.GetTouch(0);
+        touchPos = new Vector2(_camera.ScreenToWorldPoint(touch.position).x
+            , Mathf.Clamp(_camera.ScreenToWorldPoint(touch.position).y, -5f, (transform.position.y - 0.5f)));
+        float rotZ = Mathf.Atan2(touchPos.y - ThrowPivot.transform.position.y,
+            touchPos.x - ThrowPivot.transform.position.x) * Mathf.Rad2Deg;
+        ThrowPivot.transform.rotation = Quaternion.AngleAxis(rotZ + 90, Vector3.forward);
+        ThrowPoint.transform.position = touchPos;
+
+        if (touch.phase == TouchPhase.Began)
         {
             ThrowPivot.SetActive(true);
-            touch = Input.GetTouch(0);
-            touchPos = new Vector2(_camera.ScreenToWorldPoint(touch.position).x
-                , Mathf.Clamp(_camera.ScreenToWorldPoint(touch.position).y, -5f, (transform.position.y - 0.5f)));
-            float rotZ = Mathf.Atan2(touchPos.y - ThrowPivot.transform.position.y,
-                touchPos.x - ThrowPivot.transform.position.x) * Mathf.Rad2Deg;
-            ThrowPivot.transform.rotation = Quaternion.AngleAxis(rotZ + 90, Vector3.forward);
-            ThrowPoint.transform.position = touchPos;
+        }
 
-            if (touch.phase == TouchPhase.Began)
-            {
-                ThrowPivot.SetActive(true);
-            }
-
-            if (touch.phase == TouchPhase.Ended)
-            {
-                ballDir = ((Vector2)transform.position - touchPos).normalized;
-                BallRd.AddForce(ballDir * speed);
-                ThrowPivot.SetActive(false);
-                _isShooting = false;
-            }
+        if (touch.phase == TouchPhase.Ended)
+        {
+            ballDir = ((Vector2)transform.position - touchPos).normalized;
+            BallRd.AddForce(ballDir * speed);
+            ThrowPivot.SetActive(false);
+            _isShooting = false;
+            GameManager.Instance.IsStarted = true;
         }
     }
+
 
     public void SetBonusBall()
     {

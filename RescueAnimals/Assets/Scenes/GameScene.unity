@@ -3580,6 +3580,8 @@ MonoBehaviour:
   ballParticle: {fileID: 5024009746357069192, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   satellitePrefab: {fileID: 9216076269219349978, guid: a19bfb874373448b98e80ad81a616391, type: 3}
   gameOverLine: 0
+  _ballCount: 0
+  _timeScale: 0.2
 --- !u!4 &1070558929
 Transform:
   m_ObjectHideFlags: 0
