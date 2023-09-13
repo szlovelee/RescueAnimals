@@ -71,17 +71,19 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
                 if (touch.phase == TouchPhase.Began)
                 {
                     ThrowPivot.SetActive(true);
-                
-                if (touch.phase == TouchPhase.Ended)
-                {
-                    ballDir = ((Vector2)transform.position - touchPos).normalized;
-                    BallRd.AddForce(ballDir * speed);
-                    ThrowPivot.SetActive(false);
-                    _isShooting = false;
+
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        ballDir = ((Vector2)transform.position - touchPos).normalized;
+                        BallRd.AddForce(ballDir * speed);
+                        ThrowPivot.SetActive(false);
+                        _isShooting = false;
+                    }
                 }
             }
         }
     }
+
 
     public void SetBonusBall()
     {

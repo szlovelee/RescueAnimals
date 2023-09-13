@@ -98,6 +98,10 @@ public class HomePresenter : MonoBehaviour
             panel.SetActive(false);
         }
 
+        foreach (Transform child in _view.Rank)
+        {
+            Destroy(child.gameObject);
+        }
         SoundManager.instance.PlayReturnEffect();
     }
 
