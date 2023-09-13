@@ -1,9 +1,12 @@
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Component.Entities;
 using Entities;
 using EnumTypes;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Util;
@@ -15,17 +18,22 @@ public class GameManager : MonoBehaviour
     public RankSystem Rank;
     public int score;
     public int coin;
+    public float _lastTimeRegenerateBlock = 0f;
 
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private AnimalData animalData;
+    [SerializeField] private ParticleSystem ballParticle;
+
+
     private Camera cam;
 
     public event Action OnStageClear;
     public event Action OnGameEnd;
     public event Action OnScoreAdded; // todo make Action<int> send score value to presenter 
 
+    private SinglePrefabObjectPool<Ball> _ballObjectPool;
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
     private Vector2 ballPos = new Vector2 (0, -2.8f);
@@ -33,7 +41,7 @@ public class GameManager : MonoBehaviour
     private bool isPlaying = true;
     private int addedScore;
 
-    private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.AliveCount <= 0;
+    private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.aliveCount <= 0;
     public static GameManager Instance;
 
     private void Awake()
@@ -42,6 +50,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             cam = Camera.main;
+            _ballObjectPool = new(prefab: ballPrefab, 1);
         }
         else
         {
@@ -57,15 +66,20 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        Scene scene = SceneManager.GetActiveScene();
-
-        if (player.balls.Count == 0 && scene.name == "GameScene" && isPlaying)
+        if (IsGameOver())
         {
-            Gameover();
+            GameOver();
         }
     }
 
-    private void Gameover()
+    private void OnDestroy()
+    {
+        currentStage.OnBlockDestroyed -= AddBlockPoint;
+        currentStage.OnAnimalSaved -= AddAnimalPoint;
+        StopCoroutine(RegenerateBlockOnTime());
+    }
+
+    private void GameOver()
     {
         isPlaying = false;
         UpdateRank();
@@ -73,11 +87,12 @@ public class GameManager : MonoBehaviour
         DataManager.Instance.SavePlayer(player, animalData, Rank);
     }
 
-    private void OnDestroy()
+    private bool IsGameOver()
     {
-        currentStage.OnBlockDestroyed -= AddBlockPoint;
-        currentStage.OnAnimalSaved -= AddAnimalPoint;
+        Scene scene = SceneManager.GetActiveScene();
+        return player.balls.Count == 0 && scene.name == "GameScene" && isPlaying;
     }
+
 
     private void CreateBall()
     {
@@ -95,20 +110,35 @@ public class GameManager : MonoBehaviour
         currentStage.ResetStage();
         score = 0;
         isPlaying = true;
-        ListenStageEvent();
         OnScoreAdded += ScoreCheck;
         OnGameEnd += ResetBall;
         OnGameEnd += GamePause;
         currentStage.InstantiateObjects();
         InstantiateCharacter();
         CreateBall();
+        StartCoroutine(RegenerateBlockOnTime());
+        ListenStageEvent();
     }
 
+    private IEnumerator RegenerateBlockOnTime()
+    {
+        while (isPlaying)
+        {
+            yield return new WaitForNextFrameUnit();
+            _lastTimeRegenerateBlock += Time.deltaTime;
+            if (_lastTimeRegenerateBlock >= currentStage.BricksGenTime)
+            {
+                currentStage.AddBlockLine();
+                _lastTimeRegenerateBlock = 0;
+            }
+        }
+    }
 
     private void ListenStageEvent()
     {
         currentStage.OnBlockDestroyed += AddBlockPoint;
         currentStage.OnAnimalSaved += AddAnimalPoint;
+        currentStage.OnBlockMoved += OnBlockMoved;
     }
 
     public void CallGameStart()
@@ -152,6 +182,7 @@ public class GameManager : MonoBehaviour
     {
         while (player.balls.Count > 1)
         {
+            player.balls[0].OnBallCollide -= ShowParticle;
             Destroy(player.balls[0].gameObject);
             player.balls.RemoveAt(0);
         }
@@ -177,6 +208,18 @@ public class GameManager : MonoBehaviour
     public void GameResume()
     {
         Time.timeScale = 1f;
+    }
+
+    public void AddBalls(Vector2 position, int ballCount)
+    {
+        for (int i = 0; i < ballCount; i++)
+        {
+            var ball = _ballObjectPool.Pull();
+            ball.transform.position = position;
+            ball.SetBonusBall();
+            ball.OnBallCollide += ShowParticle;
+            player.balls.Add(ball);
+        }
     }
 
 
@@ -238,5 +281,21 @@ public class GameManager : MonoBehaviour
         var y = halfHeight * 0.7f * -1;
         player = Instantiate(playerPrefab, new Vector3(0, y, 0), Quaternion.identity)
             .GetComponent<Player>();
+    }
+
+    private void ShowParticle(Vector2 position)
+    {
+        var particle = Instantiate(ballParticle);
+        particle.transform.position = position;
+    }
+
+    private void OnBlockMoved(Vector2 position)
+    {
+        if (!isPlaying) return;
+        var playerTransform = player.gameObject.transform;
+        if (position.y <= playerTransform.position.y + playerTransform.localScale.y * 0.5f)
+        {
+            GameOver();
+        }
     }
 }

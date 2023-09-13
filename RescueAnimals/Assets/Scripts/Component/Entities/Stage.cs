@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using Entities.BlockGenerators;
 using EnumTypes;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Util;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
@@ -50,13 +52,14 @@ namespace Entities
         public StageType stage = StageType.None;
 
         private List<GameObject> aliveObjects = new();
+        private int _blockGenRowIndex;
+        public float BricksGenTime => 1f;
 
-        public float BricksGenTime => CalcBrickGenTime();
-
-        public int AliveCount => aliveObjects.Count;
+        [HideInInspector] public int aliveCount => aliveObjects.Count;
 
         public event Action OnBlockDestroyed;
         public event Action<AnimalType> OnAnimalSaved;
+        public event Action<Vector2> OnBlockMoved;
 
         private void OnEnable()
         {
@@ -69,6 +72,7 @@ namespace Entities
             _mapTypes = new MapType[maxRow, maxCol];
             _animalPool = new ObjectPool<Animal>(animalPrefabs);
             _blockPool = new ObjectPool<Block>(blockPrefabs);
+            aliveObjects.Clear();
             CreateBlocks();
             CreateAnimals();
         }
@@ -94,7 +98,6 @@ namespace Entities
         {
             stageNum++;
             BlockGenerator blockGen = blockGenerators[(stageNum - 1) % blockGenerators.Count];
-            // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
             AnimalGenerator animalGen = animalGenerator; // temp
             ChangePattern(blockGen, animalGen);
             CreateBlocks();
@@ -141,22 +144,15 @@ namespace Entities
                         x: _startPosition.x + intervalX * col,
                         y: _startPosition.y + intervalY * row);
 
+
                     switch (mapType)
                     {
                         case MapType.Block:
                             //todo calc this index block
-                            var idx = CalcBlockPercentage();
-                            var newBlock = _blockPool.Pull(idx, position, Quaternion.identity);
-                            aliveObjects.Add(newBlock.gameObject);
-                            newBlock.OnBlockDestroyed += OnBlockDestroyed;
+                            InstantiateBlock(position);
                             break;
                         case MapType.Animal:
-                            var selectedIdx = CalcAnimalPercentage();
-                            _animalPool.SelectedIndex = selectedIdx;
-                            var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
-                            aliveObjects.Add(newAnimal.gameObject);
-                            newAnimal.OnAnimalSave += (t) => { OnAnimalSaved?.Invoke(t); };
-                            SetAnimalReinforceState(newAnimal);
+                            InstantiateAnimal(position);
                             break;
                     }
 
@@ -165,16 +161,62 @@ namespace Entities
             }
         }
 
+        private void InstantiateAnimal(Vector2 position)
+        {
+            var selectedIdx = CalcAnimalPercentage();
+            _animalPool.SelectedIndex = selectedIdx;
+            var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
+            aliveObjects.Add(newAnimal.gameObject);
+            newAnimal.OnAnimalSave += _ => AnimalSaved(newAnimal);
+            SetAnimalReinforceState(newAnimal);
+        }
+
+        private void InstantiateBlock(Vector2 position)
+        {
+            var idx = CalcBlockPercentage();
+            var newBlock = _blockPool.Pull(idx, position, Quaternion.identity);
+            aliveObjects.Add(newBlock.gameObject);
+            newBlock.OnBlockDestroyed += () => BlockDestroyed(newBlock);
+        }
+
 
         public void ClearMap()
         {
             foreach (var block in aliveObjects)
             {
-                if (block.gameObject != null)
+                if (block.gameObject != null && block.activeSelf)
                 {
                     block.SetActive(false);
                 }
             }
+        }
+
+        public void AddBlockLine()
+        {
+            _blockGenRowIndex = (_blockGenRowIndex + 1) % maxRow;
+
+            for (int col = 0; col < maxCol; col++)
+            {
+                var mapType = _mapTypes[_blockGenRowIndex, col];
+                if (mapType != MapType.Block) continue;
+
+                //todo extract method to refactor
+                var position = _startPosition;
+                position.x += col * intervalX;
+                InstantiateBlock(position);
+            }
+
+            Vector2 minYPos = Vector2.positiveInfinity;
+            foreach (var obj in aliveObjects)
+            {
+                obj.transform.localPosition += new Vector3(0, intervalY);
+                if (obj.transform.position.y <= minYPos.y)
+                {
+                    minYPos = obj.transform.position;
+                }
+            }
+
+            OnBlockMoved?.Invoke(minYPos);
         }
 
         public void ResetStage()
@@ -196,6 +238,18 @@ namespace Entities
         public void SetStartPosition(Vector2 startPosition)
         {
             _startPosition = startPosition;
+        }
+
+        private void BlockDestroyed(Block block)
+        {
+            aliveObjects.Remove(block.gameObject);
+            OnBlockDestroyed?.Invoke();
+        }
+
+        private void AnimalSaved(Animal animal)
+        {
+            aliveObjects.Remove(animal.gameObject);
+            OnAnimalSaved?.Invoke(animal.animalType);
         }
         //todo to manipulate retry make function that clear and init  
     }
