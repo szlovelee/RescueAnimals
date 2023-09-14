@@ -79,13 +79,7 @@ namespace Entities
 
         private float CalcBrickGenTime()
         {
-            return time;
-            }
-                time = 5;
-            {
-            if (time < 5)
-            Debug.Log($"{time} / {stageNum}");
-            var time = 30 - ((float)stageNum  * 2);
+            return 0;
         }
 
         private int CalcAnimalPercentage()
