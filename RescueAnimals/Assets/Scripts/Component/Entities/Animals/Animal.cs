@@ -11,8 +11,8 @@ using Unity.VisualScripting;
 
 public class Animal : MonoBehaviour, IPoolable<Animal>
 {
-    [SerializeField] private double MaxHp = 10;
-    [SerializeField] private double Hp = 10;
+    [SerializeField] public double MaxHp = 10;
+    [SerializeField] public double Hp = 10;
     //[SerializeField] private Animator _animator;
 
     public AnimalType animalType;
@@ -23,7 +23,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     public event Action<Animal> OnAnimalSave;
     private bool _isSaved = false;
 
-    public event Action OnHit;
+    public event Action<Vector2> OnHit;
 
     public void SetAnimalReinforceLevel(int level)
     {
@@ -53,7 +53,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     public void GetDamaged(float damage)
     {
         Hp -= damage;
-        OnHit?.Invoke();
+        OnHit?.Invoke(gameObject.transform.position);
         if (Hp <= 0 && !_isSaved && gameObject.activeInHierarchy)
         {
             _isSaved = true;
@@ -61,7 +61,6 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
             OnAnimalSave?.Invoke(this);
             onResqueEvent?.Invoke();
             jailObj.SetActive(false);
-            
         }
     }
 

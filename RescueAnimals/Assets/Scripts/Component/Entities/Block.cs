@@ -7,15 +7,15 @@ using Util;
 public class Block : MonoBehaviour, IPoolable<Block>
 
 {
-    [SerializeField] private double MaxHp = 10;
+    [SerializeField] public double MaxHp = 10;
 
-    [SerializeField] private double Hp = 10;
+    [SerializeField] public double Hp = 10;
 
     [SerializeField] private Animator _animator;
 
 
     public Action<Block> OnBlockDestroyed;
-    public Action OnHitBlock;
+    public Action<Vector2> OnHitBlock;
 
     private Action<Block> _returnToPool;
 
@@ -44,7 +44,7 @@ public class Block : MonoBehaviour, IPoolable<Block>
     public void GetDamaged(float atk)
     {
         Hp -= atk;
-        OnHitBlock?.Invoke();
+        OnHitBlock?.Invoke(transform.position);
         switch (Hp / MaxHp)
         {
             case <= 0:

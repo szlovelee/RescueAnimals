@@ -79,7 +79,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ballPrefab: {fileID: 7321661936805002925, guid: e3f8dc0431c5a6e4c934b0fb8692a44d, type: 3}
+  reinforceData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
+  coef: {fileID: 11400000, guid: f8d4eca7be556452c842ad65ba35bc62, type: 2}
 --- !u!61 &663607166513995293
 BoxCollider2D:
   m_ObjectHideFlags: 0
