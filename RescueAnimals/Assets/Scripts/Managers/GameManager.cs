@@ -11,6 +11,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Util;
 using Random = UnityEngine.Random;
 
@@ -108,7 +109,9 @@ public class GameManager : MonoBehaviour
         currentStage.OnBlockDestroyed -= AddBlockPoint;
         currentStage.OnAnimalSaved -= AddAnimalPoint;
         currentStage.OnBlockMoved -= OnBlockMoved;
-        StopCoroutine(RegenerateBlockOnTime());
+        currentStage.OnBlockHit -= ShowDamage;
+        currentStage.OnAnimalHit -= ShowDamage;
+        StopAllCoroutines();
     }
 
     private void GameOver()
@@ -139,8 +142,8 @@ public class GameManager : MonoBehaviour
     {
         gameData = DataManager.Instance.LoadPlayerInfo(animalData);
         currentStage.Initialize();
-        currentStage.OnBlockHit += () => { SoundManager.instance.PlayBallEffect(); };
-        currentStage.OnAnimalHit += () => { SoundManager.instance.PlayBallEffectOnCage(); };
+        currentStage.OnBlockHit += ShowDamage;
+        currentStage.OnAnimalHit += ShowDamage;
         Time.timeScale = _timeScale;
         MakeWalls();
         SetBlockStartPosition();
@@ -437,4 +440,11 @@ public class GameManager : MonoBehaviour
     {
         _ballCount--;
     }
+
+    //todo show visible damage
+    private void ShowDamage(Vector2 pos)
+    {
+        SoundManager.instance.PlayBallEffect();
+    }
+
 }
