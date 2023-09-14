@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89faed177f374ab3a136f713626887a1, type: 3}
   m_Name: Coefficient
   m_EditorClassIdentifier: 
-  beagleCountPerLevel: 4
+  beagleCountPerLevel: 5
   beagleAtkPerLevel: 3
   satelliteCountPerLevel: 1
   satelliteAtkPerLevel: 3

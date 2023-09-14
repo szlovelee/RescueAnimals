@@ -40,15 +40,30 @@ namespace EnumTypes
 
         public SaveData LoadPlayerInfo(AnimalData animalData)
         {
-            var parent = Application.persistentDataPath;
-            var filePath = Path.Combine(parent, FileName);
-            var json = File.ReadAllText(filePath);
-            var saveData = JsonUtility.FromJson<SaveData>(json);
-            var reinforce = animalData.AnimalReinforceData;
-            for (int i = 0; i < saveData.ReinforceSaveData.Count; i++)
+            SaveData saveData;
+            try
             {
-                if (i >= reinforce.Count) break;
-                reinforce[i].reinforceLevel = saveData.ReinforceSaveData[i].reinforceLevel;
+                var parent = Application.persistentDataPath;
+                var filePath = Path.Combine(parent, FileName);
+                var json = File.ReadAllText(filePath);
+                saveData = JsonUtility.FromJson<SaveData>(json);
+                var reinforce = animalData.AnimalReinforceData;
+                for (int i = 0; i < saveData.ReinforceSaveData.Count; i++)
+                {
+                    if (i >= reinforce.Count) break;
+                    reinforce[i].reinforceLevel = saveData.ReinforceSaveData[i].reinforceLevel;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                saveData = new SaveData(
+                    level: 1,
+                    exp: 0,
+                    gold: 0,
+                    atk: 2,
+                    new(),
+                    new());
             }
 
             return saveData;
@@ -71,12 +86,11 @@ namespace EnumTypes
                 player.atk,
                 reinforceSaveData: reinforce,
                 rankSystemData: rankings
-            ); 
+            );
             var json = JsonUtility.ToJson(saveData);
             File.WriteAllText(filePath, json);
             IsWrite = false;
             Debug.Log(json);
-
         }
 
         public void SavePlayer(SaveData saveData)
@@ -88,7 +102,6 @@ namespace EnumTypes
             File.WriteAllText(filePath, json);
             IsWrite = false;
             Debug.Log(json);
-
         }
     }
 }

@@ -58,6 +58,8 @@ namespace Entities
         public event Action OnBlockDestroyed;
         public event Action<AnimalType> OnAnimalSaved;
         public event Action<Vector2> OnBlockMoved;
+        public event Action OnAnimalHit;
+        public event Action OnBlockHit;
 
         private void OnEnable()
         {
@@ -77,13 +79,13 @@ namespace Entities
 
         private float CalcBrickGenTime()
         {
-            var time = 30 - ((float)stageNum  * 2);
-            Debug.Log($"{time} / {stageNum}");
-            if (time < 5)
-            {
-                time = 5;
-            }
             return time;
+            }
+                time = 5;
+            {
+            if (time < 5)
+            Debug.Log($"{time} / {stageNum}");
+            var time = 30 - ((float)stageNum  * 2);
         }
 
         private int CalcAnimalPercentage()
@@ -179,6 +181,7 @@ namespace Entities
             var newAnimal = _animalPool.Pull(selectedIdx, position, Quaternion.identity);
             aliveObjects.Add(newAnimal.gameObject);
             newAnimal.OnAnimalSave += AnimalSaved;
+            newAnimal.OnHit += OnAnimalHit;
             SetAnimalReinforceState(newAnimal);
         }
 
@@ -187,6 +190,7 @@ namespace Entities
             var idx = CalcBlockPercentage();
             var newBlock = _blockPool.Pull(idx, position, Quaternion.identity);
             aliveObjects.Add(newBlock.gameObject);
+            newBlock.OnHitBlock += OnBlockHit;
             newBlock.OnBlockDestroyed += BlockDestroyed;
         }
 
