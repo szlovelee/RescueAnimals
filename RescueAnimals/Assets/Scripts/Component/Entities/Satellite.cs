@@ -39,8 +39,8 @@ namespace Component.Entities
             lastingTime -= Time.deltaTime;
             _timeSinceLastAttack += Time.deltaTime;
             Radian += Mathf.PI * 1f * Time.deltaTime;
-            radius += 0.1f;
-            if (radius >= 3) radius = 0.7f;
+            // radius += 0.1f;
+            // if (radius >= 3) radius = 0.7f;
             
             gameObject.transform.position = new Vector3(
                 x: radius * Mathf.Cos(Radian),

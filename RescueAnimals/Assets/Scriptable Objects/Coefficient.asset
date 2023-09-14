@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Coefficient
   m_EditorClassIdentifier: 
   beagleCountPerLevel: 5
-  beagleAtkPerLevel: 3
-  satelliteCountPerLevel: 1
+  beagleAtkPerLevel: 4
+  satelliteCountPerLevel: 5
   satelliteAtkPerLevel: 3
   dragonBreathAtkPerLevel: 5
   pandaCountPerLevel: 1
