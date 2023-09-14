@@ -12,6 +12,9 @@ public class HomeView : MonoBehaviour
     public event Action OnRankOpen;
     public event Action OnPlayerOpen;
     public event Action OnPanelClose;
+    public event Action OnGuideOff;
+    public event Action OnReinforcePlayerAtk;
+    public event Action OnReinforcePlayerSpd;
     public event Action<AnimalType> OnAnimalReinforce;
 
     public GameObject upgradePanel;
@@ -23,6 +26,12 @@ public class HomeView : MonoBehaviour
 
     public Transform Rank;
     public GameObject rankPrefab;
+
+    public GameObject guide;
+
+    [Header("Player")]
+    public Slider playerAtkSlider;
+    public Text playerAtkText;
 
     [Header("Retreiver")]
     public Text retreiverLevelText;
@@ -74,6 +83,16 @@ public class HomeView : MonoBehaviour
         OnAnimalReinforce?.Invoke(AnimalType.BlackCat);
     }
 
+    public void CallPlayerSpdReinforce()
+    {
+        OnReinforcePlayerAtk?.Invoke();
+    }
+
+    public void CallPlayerAtkReinforce()
+    {
+        OnReinforcePlayerSpd?.Invoke();
+    }
+
     public void CallGameStartClicked()
     {
         OnGameStartClicked?.Invoke();
@@ -99,4 +118,8 @@ public class HomeView : MonoBehaviour
         OnPanelClose?.Invoke();
     }
 
+    public void CallGuideOff()
+    {
+        OnGuideOff?.Invoke();
+    }
 }

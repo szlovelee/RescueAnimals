@@ -15,29 +15,36 @@ MonoBehaviour:
   AnimalReinforceData:
   - animalType: 0
     reinforceLevel: 3
+    reinforcePrice: 1
     bonusStatRate: 0.2
     isActive: 1
   - animalType: 2
     reinforceLevel: 4
+    reinforcePrice: 2
     bonusStatRate: 0.5
     isActive: 1
   - animalType: 1
     reinforceLevel: 1
+    reinforcePrice: 3
     bonusStatRate: 0.5
     isActive: 1
   - animalType: 3
-    reinforceLevel: 1
+    reinforceLevel: 4
+    reinforcePrice: 4
     bonusStatRate: 1
     isActive: 1
   - animalType: 4
     reinforceLevel: 4
+    reinforcePrice: 5
     bonusStatRate: 0.4
     isActive: 1
   - animalType: 5
     reinforceLevel: 4
+    reinforcePrice: 6
     bonusStatRate: 0.4
     isActive: 1
   - animalType: 6
     reinforceLevel: 28
+    reinforcePrice: 7
     bonusStatRate: 0.4
     isActive: 1

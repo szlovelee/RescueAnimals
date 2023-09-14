@@ -9,6 +9,7 @@ public class AnimalReinforce
 {
     public AnimalType animalType;
     public int reinforceLevel;
+    public int reinforcePrice;
     public float bonusStatRate;
     public bool isActive = false;
 }

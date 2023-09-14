@@ -12,6 +12,7 @@ public class HomePresenter : MonoBehaviour
     public AnimalData reinforceData;
     public RankSystem rankSystem;
 
+    private SaveData _savedData;
     [SerializeField] private GameObject _viewObj;
     private HomeView _view;
 
@@ -28,9 +29,12 @@ public class HomePresenter : MonoBehaviour
         _view.OnRankOpen += RankPanelOpen;
         _view.OnPlayerOpen += PlayerPanelOpen;
         _view.OnPanelClose += PanelClose;
+        _view.OnGuideOff += GuideOff;
         _view.OnAnimalReinforce += ReinforceAnimal;
+        _view.OnReinforcePlayerAtk += ReinforcePlayerAtk;
+        _view.OnReinforcePlayerSpd += ReinforcePlayerSpd;
 
-        UpdateCoin();
+        LoadSaveData();
     }
 
     private void SetCurrentAnimalReinforceState()
@@ -48,21 +52,25 @@ public class HomePresenter : MonoBehaviour
             case AnimalType.Retreiver:
                 _view.retreiverNotActivePanel.SetActive(!data.isActive);
                 _view.retreiverLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.retreiverPriceText.text = $"${data.reinforcePrice}";
                 _view.retreiverExplanationText.text = $"보너스 공을 {data.reinforceLevel}개 만큼 생성!";
                 break;
             case AnimalType.Panda:
                 _view.pandaNotActivePanel.SetActive(!data.isActive);
                 _view.pandaLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.pandaPriceText.text = $"${data.reinforcePrice}";
                 _view.pandaExplanationText.text = $"{5 + (data.reinforceLevel * data.bonusStatRate)}초 동안 도와주는 판다를 부름!";
                 break;
             case AnimalType.Dragon:
                 _view.dragonNotActivePanel.SetActive(!data.isActive);
                 _view.dragonLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.dragonPriceText.text = $"${data.reinforcePrice}";
                 _view.dragonExplanationText.text = $"아직 미정!";
                 break;
             case AnimalType.BlackCat:
                 _view.catNotActivePanel.SetActive(!data.isActive);
                 _view.catLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.catPriceText.text = $"${data.reinforcePrice}";
                 _view.catExplanationText.text = $"아직 미정!";
                 break;
         }
@@ -72,12 +80,54 @@ public class HomePresenter : MonoBehaviour
     {
         var data = reinforceData.AnimalReinforceData.Find(x=>x.animalType == animalType);
 
+        if (_savedData.Gold < data.reinforcePrice)
+        {
+            ShowGuide();
+
+            return;
+        }
+
         data.reinforceLevel += 1;
+        _savedData.Gold -= data.reinforcePrice;
+        UpdateCoin(_savedData.Gold);
         ShowReinforceState(data);
+    }
+
+    private void SetCurrentPlayerState()
+    {
+        _view.playerAtkText.text = $"({_savedData.Atk} / 10)";
+        _view.playerAtkSlider.value = _savedData.Atk * 0.1f;
+    }
+
+    private void ReinforcePlayerAtk()
+    {
+        if (_savedData.Gold < 1)
+        {
+            ShowGuide();
+
+            return;
+        }
+
+        _savedData.Atk += 1;
+    }
+
+    private void ReinforcePlayerSpd()
+    {
+        if (_savedData.Gold < 1)
+        {
+            ShowGuide();
+
+            return;
+        }
+
+        // No Speed Data
+        //_savedData. += 1;
     }
 
     private void LoadGame()
     {
+        DataManager.Instance.SavePlayer(_savedData);
+
         StartCoroutine(LoadGameSceneAsync());
         SoundManager.instance.PlayAcceptEffect();
     }
@@ -96,6 +146,8 @@ public class HomePresenter : MonoBehaviour
 
     private void PlayerPanelOpen()
     {
+        SetCurrentPlayerState();
+
         ActivatePanel(_view.panels, _view.playerPanel);
     }
 
@@ -113,11 +165,29 @@ public class HomePresenter : MonoBehaviour
         SoundManager.instance.PlayReturnEffect();
     }
 
-    private void UpdateCoin()
+    private void ShowGuide()
     {
-        SaveData gameData = DataManager.Instance.LoadPlayerInfo(reinforceData);
-        _view.coin.text = gameData.Gold.ToString();
-        Debug.Log($"UpdateCoin, {DataManager.Instance.LoadPlayerInfo(reinforceData).Gold}");
+        _view.guide.SetActive(true);
+    }
+
+    private void GuideOff()
+    {
+        _view.guide.SetActive(false);
+    }
+
+    private void LoadSaveData()
+    {
+        _savedData = DataManager.Instance.LoadPlayerInfo(reinforceData);
+
+        _view.coin.text = _savedData.Gold.ToString();
+        Debug.Log($"UpdateCoin, {_savedData.Gold}");
+        Debug.Log($"UpdateAtk, {_savedData.Atk}");
+    }
+
+    private void UpdateCoin(int setCoin)
+    {
+        _savedData.Gold = setCoin;
+        _view.coin.text = _savedData.Gold.ToString();
     }
 
     private void ActivatePanel(GameObject[] panels, GameObject targetPanel)

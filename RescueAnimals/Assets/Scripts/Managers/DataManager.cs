@@ -78,5 +78,17 @@ namespace EnumTypes
             Debug.Log(json);
 
         }
+
+        public void SavePlayer(SaveData saveData)
+        {
+            var parent = Application.persistentDataPath;
+            var filePath = Path.Combine(parent, FileName);
+
+            var json = JsonUtility.ToJson(saveData);
+            File.WriteAllText(filePath, json);
+            IsWrite = false;
+            Debug.Log(json);
+
+        }
     }
 }
