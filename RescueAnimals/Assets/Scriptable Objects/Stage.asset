@@ -16,7 +16,7 @@ MonoBehaviour:
   animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
   intervalX: 0.5
   intervalY: -0.5
-  generationTime: 142.6
+  generationTime: 26.600006
   maxRow: 8
   maxCol: 8
   animalGenerator: {fileID: 11400000, guid: 22cb8ac5ef9004cd7ab9901676ef96a1, type: 2}
@@ -39,4 +39,4 @@ MonoBehaviour:
   - {fileID: 4182793997858057886, guid: 4a960ebf301bd41cdb68cfc14612ef3b, type: 3}
   BoxScale: {x: 0.5, y: 0.5}
   stage: 1
-  onlyGenAnimal: Retreiver
+  onlyGenAnimal: Beagle

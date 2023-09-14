@@ -44,6 +44,7 @@ public class Block : MonoBehaviour, IPoolable<Block>
     public void GetDamaged(float atk)
     {
         Hp -= atk;
+        OnHitBlock?.Invoke();
         switch (Hp / MaxHp)
         {
             case <= 0:
@@ -76,6 +77,7 @@ public class Block : MonoBehaviour, IPoolable<Block>
 
     private void OnDisable()
     {
+        OnHitBlock = null;
         ReturnToPool();
     }
 }

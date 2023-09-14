@@ -57,12 +57,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public bool IsStarted { get; set; } = false;
+    public bool IsRunning { get; private set; }
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            IsRunning = true;
             cam = Camera.main;
             _ballObjectPool = new(prefab: ballPrefab, 5);
             _satellitePool = new(prefab: satellitePrefab, 0);
@@ -92,13 +94,13 @@ public class GameManager : MonoBehaviour
 
         if (!IsStageClear) return;
         GamePause();
-        ResetBall();
+        OnStageClear?.Invoke();
         ClearBeagles();
         ClearSatellites();
         addedScore = 0;
         SoundManager.instance.PlayStageClear();
         currentStage.StageClear();
-        OnStageClear?.Invoke();
+        ResetBall();
     }
 
     private void OnDestroy()
@@ -137,6 +139,8 @@ public class GameManager : MonoBehaviour
     {
         gameData = DataManager.Instance.LoadPlayerInfo(animalData);
         currentStage.Initialize();
+        currentStage.OnBlockHit += () => { SoundManager.instance.PlayBallEffect(); };
+        currentStage.OnAnimalHit += () => { SoundManager.instance.PlayBallEffectOnCage(); };
         Time.timeScale = _timeScale;
         MakeWalls();
         SetBlockStartPosition();
@@ -221,8 +225,8 @@ public class GameManager : MonoBehaviour
 
         _ballCount = 0;
         player.balls.Clear();
-        IsStarted = false;
         CreateBall();
+        IsStarted = false;
     }
 
     private void ClearSatellites()
@@ -263,10 +267,12 @@ public class GameManager : MonoBehaviour
     public void GamePause()
     {
         Time.timeScale = 0f;
+        IsRunning = false;
     }
 
     public void GameResume()
     {
+        IsRunning = true;
         Time.timeScale = 1f;
     }
 

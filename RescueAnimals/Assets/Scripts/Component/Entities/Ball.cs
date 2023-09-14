@@ -47,7 +47,6 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
         ThrowPivot = transform.GetChild(0).gameObject;
         ThrowPoint = transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
         _camera = Camera.main;
-        Atk = 10;
     }
 
     private void LateUpdate()
@@ -64,7 +63,9 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
         }
 
         if (Input.touchCount <= 0 || GameManager.Instance.IsStarted) return;
-        
+
+        if (!GameManager.Instance.IsRunning) return;
+
         touch = Input.GetTouch(0);
         touchPos = new Vector2(_camera.ScreenToWorldPoint(touch.position).x
             , Mathf.Clamp(_camera.ScreenToWorldPoint(touch.position).y, -5f, (transform.position.y - 0.5f)));
@@ -88,6 +89,10 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
         }
     }
 
+    private void Start()
+    {
+        Atk = GameManager.Instance.player.atk;
+    }
 
     public void SetBonusBall()
     {
