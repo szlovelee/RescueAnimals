@@ -4423,7 +4423,7 @@ MonoBehaviour:
   acceptEffect: {fileID: 8300000, guid: 61c45c7c2b6670940aaf2917448dbd06, type: 3}
   errorEffect: {fileID: 8300000, guid: bab9841dd23d46b4eb7dd3fff90776b2, type: 3}
   ball: {fileID: 8300000, guid: 62e377c408f5f76459bb82eecabddef7, type: 3}
-  ball_cage: {fileID: 8300000, guid: b7b5a6156961bac44a67504d42ce6fcf, type: 3}
+  ball_cage: {fileID: 8300000, guid: 566d2ea6240b489479a6e9fd608c2621, type: 3}
   stageClear: {fileID: 8300000, guid: c480f666fdb2a694aab3a86b89cfd466, type: 3}
   gameOver: {fileID: 8300000, guid: c4e0ff01131c371469809f99e119bd55, type: 3}
   bgmAudioSource: {fileID: 1325449528}
