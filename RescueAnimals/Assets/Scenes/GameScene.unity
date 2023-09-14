@@ -3581,7 +3581,7 @@ MonoBehaviour:
   satellitePrefab: {fileID: 9216076269219349978, guid: a19bfb874373448b98e80ad81a616391, type: 3}
   gameOverLine: 0
   _ballCount: 0
-  _timeScale: 0.2
+  _timeScale: 1
 --- !u!4 &1070558929
 Transform:
   m_ObjectHideFlags: 0
