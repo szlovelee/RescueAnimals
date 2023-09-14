@@ -23,6 +23,8 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     public event Action<Animal> OnAnimalSave;
     private bool _isSaved = false;
 
+    public event Action OnHit;
+
     public void SetAnimalReinforceLevel(int level)
     {
         reinforceLevel = level;
@@ -51,6 +53,7 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
     public void GetDamaged(float damage)
     {
         Hp -= damage;
+        OnHit?.Invoke();
         if (Hp <= 0 && !_isSaved && gameObject.activeInHierarchy)
         {
             _isSaved = true;
@@ -58,12 +61,14 @@ public class Animal : MonoBehaviour, IPoolable<Animal>
             OnAnimalSave?.Invoke(this);
             onResqueEvent?.Invoke();
             jailObj.SetActive(false);
+            
         }
     }
 
     private void OnDisable()
     {
         StopCoroutine(Fadeout());
+        OnHit = null;
         ReturnToPool();
     }
 

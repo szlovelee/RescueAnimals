@@ -141,6 +141,8 @@ public class GameManager : MonoBehaviour
     {
         gameData = DataManager.Instance.LoadPlayerInfo(animalData);
         currentStage.Initialize();
+        currentStage.OnBlockHit += () => { SoundManager.instance.PlayBallEffect(); };
+        currentStage.OnAnimalHit += () => { SoundManager.instance.PlayBallEffectOnCage(); };
         Time.timeScale = _timeScale;
         MakeWalls();
         SetBlockStartPosition();

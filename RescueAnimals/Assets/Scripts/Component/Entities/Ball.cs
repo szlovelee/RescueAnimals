@@ -91,8 +91,7 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
 
     private void Start()
     {
-        // Atk = GameManager.Instance.player.atk;
-        Atk = 100;
+        Atk = GameManager.Instance.player.atk;
     }
 
     public void SetBonusBall()

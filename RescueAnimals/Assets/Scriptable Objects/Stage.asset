@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08bf59238bdb8524d85f4a10774119e7, type: 3}
   m_Name: Stage
   m_EditorClassIdentifier: 
-  stageNum: 1
+  stageNum: 2
   animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
   intervalX: 0.5
   intervalY: -0.5
-  generationTime: 30
+  generationTime: 26.600006
   maxRow: 8
   maxCol: 8
   animalGenerator: {fileID: 11400000, guid: 22cb8ac5ef9004cd7ab9901676ef96a1, type: 2}
@@ -39,4 +39,4 @@ MonoBehaviour:
   - {fileID: 4182793997858057886, guid: 4a960ebf301bd41cdb68cfc14612ef3b, type: 3}
   BoxScale: {x: 0.5, y: 0.5}
   stage: 1
-  onlyGenAnimal: Dragon
+  onlyGenAnimal: Beagle
