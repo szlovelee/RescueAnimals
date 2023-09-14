@@ -39,16 +39,4 @@ namespace Component.Entities
         }
     }
 
-
-    [Serializable]
-    public class RankSystemData
-    {
-        List<Rank> rankList;
-
-        public RankSystemData(List<Rank> rankList)
-        {
-            this.rankList = rankList;
-        }
-    }
-
 }

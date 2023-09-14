@@ -186,6 +186,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   assistPandaPrefab: {fileID: 1566441489894516702, guid: dc5f81f3f18b414478c62afe321c20a0, type: 3}
+  coef: {fileID: 11400000, guid: f8d4eca7be556452c842ad65ba35bc62, type: 2}
 --- !u!61 &4293936294566112522
 BoxCollider2D:
   m_ObjectHideFlags: 0

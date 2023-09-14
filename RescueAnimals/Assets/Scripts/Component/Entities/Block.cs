@@ -34,6 +34,13 @@ public class Block : MonoBehaviour, IPoolable<Block>
         GetDamaged(attackable.Atk);
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        var attackable = other.gameObject.GetComponent<IAttackable>();
+        if (attackable == null) return;
+        GetDamaged(attackable.Atk);
+    }
+
     public void GetDamaged(float atk)
     {
         Hp -= atk;

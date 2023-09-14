@@ -25,12 +25,12 @@ public class Dragon : Animal, IAnimalBehaviour
             if (hit.CompareTag("Block"))
             {
                 var block = hit.gameObject.GetComponent<Block>();
-                block.GetDamaged(reinforceLevel * 5);
+                block.GetDamaged(15);
             }
             else if (hit.CompareTag("Animal"))
             {
                 var animal = hit.gameObject.GetComponent<Animal>();
-                animal.GetDamaged(reinforceLevel * 5);
+                animal.GetDamaged(15);
             }
         }
 

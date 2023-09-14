@@ -21,11 +21,11 @@ public class AssistPanda : MonoBehaviour
         StartCoroutine(PandaMove());
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         _assistTime -= Time.deltaTime;
 
-        if(_assistTime < 0f)
+        if (_assistTime < 0f)
         {
             Destroy(this.gameObject);
         }
@@ -46,6 +46,7 @@ public class AssistPanda : MonoBehaviour
                 break;
         }
     }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Wall")
@@ -63,7 +64,7 @@ public class AssistPanda : MonoBehaviour
     {
         _animator.SetBool("IsMove", true);
 
-        if(direction > 0f)
+        if (direction > 0f)
         {
             this.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }

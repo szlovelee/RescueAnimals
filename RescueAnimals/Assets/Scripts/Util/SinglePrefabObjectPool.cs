@@ -27,6 +27,13 @@ namespace Util
             t.gameObject.SetActive(true);
             return t;
         }
+        
+        public T Pull(Vector3 position)
+        {
+            var t = Pull();
+            t.transform.position = position;
+            return t;
+        }
 
         public void Push(T obj)
         {
@@ -48,7 +55,6 @@ namespace Util
                 T t = GameObject.Instantiate(_prefab).AddComponent<T>();
                 t.Initialize(Push);
                 t.gameObject.SetActive(false);
-                _stack.Push(t);
             }
         }
     }

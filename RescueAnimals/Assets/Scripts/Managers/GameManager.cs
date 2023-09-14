@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Component.Entities;
+using Component.Entities.Database;
 using Entities;
 using EnumTypes;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Util;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,7 +26,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject beaglePrefab;
     [SerializeField] private AnimalData animalData;
+    [SerializeField] private Coefficient reinforceCoef;
     [SerializeField] private ParticleSystem ballParticle;
     [SerializeField] private GameObject satellitePrefab;
 
@@ -36,17 +41,22 @@ public class GameManager : MonoBehaviour
 
     private SinglePrefabObjectPool<Ball> _ballObjectPool;
     private SinglePrefabObjectPool<Satellite> _satellitePool;
+    private SinglePrefabObjectPool<RunningBeagle> _beaglePool;
     private List<Satellite> _satellites = new();
+    private List<GameObject> _beagles = new();
     float ballSpeed = 0f;
     public float gameOverLine = 0f;
     private Vector2 ballPos = new Vector2(0, -2.8f);
     private SaveData gameData;
-
+    [SerializeField] private int _ballCount;
+    [SerializeField] private float _timeScale = 1f;
     private bool isPlaying = true;
     private int addedScore;
 
     private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.aliveCount <= 0;
     public static GameManager Instance;
+
+    public bool IsStarted { get; set; } = false;
 
     private void Awake()
     {
@@ -54,8 +64,9 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             cam = Camera.main;
-            _ballObjectPool = new(prefab: ballPrefab, 1);
-            _satellitePool = new(prefab: satellitePrefab, 1);
+            _ballObjectPool = new(prefab: ballPrefab, 5);
+            _satellitePool = new(prefab: satellitePrefab, 0);
+            _beaglePool = new(prefab: beaglePrefab, 0);
         }
         else
         {
@@ -66,15 +77,28 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = _timeScale;
         SetGame();
+        Debug.Log(Rank);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (IsGameOver())
         {
             GameOver();
+            return;
         }
+
+        if (!IsStageClear) return;
+        GamePause();
+        ResetBall();
+        ClearBeagles();
+        ClearSatellites();
+        addedScore = 0;
+        SoundManager.instance.PlayStageClear();
+        currentStage.StageClear();
+        OnStageClear?.Invoke();
     }
 
     private void OnDestroy()
@@ -88,31 +112,32 @@ public class GameManager : MonoBehaviour
     private void GameOver()
     {
         player.gold += coin;
-        isPlaying = false;
         UpdateRank();
+        isPlaying = false;
+        DataManager.Instance.SavePlayer(player, animalData, Rank.GetRankings());
         OnGameEnd?.Invoke();
-        DataManager.Instance.SavePlayer(player, animalData, Rank);
     }
 
     private bool IsGameOver()
     {
         Scene scene = SceneManager.GetActiveScene();
-        return player.balls.Count == 0 && scene.name == "GameScene" && isPlaying;
+        return _ballCount <= 0 && scene.name == "GameScene" && isPlaying;
     }
 
 
     private void CreateBall()
     {
         //todo ball make pool-able
+        _ballCount = 1;
         Ball newBall = Instantiate(ballPrefab, ballPos, Quaternion.identity).GetComponent<Ball>();
         player.balls.Add(newBall);
     }
 
     private void SetGame()
     {
-        gameData = DataManager.Instance.LoadPlayerInfo(animalData, Rank);
+        gameData = DataManager.Instance.LoadPlayerInfo(animalData);
         currentStage.Initialize();
-        Time.timeScale = 1f;
+        Time.timeScale = _timeScale;
         MakeWalls();
         SetBlockStartPosition();
         currentStage.ResetStage();
@@ -162,7 +187,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
     private void AddScoreAndMoney(int addedScore, int addedCoin)
     {
         score += addedScore;
@@ -185,15 +209,6 @@ public class GameManager : MonoBehaviour
 
     private void ScoreCheck()
     {
-        if (IsStageClear)
-        {
-            ResetBall();
-            ClearSatellites();
-            currentStage.StageClear();
-            addedScore = 0;
-            SoundManager.instance.PlayStageClear();
-            OnStageClear?.Invoke();
-        }
     }
 
     private void ResetBall()
@@ -204,7 +219,9 @@ public class GameManager : MonoBehaviour
             player.balls[i].gameObject.SetActive(false);
         }
 
+        _ballCount = 0;
         player.balls.Clear();
+        IsStarted = false;
         CreateBall();
     }
 
@@ -218,10 +235,22 @@ public class GameManager : MonoBehaviour
         _satellites.Clear();
     }
 
+    private void ClearBeagles()
+    {
+        foreach (var beagle in _beagles)
+        {
+            beagle.SetActive(false);
+        }
+
+        _beagles.Clear();
+    }
+
+
     private void UpdateRank()
     {
         Rank rank = new Rank(score, currentStage.stageNum);
         Rank.AddRank(rank);
+        Debug.Log("Rank Added On GameEnd");
     }
 
     public void StartStage()
@@ -243,13 +272,14 @@ public class GameManager : MonoBehaviour
 
     public void AddBalls(Vector2 position, int ballCount)
     {
-        for (int i = 0; i < ballCount; i++)
+        for (var i = 0; i < ballCount; i++)
         {
             var ball = _ballObjectPool.Pull();
-            ball.transform.position = position;
             ball.SetBonusBall();
+            ball.transform.position = position;
             ball.OnBallCollide += ShowParticle;
             player.balls.Add(ball);
+            _ballCount++;
         }
     }
 
@@ -335,13 +365,70 @@ public class GameManager : MonoBehaviour
         var idx = UnityEngine.Random.Range(0, player.balls.Count);
         var pivot = player.balls[idx];
         if (pivot == null) return;
-        for (int i = 0; i < 5; i++)
+        var reinforceLevel = animalData
+            .AnimalReinforceData
+            .Find(it => it.animalType == AnimalType.BlackCat)
+            .reinforceLevel;
+        var count = reinforceCoef.satelliteCountPerLevel * reinforceLevel;
+        for (int i = 0; i < count; i++)
         {
             var satellite = _satellitePool.Pull();
+            satellite.SetLastingTime(3f);
+            satellite.Attack = reinforceCoef.satelliteAtkPerLevel * reinforceLevel;
             _satellites.Add(satellite);
             satellite.Radian = (Mathf.PI / 4) * i;
             satellite.Pivot = pivot.transform;
         }
     }
 
+    public void BeagleTime()
+    {
+        var beagleLevel = animalData.AnimalReinforceData
+            .Find(it => it.animalType == AnimalType.Beagle)
+            .reinforceLevel;
+
+        var count = beagleLevel * reinforceCoef.beagleCountPerLevel;
+        var worldPoint = cam.ViewportToWorldPoint(new Vector3(1, 1));
+        var x = worldPoint.x;
+        var y = worldPoint.y;
+
+        for (int i = 0; i < count; i++)
+        {
+            var randomY = Random.Range(-y, y);
+            var beagle = _beaglePool.Pull(new Vector3(-x, randomY));
+            beagle.attack = beagleLevel * reinforceCoef.beagleAtkPerLevel;
+            _beagles.Add(beagle.gameObject);
+        }
+
+        StartCoroutine(BeagleMovement(_beagles, seconds: beagleLevel * 0.5f));
+    }
+
+    private IEnumerator BeagleMovement(List<GameObject> beagles, float seconds)
+    {
+        var time = 0f;
+
+        while (seconds >= time && !IsStageClear)
+        {
+            time += Time.deltaTime;
+            foreach (var beagle in beagles)
+            {
+                if (IsStageClear) break;
+
+                var beagleTransform = beagle.transform;
+                beagleTransform.position += new Vector3(1, 0) * Time.deltaTime * 5f;
+            }
+
+            yield return new WaitForNextFrameUnit();
+        }
+
+        foreach (var beagle in beagles)
+        {
+            beagle.SetActive(false);
+        }
+    }
+
+    public void DecreaseBallCount()
+    {
+        _ballCount--;
+    }
 }
