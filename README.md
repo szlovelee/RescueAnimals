@@ -1,2 +1,10 @@
 # RescueAnimals
-![슬라이드1](https://github.com/szlovelee/RescueAnimals/assets/77392694/c42c782c-2a38-4b2d-bdbe-ca83d891535c)
+![RescueAnimals](https://github.com/szlovelee/RescueAnimals/assets/77392694/c0b9863c-fd52-4600-b5e9-5ba8c3c022d4)
+![슬라이드2](https://github.com/szlovelee/RescueAnimals/assets/77392694/26a024e0-f1d3-4b64-abf6-12fec01e5b75)
+![슬라이드3](https://github.com/szlovelee/RescueAnimals/assets/77392694/e6e12eca-78dc-49fd-a960-3c83d466f811)
+![슬라이드4](https://github.com/szlovelee/RescueAnimals/assets/77392694/1409f588-1d3d-48c3-adc2-dff47ce7dd1b)
+![슬라이드5](https://github.com/szlovelee/RescueAnimals/assets/77392694/bcbf805e-9e7d-4769-b1f8-4525d9c3b193)
+![슬라이드6](https://github.com/szlovelee/RescueAnimals/assets/77392694/bdb84494-6397-47ca-ad70-8c3335f551f1)
+![슬라이드10](https://github.com/szlovelee/RescueAnimals/assets/77392694/51b413de-a17a-4aa7-90f5-b22c56b349d4)
+![슬라이드11](https://github.com/szlovelee/RescueAnimals/assets/77392694/1230e74f-1f3c-43e6-83ea-d5995fbbc0b9)
+![슬라이드12](https://github.com/szlovelee/RescueAnimals/assets/77392694/8bdf98ae-55e7-48d7-8474-e3cf8b43e004)
