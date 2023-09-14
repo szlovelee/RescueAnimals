@@ -77,8 +77,13 @@ namespace Entities
 
         private float CalcBrickGenTime()
         {
-            var time = generationTime - ((float)stageNum  * 2);
-            return time < 5 ? 5 : time;
+            var time = 30 - ((float)stageNum  * 2);
+            Debug.Log($"{time} / {stageNum}");
+            if (time < 5)
+            {
+                time = 5;
+            }
+            return time;
         }
 
         private int CalcAnimalPercentage()
@@ -235,6 +240,7 @@ namespace Entities
             // AnimalGenerator animalGen = animalGenerators[stageNum - 1];
             AnimalGenerator animalGen = animalGenerator; // temp
             ChangePattern(blockGen, animalGen);
+            generationTime = 30f;
         }
 
         private void SetAnimalReinforceState(Animal animal)
