@@ -112,6 +112,7 @@ public class GamePresenter : MonoBehaviour
 
     void ChangeToHomeScene()
     {
+        gameManager.SaveData();
         LoadTargetScene("HomeScene");
         SoundManager.instance.PlayAcceptEffect();
     }
@@ -128,8 +129,8 @@ public class GamePresenter : MonoBehaviour
 
     void StageClearUI()
     {
-        _view.StageTxt.text = string.Format($"stage {gameManager.currentStage.stageNum}");
-        StartCoroutine(PauseRoutine(3f));
+        
+        StartCoroutine(PauseRoutine(0.5f));
     }
 
     void ActivateUIElement(GameObject obj)
@@ -174,9 +175,8 @@ public class GamePresenter : MonoBehaviour
         }
 
         DeactivateUIElement(_view.ClearMessage);
-
+        _view.StageTxt.text = string.Format($"stage {gameManager.currentStage.stageNum}");
         gameManager.StartStage();
-
     }
     private IEnumerator BlinkTextRoutine(float duration)
     {

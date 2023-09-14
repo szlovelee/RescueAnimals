@@ -47,11 +47,10 @@ namespace EnumTypes
                 var filePath = Path.Combine(parent, FileName);
                 var json = File.ReadAllText(filePath);
                 saveData = JsonUtility.FromJson<SaveData>(json);
-                var reinforce = animalData.AnimalReinforceData;
                 for (int i = 0; i < saveData.ReinforceSaveData.Count; i++)
                 {
-                    if (i >= reinforce.Count) break;
-                    reinforce[i].reinforceLevel = saveData.ReinforceSaveData[i].reinforceLevel;
+                    if (i >= animalData.AnimalReinforceData.Count) break;
+                    animalData.AnimalReinforceData[i].reinforceLevel = saveData.ReinforceSaveData[i].reinforceLevel;
                 }
             }
             catch (Exception e)

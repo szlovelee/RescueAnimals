@@ -29,36 +29,30 @@ public class HomeView : MonoBehaviour
 
     public GameObject guide;
 
-    [Header("Player")]
-    public Slider playerAtkSlider;
+    [Header("Player")] public Slider playerAtkSlider;
     public Text playerAtkText;
 
-    [Header("Retreiver")]
-    public Text retreiverLevelText;
+    [Header("Retreiver")] public Text retreiverLevelText;
     public Text retreiverPriceText;
     public Text retreiverExplanationText;
     public GameObject retreiverNotActivePanel;
 
-    [Header("Panda")]
-    public Text pandaLevelText;
+    [Header("Panda")] public Text pandaLevelText;
     public Text pandaPriceText;
     public Text pandaExplanationText;
     public GameObject pandaNotActivePanel;
 
-    [Header("Dragon")]
-    public Text dragonLevelText;
+    [Header("Dragon")] public Text dragonLevelText;
     public Text dragonPriceText;
     public Text dragonExplanationText;
     public GameObject dragonNotActivePanel;
 
-    [Header("Cat")]
-    public Text catLevelText;
+    [Header("Cat")] public Text catLevelText;
     public Text catPriceText;
     public Text catExplanationText;
     public GameObject catNotActivePanel;
 
-    [Header("Beagle")]
-    public Text beagleLevelText;
+    [Header("Beagle")] public Text beagleLevelText;
     public Text beaglePriceText;
     public Text beagleExplanationText;
     public GameObject beagleNotActivePanel;
@@ -89,6 +83,12 @@ public class HomeView : MonoBehaviour
         OnAnimalReinforce?.Invoke(AnimalType.BlackCat);
     }
 
+    public void CallBeagleReinforce()
+    {
+        OnAnimalReinforce?.Invoke(AnimalType.Beagle);
+    }
+
+
     public void CallPlayerSpdReinforce()
     {
         OnReinforcePlayerAtk?.Invoke();
@@ -104,7 +104,7 @@ public class HomeView : MonoBehaviour
         OnGameStartClicked?.Invoke();
     }
 
-    public void CallUpgradeOpen() 
+    public void CallUpgradeOpen()
     {
         OnUpgradeOpen?.Invoke();
     }

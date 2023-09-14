@@ -21,7 +21,7 @@ public class HomePresenter : MonoBehaviour
 
     private void Awake()
     {
-        _view = _viewObj.GetComponent<HomeView>(); 
+        _view = _viewObj.GetComponent<HomeView>();
     }
 
     private void Start()
@@ -41,7 +41,7 @@ public class HomePresenter : MonoBehaviour
 
     private void SetCurrentAnimalReinforceState()
     {
-        foreach(var data in reinforceData.AnimalReinforceData)
+        foreach (var data in reinforceData.AnimalReinforceData)
         {
             ShowReinforceState(data);
         }
@@ -55,43 +55,47 @@ public class HomePresenter : MonoBehaviour
                 _view.retreiverNotActivePanel.SetActive(!data.isActive);
                 _view.retreiverLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.retreiverPriceText.text = $"${data.reinforcePrice}";
-                _view.retreiverExplanationText.text = $"보너스 공을 {data.reinforceLevel * coefficient. ballCloneCountPerLevel}개 만큼 생성!";
+                _view.retreiverExplanationText.text =
+                    $"보너스 공을 {data.reinforceLevel * coefficient.ballCloneCountPerLevel}개 만큼 생성!";
                 break;
             case AnimalType.Panda:
                 _view.pandaNotActivePanel.SetActive(!data.isActive);
                 _view.pandaLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.pandaPriceText.text = $"${data.reinforcePrice}";
-                _view.pandaExplanationText.text = $"{5 + (data.reinforceLevel * data.bonusStatRate)}초 동안 도와주는 판다 {data.reinforceLevel * coefficient.pandaCountPerLevel}마리를 부름!";
+                _view.pandaExplanationText.text =
+                    $"{5 + (data.reinforceLevel * data.bonusStatRate)}초 동안 도와주는 판다 {data.reinforceLevel * coefficient.pandaCountPerLevel}마리를 부름!";
                 break;
             case AnimalType.Dragon:
                 _view.dragonNotActivePanel.SetActive(!data.isActive);
                 _view.dragonLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.dragonPriceText.text = $"${data.reinforcePrice}";
-                _view.dragonExplanationText.text = $"모든 블록에 데미지 -{data.reinforceLevel * coefficient.dragonBreathAtkPerLevel} 입힘!";
+                _view.dragonExplanationText.text =
+                    $"모든 블록에 데미지 -{data.reinforceLevel * coefficient.dragonBreathAtkPerLevel} 입힘!";
                 break;
             case AnimalType.BlackCat:
                 _view.catNotActivePanel.SetActive(!data.isActive);
                 _view.catLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.catPriceText.text = $"${data.reinforcePrice}";
-                _view.catExplanationText.text = $"위성 공 {data.reinforceLevel * coefficient.satelliteCountPerLevel}개 생성 & 공격력 + {data.reinforceLevel * coefficient.satelliteAtkPerLevel} 증가!";
+                _view.catExplanationText.text =
+                    $"위성 공 {data.reinforceLevel * coefficient.satelliteCountPerLevel}개 생성 & 공격력 + {data.reinforceLevel * coefficient.satelliteAtkPerLevel} 증가!";
                 break;
             case AnimalType.Beagle:
                 _view.beagleNotActivePanel.SetActive(!data.isActive);
                 _view.beagleLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.beaglePriceText.text = $"${data.reinforcePrice}";
-                _view.beagleExplanationText.text = $"비글 친구들 {data.reinforceLevel * coefficient.beagleCountPerLevel}마리가 공격력 {data.reinforceLevel * coefficient.beagleAtkPerLevel}으로 함께 공격!";
+                _view.beagleExplanationText.text =
+                    $"비글 친구들 {data.reinforceLevel * coefficient.beagleCountPerLevel}마리가 공격력 {data.reinforceLevel * coefficient.beagleAtkPerLevel}으로 함께 공격!";
                 break;
         }
     }
 
     private void ReinforceAnimal(AnimalType animalType)
     {
-        var data = reinforceData.AnimalReinforceData.Find(x=>x.animalType == animalType);
-
-        if (_savedData.Gold < data.reinforcePrice)
+        var data = reinforceData.AnimalReinforceData.Find(x => x.animalType == animalType);
+        var price = data.reinforcePrice * data.reinforceLevel * 1.5f;
+        if (_savedData.Gold < price)
         {
             ShowGuide();
-
             return;
         }
 
@@ -99,6 +103,12 @@ public class HomePresenter : MonoBehaviour
         _savedData.Gold -= data.reinforcePrice;
         UpdateCoin(_savedData.Gold);
         ShowReinforceState(data);
+        var player = GameManager.Instance.player;
+        player.atk = _savedData.Atk;
+        player.exp = _savedData.Exp;
+        player.gold = _savedData.Gold;
+        player.level = _savedData.Level;
+        DataManager.Instance.SavePlayer(player, reinforceData, rankSystem.rankings);
     }
 
     private void SetCurrentPlayerState()
@@ -139,7 +149,7 @@ public class HomePresenter : MonoBehaviour
         StartCoroutine(LoadGameSceneAsync());
         SoundManager.instance.PlayAcceptEffect();
     }
-    
+
     private void UpgradePanelOpen()
     {
         SetCurrentAnimalReinforceState();
@@ -170,6 +180,7 @@ public class HomePresenter : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
         SoundManager.instance.PlayReturnEffect();
     }
 

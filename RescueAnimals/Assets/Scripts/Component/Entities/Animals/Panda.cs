@@ -6,8 +6,6 @@ using EnumTypes;
 
 public class Panda : Animal, IAnimalBehaviour
 {
-    private float _spawnTime = 100f;
-
     // Temp!!!
     [SerializeField] private AssistPanda assistPandaPrefab;
     [SerializeField] private Coefficient coef;
@@ -19,11 +17,13 @@ public class Panda : Animal, IAnimalBehaviour
 
     public void OnResqueEffect()
     {
-        for (int i = 0; i < reinforceLevel * coef.pandaCountPerLevel; i++)
+        var count = reinforceLevel * coef.pandaCountPerLevel;
+        var assistTime = reinforceLevel * coef.pandaCountPerLevel;
+        for (int i = 0; i < count; i++)
         {
             AssistPanda newPanda = Instantiate(assistPandaPrefab);
             newPanda.transform.position = GameManager.Instance.player.transform.position;
-            newPanda.SetAssistTime(_spawnTime + (3f));
+            newPanda.SetAssistTime((assistTime));
         }
     }
 }

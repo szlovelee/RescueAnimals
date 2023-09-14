@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     private bool isPlaying = true;
     private int addedScore;
 
-    private bool IsStageClear => addedScore > 1000 + currentStage.stageNum || currentStage.aliveCount <= 0;
+    private bool IsStageClear => addedScore > 1000 * currentStage.stageNum || currentStage.aliveCount <= 0;
     public static GameManager Instance;
 
     public bool IsStarted { get; set; } = false;
@@ -94,15 +94,13 @@ public class GameManager : MonoBehaviour
         }
 
         if (!IsStageClear) return;
-
+        currentStage.StageClear();
         OnStageClear?.Invoke();
         GamePause();
         ClearBeagles();
         ClearSatellites();
-        
         addedScore = 0;
         SoundManager.instance.PlayStageClear();
-        currentStage.StageClear();
         ResetBall();
     }
 
@@ -118,10 +116,8 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
-        player.gold += coin;
-        UpdateRank();
         isPlaying = false;
-        DataManager.Instance.SavePlayer(player, animalData, Rank.GetRankings());
+        SaveData();
         OnGameEnd?.Invoke();
     }
 
@@ -206,13 +202,13 @@ public class GameManager : MonoBehaviour
 
     private void AddBlockPoint()
     {
-        AddScoreAndMoney(10, 2);
+        AddScoreAndMoney(10, 1);
         SoundManager.instance.PlayBallEffect();
     }
 
     private void AddAnimalPoint(AnimalType t)
     {
-        AddScoreAndMoney(50, 25);
+        AddScoreAndMoney(50, 4);
         SoundManager.instance.PlayBallEffectOnCage();
     }
 
@@ -319,12 +315,12 @@ public class GameManager : MonoBehaviour
         var width = worldRect.x * 2;
         var height = worldRect.y * 2;
 
-        var widths = new[] { 1, width, 1, width };
-        var heights = new[] { height, 1, height, 1 };
+        var widths = new[] { 3, width, 3, width };
+        var heights = new[] { height, 3, height, 3 };
 
         //position 0이어야 Transform.scale: 1 일 때, -0.5,+0.5 씩 확장함.
-        var startXList = new[] { worldRect.x, 0, -worldRect.x, 0 };
-        var startYList = new[] { 0, -worldRect.y, 0, worldRect.y };
+        var startXList = new[] { worldRect.x + 1f, 0, -worldRect.x - 1f, 0 };
+        var startYList = new[] { 0, -worldRect.y - 1f, 0, worldRect.y + 1f };
         //유니티 좌표계 (x, y) 원점은 정가운데, 1사분면 : (+,+), 2사분면 : (-, +), 3: (-, -), 4:(+, -)
         var dx = new[] { 1, 0, -1, 0 };
         var dy = new[] { 0, -1, 0, 1 };
@@ -339,7 +335,9 @@ public class GameManager : MonoBehaviour
                 x: startXList[i] + widths[i] * 0.5f * dx[i], // 너비의 절반 이동해서 피봇값 상쇄 offsetX
                 y: startYList[i] + heights[i] * 0.5f * dy[i]); // 높이의 절반 이동해서 피봇값 상쇄 offsetY 
             var go = Instantiate(wallPrefab, position, Quaternion.identity);
-            go.transform.localScale = new Vector2(widths[i], heights[i]);
+            var localScaleWidth = widths[i] + (Math.Abs(widths[i] - 1) < 0.05f ? 0 : widths[i] / 2);
+            var localScaleHeight = heights[i] + (Math.Abs(heights[i] - 1) < 0.05f ? 0 : heights[i] / 2);
+            go.transform.localScale = new Vector2(localScaleWidth, localScaleHeight);
         }
 
         float baseY = startYList[1];
@@ -380,7 +378,9 @@ public class GameManager : MonoBehaviour
             .AnimalReinforceData
             .Find(it => it.animalType == AnimalType.BlackCat)
             .reinforceLevel;
+
         var count = reinforceCoef.satelliteCountPerLevel * reinforceLevel;
+
         for (int i = 0; i < count; i++)
         {
             var satellite = _satellitePool.Pull();
@@ -405,13 +405,14 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            var randomY = Random.Range(-y, y);
+            var randomY = Random.Range(-0.5f * y , y * 0.5f);
             var beagle = _beaglePool.Pull(new Vector3(-x, randomY));
             beagle.attack = beagleLevel * reinforceCoef.beagleAtkPerLevel;
+            beagle.transform.localScale = new Vector3(3f, 3f);
             _beagles.Add(beagle.gameObject);
         }
 
-        StartCoroutine(BeagleMovement(_beagles, seconds: beagleLevel * 0.5f));
+        StartCoroutine(BeagleMovement(_beagles, 15f));
     }
 
     private IEnumerator BeagleMovement(List<GameObject> beagles, float seconds)
@@ -449,4 +450,10 @@ public class GameManager : MonoBehaviour
         SoundManager.instance.PlayBallEffect();
     }
 
+    public void SaveData()
+    {
+        player.gold += coin;
+        UpdateRank();
+        DataManager.Instance.SavePlayer(player, animalData, Rank.GetRankings());
+    }
 }

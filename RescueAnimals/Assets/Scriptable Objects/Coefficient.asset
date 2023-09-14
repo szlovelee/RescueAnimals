@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89faed177f374ab3a136f713626887a1, type: 3}
   m_Name: Coefficient
   m_EditorClassIdentifier: 
-  beagleCountPerLevel: 5
-  beagleAtkPerLevel: 4
-  satelliteCountPerLevel: 5
-  satelliteAtkPerLevel: 3
-  dragonBreathAtkPerLevel: 5
+  beagleCountPerLevel: 1
+  beagleAtkPerLevel: 1
+  satelliteCountPerLevel: 1
+  satelliteAtkPerLevel: 1
+  dragonBreathAtkPerLevel: 1
   pandaCountPerLevel: 1
   ballCloneCountPerLevel: 1

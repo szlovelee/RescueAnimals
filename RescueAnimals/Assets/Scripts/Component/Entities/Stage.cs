@@ -79,7 +79,7 @@ namespace Entities
 
         private float CalcBrickGenTime()
         {
-            var time = 30 - ((float)stageNum * 2);
+            var time = 20 - ((float)stageNum * 5);
             Debug.Log($"{time} / {stageNum}");
             if (time < 5)
             {

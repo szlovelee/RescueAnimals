@@ -13,10 +13,7 @@ public class Retreiver : Animal, IAnimalBehaviour
 
     private void Start()
     {
-        reinforceLevel = reinforceData
-            .AnimalReinforceData
-            .Find(data => data.animalType == AnimalType.Retreiver)
-            .reinforceLevel;
+        
     }
 
     public void OnResqueMove()
@@ -26,6 +23,10 @@ public class Retreiver : Animal, IAnimalBehaviour
 
     public void OnResqueEffect()
     {
+        reinforceLevel = reinforceData
+            .AnimalReinforceData
+            .Find(data => data.animalType == AnimalType.Retreiver)
+            .reinforceLevel;
         GameManager.Instance.AddBalls(transform.position, BallCount);
     }
 }
