@@ -101,7 +101,7 @@ namespace EnumTypes
             var json = JsonUtility.ToJson(saveData);
             File.WriteAllText(filePath, json);
             IsWrite = false;
-            Debug.Log(json);
+            Debug.Log(filePath);
         }
     }
 }

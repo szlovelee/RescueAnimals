@@ -57,6 +57,12 @@ public class HomeView : MonoBehaviour
     public Text catExplanationText;
     public GameObject catNotActivePanel;
 
+    [Header("Beagle")]
+    public Text beagleLevelText;
+    public Text beaglePriceText;
+    public Text beagleExplanationText;
+    public GameObject beagleNotActivePanel;
+
     private void Start()
     {
         panels = new GameObject[] { upgradePanel, rankPanel, playerPanel };
