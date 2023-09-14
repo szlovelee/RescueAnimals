@@ -80,6 +80,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _bombEffect: {fileID: 7226583673155636403, guid: a2ab56839e1c9504ea9d141e95d0b16b, type: 3}
+  coef: {fileID: 11400000, guid: f8d4eca7be556452c842ad65ba35bc62, type: 2}
+  animalData: {fileID: 11400000, guid: e5b19799418fc5b4bad938e39d325a37, type: 2}
 --- !u!61 &87598850365973835
 BoxCollider2D:
   m_ObjectHideFlags: 0

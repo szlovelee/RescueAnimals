@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using EnumTypes;
 using TMPro;
 using Component.Entities;
+using Component.Entities.Database;
 
 public class HomePresenter : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class HomePresenter : MonoBehaviour
     private SaveData _savedData;
     [SerializeField] private GameObject _viewObj;
     private HomeView _view;
+    public Coefficient coefficient;
 
 
     private void Awake()
@@ -53,25 +55,31 @@ public class HomePresenter : MonoBehaviour
                 _view.retreiverNotActivePanel.SetActive(!data.isActive);
                 _view.retreiverLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.retreiverPriceText.text = $"${data.reinforcePrice}";
-                _view.retreiverExplanationText.text = $"보너스 공을 {data.reinforceLevel}개 만큼 생성!";
+                _view.retreiverExplanationText.text = $"보너스 공을 {data.reinforceLevel * coefficient. ballCloneCountPerLevel}개 만큼 생성!";
                 break;
             case AnimalType.Panda:
                 _view.pandaNotActivePanel.SetActive(!data.isActive);
                 _view.pandaLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.pandaPriceText.text = $"${data.reinforcePrice}";
-                _view.pandaExplanationText.text = $"{5 + (data.reinforceLevel * data.bonusStatRate)}초 동안 도와주는 판다를 부름!";
+                _view.pandaExplanationText.text = $"{5 + (data.reinforceLevel * data.bonusStatRate)}초 동안 도와주는 판다 {data.reinforceLevel * coefficient.pandaCountPerLevel}마리를 부름!";
                 break;
             case AnimalType.Dragon:
                 _view.dragonNotActivePanel.SetActive(!data.isActive);
                 _view.dragonLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.dragonPriceText.text = $"${data.reinforcePrice}";
-                _view.dragonExplanationText.text = $"아직 미정!";
+                _view.dragonExplanationText.text = $"모든 블록에 데미지 -{data.reinforceLevel * coefficient.dragonBreathAtkPerLevel} 입힘!";
                 break;
             case AnimalType.BlackCat:
                 _view.catNotActivePanel.SetActive(!data.isActive);
                 _view.catLevelText.text = $"레벨 {data.reinforceLevel}";
                 _view.catPriceText.text = $"${data.reinforcePrice}";
-                _view.catExplanationText.text = $"아직 미정!";
+                _view.catExplanationText.text = $"위성 공 {data.reinforceLevel * coefficient.satelliteCountPerLevel}개 생성 & 공격력 + {data.reinforceLevel * coefficient.satelliteAtkPerLevel} 증가!";
+                break;
+            case AnimalType.Beagle:
+                _view.beagleNotActivePanel.SetActive(!data.isActive);
+                _view.beagleLevelText.text = $"레벨 {data.reinforceLevel}";
+                _view.beaglePriceText.text = $"${data.reinforcePrice}";
+                _view.beagleExplanationText.text = $"비글 친구들 {data.reinforceLevel * coefficient.beagleCountPerLevel}마리가 공격력 {data.reinforceLevel * coefficient.beagleAtkPerLevel}으로 함께 공격!";
                 break;
         }
     }

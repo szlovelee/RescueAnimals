@@ -152,25 +152,35 @@ public class Ball : MonoBehaviour, IAttackable, IPoolable<Ball>
             {
                 if (BP.x < 0)
                 {
-                    BallRd.AddForce(new Vector2(-50f, 0));
+                    BallRd.AddForce(new Vector2(-1f, 0).normalized * 50f);
                 }
                 else
                 {
-                    BallRd.AddForce(new Vector2(50f, 0));
+                    BallRd.AddForce(new Vector2(1f, 0).normalized * 50f);
                 }
             }
             else if (Mathf.Abs(BP.y) < 0.1f)
             {
                 if (BP.y < 0)
                 {
-                    BallRd.AddForce(new Vector2(0, -50f));
+                    BallRd.AddForce(new Vector2(0, -1f).normalized * 50f);
                 }
                 else
                 {
-                    BallRd.AddForce(new Vector2(0, 50f));
+                    BallRd.AddForce(new Vector2(0, 1f).normalized * 50f);
                 }
             }
+
+            if (BallRd.velocity.sqrMagnitude < 12)
+            {
+                BallRd.AddForce(new Vector2(-BP.x, -BP.y).normalized * 50f);
+            }
+            else if (BallRd.velocity.sqrMagnitude > 20)
+            {
+                BallRd.AddForce(new Vector2(BP.x, BP.y).normalized * 50f);
+            }
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

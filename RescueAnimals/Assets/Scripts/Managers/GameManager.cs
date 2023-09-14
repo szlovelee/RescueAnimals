@@ -93,10 +93,12 @@ public class GameManager : MonoBehaviour
         }
 
         if (!IsStageClear) return;
-        GamePause();
+
         OnStageClear?.Invoke();
+        GamePause();
         ClearBeagles();
         ClearSatellites();
+        
         addedScore = 0;
         SoundManager.instance.PlayStageClear();
         currentStage.StageClear();
