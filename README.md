@@ -1,6 +1,8 @@
 # RescueAnimals
 
-https://www.notion.so/szloveleesz/B01-5c775c4810844a8ba248da7cd5807765
+💾 기록 : https://www.notion.so/szloveleesz/B01-5c775c4810844a8ba248da7cd5807765
+🎬 영상 : https://www.youtube.com/watch?v=5OaGzd5FOYk&t=6s
+
 
 ## 프로젝트 개요
 ![RescueAnimals](https://github.com/szlovelee/RescueAnimals/assets/77392694/c0b9863c-fd52-4600-b5e9-5ba8c3c022d4)
