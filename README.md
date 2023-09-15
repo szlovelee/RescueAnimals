@@ -1,4 +1,8 @@
 # RescueAnimals
+
+https://www.notion.so/szloveleesz/B01-5c775c4810844a8ba248da7cd5807765
+
+## 프로젝트 개요
 ![RescueAnimals](https://github.com/szlovelee/RescueAnimals/assets/77392694/c0b9863c-fd52-4600-b5e9-5ba8c3c022d4)
 ![슬라이드2](https://github.com/szlovelee/RescueAnimals/assets/77392694/26a024e0-f1d3-4b64-abf6-12fec01e5b75)
 ![슬라이드3](https://github.com/szlovelee/RescueAnimals/assets/77392694/e6e12eca-78dc-49fd-a960-3c83d466f811)
